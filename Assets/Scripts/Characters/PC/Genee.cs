@@ -1,10 +1,11 @@
 using System;
-using Books;
+using Assets.Scripts.Consumables.Books;
 using Characters.Interfaces;
 using UnityEngine;
 
-namespace Characters.PC {
-    public class Genee : MonoBehaviour, IPlayableCharacter {
+namespace Characters.PC
+{
+	public class Genee : MonoBehaviour, IPlayableCharacter {
         public string Name => "Genee";
         public int Health { get; private set; } = 5;
         public int CurrentHealth { get; private set; }
