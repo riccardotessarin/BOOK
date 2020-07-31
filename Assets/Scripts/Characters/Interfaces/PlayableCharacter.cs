@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using User;
+using System;
 //using Books;
 namespace Characters.Interfaces{
-    public class PlayableCharacter : Character
+    public abstract class PlayableCharacter : Character
     {
-        [SerializeField] protected int stamina {get;set;}
-        [SerializeField] protected int currentStamina {get;set;}
-        [SerializeField] Inventory inventory;
-        [SerializeField] protected bool powerMode{get; set;}
-        [SerializeField] protected Attack equippedAttack {get;set;}
+        [SerializeField] protected int stamina;
+        [SerializeField] protected int currentStamina;
+        Inventory inventory;
+        [SerializeField] protected bool powerMode; //se true sto usando armi, se false consumabili
+        [SerializeField] protected Attack equippedAttack;
+        [SerializeField] float buffRadius;
+        [SerializeField] bool traitor;
+
+        Dictionary<string, Action> malusDic = new Dictionary<string,Action>();
+        
         
         // [SerializeField] Book EquippedBook;
         public enum Attack{
@@ -19,31 +25,63 @@ namespace Characters.Interfaces{
             Book
 
         }
-        
+        void Awake(){
+            Awaker();
+
+        }
         // Start is called before the first frame update
         void Start()
         {
-            CurrentHp = Hp;
+            Starter();
+        }
+
+        protected virtual void Awaker(){
+            malusDic.Add("ryuyuki",RyuyukiBond);
+            malusDic.Add("genee", GeneeBond);
+            malusDic.Add("rayaz", RayazBond);
+            gameObject.layer=8; //PC layer
+            isDeath = false;
+            buffRadius=5;
+            traitor=false;
+            powerMode=true;
+            equippedAttack= Attack.BaseAttack;
+            isAttacking=false;
+        }
+        protected virtual void Starter(){
+            currentHp = hp;
             currentStamina = stamina;
-            IsDeath = false;
         }
 
         // Update is called once per frame
         void Update()
         {
             
+            MalusCheck();
         }
 
         protected override void Death(){
-            IsDeath=true;
+            isDeath=true;
+            Debug.Log("DEATH");
         }
-        protected override  int BaseAttack(){return 0;}
-        protected virtual void SpecialAttack(){}
+        protected override  void BaseAttack(){}
+        protected abstract void SpecialAttack();
         protected void BookAttack(){}
-        protected virtual void RyuyukiBond(){}
-        protected virtual void GeneeBond(){}
-        protected virtual void RayazBond(){}
-        void MalusCheck(){}
+        protected abstract void RyuyukiBond();
+        protected abstract void GeneeBond();
+        protected abstract void RayazBond();
+        void MalusCheck(){
+            
+            Collider[] hitColliders = Physics.OverlapSphere(this.transform.position,buffRadius);
+            foreach (var colliders in hitColliders){
+                if (this.gameObject != colliders.gameObject){
+                    var pc = colliders.GetComponent<PlayableCharacter>();
+                    if (pc){
+                        malusDic[pc.ToString()].DynamicInvoke();
+                    }
+                }
+            }
+            Array.Clear(hitColliders,0,hitColliders.Length);
+        }
         protected void UseEquipAttack(){
             switch(equippedAttack){
                 case Attack.BaseAttack:
@@ -59,6 +97,16 @@ namespace Characters.Interfaces{
                     break;
             }
         }
+        
+
+        
+        void OnDrawGizmosSelected(){
+            Gizmos.color= Color.green;
+            Gizmos.DrawWireSphere(transform.position,buffRadius);
+        }
+
+
+
 
 
     }

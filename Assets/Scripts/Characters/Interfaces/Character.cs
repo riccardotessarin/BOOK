@@ -3,25 +3,23 @@ using UnityEngine;
 namespace Characters.Interfaces{
     public abstract class Character : MonoBehaviour
     {
-        [SerializeField] protected int Hp{get; set;}
-        [SerializeField] protected int CurrentHp {get; set;}
-        [SerializeField] public string Type {get; protected set;}
-        [SerializeField] protected int Speed {get; set;}
-        [SerializeField] protected int BasePower {get; set;}
-        [SerializeField] protected bool IsDeath {get;set;}
+
+        [SerializeField] protected float hp;
+        [SerializeField] protected float currentHp;
+        public string type;
+        
+        [SerializeField] protected float speed;
+        [SerializeField] protected int basePower;
+        [SerializeField] protected bool isDeath;
+        [SerializeField] protected bool isAttacking;
 
 
         
-        public virtual void  TakeDamage(int damage){
-            if (damage<CurrentHp)
-                CurrentHp=-damage;
-            else 
-                this.Death();     
-        }
+        protected abstract void TakeDamage(float damage); 
         protected abstract void Death();
-        protected abstract int BaseAttack();
+        protected abstract void BaseAttack();
         public override string ToString(){
-            return name;
+            return type;
         }
 
          

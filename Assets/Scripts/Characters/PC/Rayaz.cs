@@ -1,15 +1,15 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
 namespace Characters.PC{
-    public class Genee : PlayableCharacter
+    public class Rayaz : PlayableCharacter
     {
         
         // Start is called before the first frame update
         protected override void Awaker(){
             base.Awaker();
-            type="genee";
+            type="rayaz";
             hp=50;
             stamina = 50;
             

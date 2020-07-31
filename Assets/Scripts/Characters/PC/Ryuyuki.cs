@@ -5,26 +5,44 @@ using Characters.Interfaces;
 namespace Characters.PC{
     public class Ryuyuki : PlayableCharacter
     {
-
         
         // Start is called before the first frame update
-        void Start()
-        {
+        protected override void Awaker(){
+            base.Awaker();
+            type="ryuyuki";
+            hp=50;
+            stamina = 50;
             
-        }
+            speed= 60;
+            
+            
 
-        // Update is called once per frame
-        void Update()
-        {
-            
         }
-        protected override int BaseAttack(){
-            return 1;
+        protected override void Starter(){
+            base.Starter();
+        }
+        protected override void BaseAttack(){
+            
         }
         protected override void SpecialAttack(){}
-        protected override void RyuyukiBond(){}
-        protected override void GeneeBond(){}
-        protected override void RayazBond(){}
+        protected override void RyuyukiBond(){
+            Debug.Log(this.ToString()+": ryuyuki bond");
+        }
+        protected override void GeneeBond(){
+            Debug.Log(this.ToString()+"genee bond");
+        }
+        protected override void RayazBond(){
+            Debug.Log(this.ToString()+"rayazbond");
+        }
+
+        protected override void TakeDamage(float damage){
+            if (damage< currentHp){
+                Debug.Log("taking damage");
+                currentHp-=damage;
+            }
+            else
+                Death();
+        }
         
     }
 }
