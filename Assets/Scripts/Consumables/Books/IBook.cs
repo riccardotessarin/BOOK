@@ -1,24 +1,14 @@
 namespace Assets.Scripts.Consumables.Books
 {
-	public interface IBook
+	public interface IBook : IConsumable
 	{
-		string Name { get; }
 		string Element { get; }
 		string Rarity { get; }
-		string Description { get; }
+		IPage.PageType PageType { get; }
 		int Charges { get; }
 		int CurrentCharges { get; }
 
 		void RemoveCharge();
-		void AddCharge();
-		/// <summary>
-		/// Define the behavior of the ability
-		/// </summary>
-		/// <returns>
-		/// Returns the damage dealt
-		/// </returns>
-		int UseBook();
-
-		string ToString();
+		bool AddCharge(IPage page);
 	}
 }
