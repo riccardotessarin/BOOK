@@ -15,6 +15,10 @@ namespace User
 		public static Inventory Instance { get; private set; }
 
 		// Remember to handle null SelectedBook when the last charge is used and book is deleted
+		// Something like this inside an action:
+		/*
+		SelectedBook ?? SelectedBook : (PCBasicAbility);
+		 */
 		public IBook SelectedBook { get; private set; }
 
 		private void Awake() {
@@ -26,7 +30,7 @@ namespace User
 		}
 
 		/// <summary>
-		/// Try to add consumable to inventory, if it returns false then it is either an instant-use consumable
+		/// Try to add a consumable to the inventory, if it returns false then it is either an instant-use consumable
 		/// or the item list for this consumable is full
 		/// </summary>
 		/// <param name="consumable">Consumable item to be added to the inventory</param>
@@ -60,6 +64,12 @@ namespace User
 			return success;
 		}
 
+		/// <summary>
+		/// Try to remove a consumable from the inventory, if it returns false then this function has been wrongly used on an 
+		/// instant-use consumable or an error occured.
+		/// </summary>
+		/// <param name="consumable">Consumable item to be removed from the inventory</param>
+		/// <returns>Returns true if item is handled correctly</returns>
 		public bool TryRemoveConsumableFromInventory (IConsumable consumable) {
 			bool success = false;
 
@@ -85,10 +95,7 @@ namespace User
 		}
 
 		private void Update() {
-			// Probably here something like:
-			/*
-			SelectedBook ?? SelectedBook : (PCBasicAbility);
-			 */
+
 		}
 	}
 }

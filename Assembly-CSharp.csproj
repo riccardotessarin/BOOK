@@ -74,8 +74,11 @@
     <Compile Include="Assets\Scripts\Consumables\Books\Abilities\Fireball.cs" />
     <Compile Include="Assets\Scripts\Consumables\Books\Book.cs" />
     <Compile Include="Assets\Scripts\Consumables\Books\IBook.cs" />
+    <Compile Include="Assets\Scripts\Consumables\Healables\IHealable.cs" />
+    <Compile Include="Assets\Scripts\Consumables\Healables\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Consumables\IConsumable.cs" />
     <Compile Include="Assets\Scripts\Consumables\Pages\IPage.cs" />
+    <Compile Include="Assets\Scripts\Consumables\Healables\Plants\IPlant.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Actions\ActionFactory.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Actions\Implementations\InGameInputsAction.cs" />
@@ -788,8 +791,7 @@
       <HintPath>C:/Users/tod96/Documents/Unity Projects/BOOK/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
