@@ -22,28 +22,19 @@ namespace Characters.NPC{
         protected override void Starter(){
             base.Starter();
         }
-        protected override void TakeDamage(float damage){
-            if (damage< currentHp)
-                currentHp-=damage;
-            else
-                Death();
+        protected override void Updater(){
+            if(DetectionZone()){
+                //Debug.Log(secondType+" "+type+"detecting "+target.type);
+                transform.LookAt(target.transform);
+                if (BaseAttackZone())
+                    BaseAttack();
+            }
         }
-        protected override void BaseAttack(){
-            if(!isAttacking)
-                StartCoroutine(BaseAttackDamage());
+        
+        
+        
 
-        }
-        IEnumerator BaseAttackDamage(){
-            isAttacking=true;
-            this.GetComponent<Material>().color=Color.red;
-            target.SendMessage("TakeDamage",BaseDamage,SendMessageOptions.DontRequireReceiver);
-            yield return new WaitForSeconds(speed/60f);
-            this.GetComponent<Material>().color=Color.white;
-            isAttacking=false;
-
-
-
-        }
+        
 
 
         // Update is called once per frame

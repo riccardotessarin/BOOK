@@ -37,8 +37,11 @@ namespace Characters.PC{
         protected override void TakeDamage(float damage){
             if (damage< currentHp)
                 currentHp-=damage;
-            else
+            else{
+                currentHp=0;
                 Death();
+
+            }
         }
         
     }

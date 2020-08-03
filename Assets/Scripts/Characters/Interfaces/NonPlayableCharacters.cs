@@ -11,6 +11,7 @@ namespace Characters.Interfaces{
         //[SerializeField] protected bool hasTarget;
         [SerializeField] protected float detectionRadius;
         [SerializeField] protected float baseDamageMultiplicator;
+        public const int PCLAYERMASK =1<<8; //layer 8
         [SerializeField] protected float BaseDamage{
             get=> basePower*baseDamageMultiplicator;
         }
@@ -36,48 +37,59 @@ namespace Characters.Interfaces{
             Starter();
             
         }
+        protected virtual void Updater(){
+
+        }
 
         // Update is called once per frame
         void Update()
         {
-            
-            if(DetectionZone()){
-                //Debug.Log(secondType+" "+type+"detecting "+target.type);
-                transform.LookAt(target.transform);
-                if (BaseAttackZone())
-                    BaseAttack();
+            if (!isDeath){
+                Updater();
             }
+            else{
+                gameObject.GetComponent<Renderer>().material.color=Color.black;
+            }
+            
             
         }
         protected override void Death(){
             isDeath=true;
         }
         protected override void BaseAttack(){
-            Debug.Log(secondType+" "+type+"attacking "+target.type );
+            if(!isAttacking)
+                StartCoroutine(BaseAttackDamage());
+
         }
         protected virtual bool BaseAttackZone(){
             if ( target){
-                int layermask =1 <<8; //layer 8
-                Collider[] hitcolliders =  Physics.OverlapSphere(transform.position,baseAttackRadius, layermask);
+                
+                Collider[] hitcolliders =  Physics.OverlapSphere(transform.position,baseAttackRadius, PCLAYERMASK);
                 foreach(var collider in hitcolliders){
-                    if (collider.gameObject == target.gameObject)
+                    if (collider.gameObject == target.gameObject){
+                        transform.LookAt(target.transform);
                         return true;
+                    }
                 }
+                return false;
             }
             return false;
         }
         protected virtual bool DetectionZone(){
-            int layermask =1<<8;
-            Collider[] hitcolliders = Physics.OverlapSphere(transform.position,detectionRadius, layermask);
+            
+            Collider[] hitcolliders = Physics.OverlapSphere(transform.position,detectionRadius, PCLAYERMASK);
             if (hitcolliders.Length!=0){
                 if (!target){
                     target=hitcolliders[0].GetComponent<PlayableCharacter>();
+                    transform.LookAt(target.transform);
                     return true;
                 }
                 else{
                     foreach(var collider in hitcolliders){
-                        if (collider.gameObject == target.gameObject)
+                        if (collider.gameObject == target.gameObject){
+                            transform.LookAt(target.transform);
                             return true;
+                        }
                     }
                     target=null;
                     return false;
@@ -87,9 +99,23 @@ namespace Characters.Interfaces{
                 target=null;
                 return false;
         }
-        
+        protected override void TakeDamage(float damage){
+            if (damage< currentHp)
+                currentHp-=damage;
+            else
+                Death();
+        }
 
-        void OnDrawGizmosSelected(){
+         protected virtual IEnumerator BaseAttackDamage(){
+            isAttacking=true;
+            gameObject.GetComponent<Renderer>().material.color=Color.red;
+            target.SendMessage("TakeDamage",BaseDamage,SendMessageOptions.DontRequireReceiver);
+            yield return new WaitForSeconds(speed/60f);
+            gameObject.GetComponent<Renderer>().material.color=Color.white;
+            isAttacking=false;
+        }
+
+        protected virtual void OnDrawGizmosSelected(){
             Gizmos.color= Color.red;
             Gizmos.DrawWireSphere(transform.position,baseAttackRadius);
             Gizmos.color=Color.yellow;

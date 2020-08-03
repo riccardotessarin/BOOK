@@ -40,8 +40,13 @@ namespace Characters.PC{
                 Debug.Log("taking damage");
                 currentHp-=damage;
             }
-            else
+            else{
+                currentHp=0;
                 Death();
+
+            }
+            
+                
         }
         
     }
