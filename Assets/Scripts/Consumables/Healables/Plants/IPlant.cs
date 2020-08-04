@@ -2,7 +2,7 @@
 using System.Collections;
 
 public interface IPlant : IHealable {
-	enum PlantType { /* Genea, Venomyaz, Yukisnow */ }
+	enum PlantType { Genea, Venomyaz, Yukisnow }
 
 	PlantType Type { get; }
 
