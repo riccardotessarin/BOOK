@@ -10,6 +10,7 @@ namespace StateMachine.Actions {
         public static IAction GetActionOfType<T>() where T : IAction, new() {
             if (!Actions.TryGetValue(typeof(T), out var action)){
                 Actions[typeof(T)] = Activator.CreateInstance(typeof(T)) as IAction;
+                action = Actions[typeof(T)];
             }
 
             return action;
