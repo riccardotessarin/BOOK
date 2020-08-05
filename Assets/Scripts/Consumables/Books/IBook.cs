@@ -1,10 +1,12 @@
-namespace Assets.Scripts.Consumables.Books
+using Consumables.Pages;
+
+namespace Consumables.Books
 {
 	public interface IBook : IConsumable
 	{
 		string Element { get; }
 		string Rarity { get; }
-		IPage.PageType PageType { get; }
+		EnumUtility.PageType PageType { get; }
 		int Charges { get; }
 		int CurrentCharges { get; }
 

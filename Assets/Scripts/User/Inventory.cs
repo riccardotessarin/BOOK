@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Consumables.Books;
+using Consumables;
+using Consumables.Books;
+using Consumables.Healables.Plants;
+using Consumables.Pages;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
@@ -57,7 +60,7 @@ namespace User
 				}
 			}
 			else if (consumable is IPage page) {
-				var compatibleBook = _books.FirstOrDefault(book => book.AddCharge(page));
+				var compatibleBook = _books.FirstOrDefault(bookNotMax => bookNotMax.AddCharge(page));
 				success = compatibleBook != null;
 			}
 

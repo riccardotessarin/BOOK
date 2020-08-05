@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IPlant : IHealable {
-	enum PlantType { Genea, Venomyaz, Yukisnow }
+namespace Consumables.Healables.Plants {
+	public interface IPlant : IHealable {
 
-	PlantType Type { get; }
+		EnumUtility.PlantType Type { get; }
 
-	/// <summary>
-	/// Trigger a random malus.
-	/// </summary>
-	/// <returns></returns>
-	void TriggerMalus();
+		/// <summary>
+		/// Trigger a random malus.
+		/// </summary>
+		/// <returns></returns>
+		void TriggerMalus();
 
-	/// <summary>
-	/// Check if the current race and current plant are compatible.
-	/// </summary>
-	/// <returns></returns>
-	void CheckCompatibility();
+		/// <summary>
+		/// Check if the current race and current plant are compatible.
+		/// </summary>
+		/// <returns></returns>
+		void CheckCompatibility();
+	}
 }

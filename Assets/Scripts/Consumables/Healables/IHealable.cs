@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IHealable : IConsumable {
-	int HealthPercentage { get; }
+namespace Consumables.Healables {
+	public interface IHealable : IConsumable {
+		int HealthPercentage { get; }
+	}
 }
