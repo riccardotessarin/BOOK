@@ -14,8 +14,11 @@ namespace Characters.Interfaces{
         [SerializeField] protected Attack equippedAttack;
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
+        [SerializeField] protected float baseAttackRange;
+        [SerializeField] protected float baseAttackPower = 5;
 
         Dictionary<string, Action> malusDic = new Dictionary<string,Action>();
+        Dictionary<Attack, Action> attackDic = new Dictionary<Attack,Action>();
         
         
         // [SerializeField] Book EquippedBook;
@@ -39,6 +42,9 @@ namespace Characters.Interfaces{
             malusDic.Add("ryuyuki",RyuyukiBond);
             malusDic.Add("genee", GeneeBond);
             malusDic.Add("rayaz", RayazBond);
+            attackDic.Add(Attack.BaseAttack,BaseAttack);
+            attackDic.Add(Attack.SpecialAttack,SpecialAttack);
+            attackDic.Add(Attack.Book,BookAttack);
             gameObject.layer=8; //PC layer
             isDeath = false;
             buffRadius=5;
@@ -57,13 +63,20 @@ namespace Characters.Interfaces{
         {
             
             MalusCheck();
+            if (Input.GetMouseButtonDown(0)){
+                Attacker();
+            }
         }
 
         protected override void Death(){
             isDeath=true;
             Debug.Log("DEATH");
         }
-        protected override  void BaseAttack(){}
+        protected override  void BaseAttack(){
+            if(!isAttacking){
+                StartCoroutine(BaseAttackDamage());
+            }
+        }
         protected abstract void SpecialAttack();
         protected void BookAttack(){}
         protected abstract void RyuyukiBond();
@@ -103,7 +116,17 @@ namespace Characters.Interfaces{
         void OnDrawGizmosSelected(){
             Gizmos.color= Color.green;
             Gizmos.DrawWireSphere(transform.position,buffRadius);
+            Gizmos.color=Color.red;
+            Gizmos.DrawRay(transform.position,transform.TransformDirection(Vector3.forward)*baseAttackRange);
         }
+        void Attacker(){
+            attackDic[equippedAttack].DynamicInvoke();
+        }
+
+        protected abstract IEnumerator BaseAttackDamage();
+        protected abstract IEnumerator SpecialAttackDamage();
+
+        
 
 
 

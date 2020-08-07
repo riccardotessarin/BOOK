@@ -100,8 +100,10 @@ namespace Characters.Interfaces{
                 return false;
         }
         protected override void TakeDamage(float damage){
-            if (damage< currentHp)
+            if (damage< currentHp){
                 currentHp-=damage;
+                Debug.Log(gameObject.ToString()+" took damage");
+            }
             else
                 Death();
         }
