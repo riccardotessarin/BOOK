@@ -15,7 +15,10 @@ namespace Characters.Interfaces{
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
-        [SerializeField] protected float baseAttackPower = 5;
+        [SerializeField] protected float sprintSpeed;
+        
+        [SerializeField] protected Camera camera;
+        
 
         Dictionary<string, Action> malusDic = new Dictionary<string,Action>();
         Dictionary<Attack, Action> attackDic = new Dictionary<Attack,Action>();
@@ -39,6 +42,7 @@ namespace Characters.Interfaces{
         }
 
         protected virtual void Awaker(){
+            camera = transform.GetChild(0).gameObject.GetComponent<Camera>();
             malusDic.Add("ryuyuki",RyuyukiBond);
             malusDic.Add("genee", GeneeBond);
             malusDic.Add("rayaz", RayazBond);
@@ -46,30 +50,39 @@ namespace Characters.Interfaces{
             attackDic.Add(Attack.SpecialAttack,SpecialAttack);
             attackDic.Add(Attack.Book,BookAttack);
             gameObject.layer=8; //PC layer
-            isDeath = false;
+            IsDeath = false;
             buffRadius=5;
             traitor=false;
             powerMode=true;
             equippedAttack= Attack.BaseAttack;
             isAttacking=false;
+            basePower=5;
         }
         protected virtual void Starter(){
             currentHp = hp;
             currentStamina = stamina;
+        }
+        protected virtual void Updater(){
+            MalusCheck();
+            
+            if (Input.GetMouseButtonDown(0)){
+                Attacker();
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
             
-            MalusCheck();
-            if (Input.GetMouseButtonDown(0)){
-                Attacker();
-            }
+            Updater();
+        }
+        void FixedUpdate(){
+            if(Poisoned)
+                StartCoroutine(PoisonDamage());
         }
 
         protected override void Death(){
-            isDeath=true;
+            IsDeath=true;
             Debug.Log("DEATH");
         }
         protected override  void BaseAttack(){
@@ -95,36 +108,24 @@ namespace Characters.Interfaces{
             }
             Array.Clear(hitColliders,0,hitColliders.Length);
         }
-        protected void UseEquipAttack(){
-            switch(equippedAttack){
-                case Attack.BaseAttack:
-                    BaseAttack();
-                    break;
-                case Attack.SpecialAttack:
-                    SpecialAttack();
-                    break;
-                case Attack.Book:
-                    BookAttack();
-                    break;
-                default:
-                    break;
-            }
-        }
+        
         
 
         
-        void OnDrawGizmosSelected(){
+        protected virtual void OnDrawGizmosSelected(){
             Gizmos.color= Color.green;
             Gizmos.DrawWireSphere(transform.position,buffRadius);
-            Gizmos.color=Color.red;
-            Gizmos.DrawRay(transform.position,transform.TransformDirection(Vector3.forward)*baseAttackRange);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position,camera.transform.forward * baseAttackRange);
+            
         }
         void Attacker(){
             attackDic[equippedAttack].DynamicInvoke();
         }
 
         protected abstract IEnumerator BaseAttackDamage();
-        protected abstract IEnumerator SpecialAttackDamage();
+        protected abstract IEnumerator SpecialEffect();
+        
 
         
 

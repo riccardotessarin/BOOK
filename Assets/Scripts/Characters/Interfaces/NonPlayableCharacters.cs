@@ -19,7 +19,7 @@ namespace Characters.Interfaces{
         protected virtual void Awaker(){
             gameObject.layer = 9; //NPC layer
             type= "kinean";
-            isDeath=false;
+            IsDeath=false;
             target= null;
             isAttacking=false;
             
@@ -38,13 +38,18 @@ namespace Characters.Interfaces{
             
         }
         protected virtual void Updater(){
-
+            
+        }
+        void FixedUpdate(){
+            if(Poisoned){
+                StartCoroutine(PoisonDamage());
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (!isDeath){
+            if (!IsDeath){
                 Updater();
             }
             else{
@@ -54,7 +59,7 @@ namespace Characters.Interfaces{
             
         }
         protected override void Death(){
-            isDeath=true;
+            IsDeath=true;
         }
         protected override void BaseAttack(){
             if(!isAttacking)
@@ -110,10 +115,11 @@ namespace Characters.Interfaces{
 
          protected virtual IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            Color baseColor = gameObject.GetComponent<Renderer>().material.color;
             gameObject.GetComponent<Renderer>().material.color=Color.red;
             target.SendMessage("TakeDamage",BaseDamage,SendMessageOptions.DontRequireReceiver);
             yield return new WaitForSeconds(speed/60f);
-            gameObject.GetComponent<Renderer>().material.color=Color.white;
+            gameObject.GetComponent<Renderer>().material.color=baseColor;
             isAttacking=false;
         }
 

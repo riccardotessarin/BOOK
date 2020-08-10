@@ -36,6 +36,7 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Attacks\PoisonFog.cs" />
      <Compile Include="Assets\Scripts\Books\IBook.cs" />
      <Compile Include="Assets\Scripts\Characters\Interfaces\Character.cs" />
      <Compile Include="Assets\Scripts\Characters\Interfaces\ICharacter.cs" />

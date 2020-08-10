@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections;
 using UnityEngine;
 namespace Characters.Interfaces{
     public abstract class Character : MonoBehaviour
@@ -10,8 +10,19 @@ namespace Characters.Interfaces{
         
         [SerializeField] protected float speed;
         [SerializeField] protected int basePower;
-        [SerializeField] protected bool isDeath;
+        [SerializeField] public bool IsDeath{get;protected set;}
         [SerializeField] protected bool isAttacking;
+        [SerializeField] bool poisoned;
+        public bool Poisoned{
+            get=>poisoned;
+            set=>poisoned=value;
+        }
+        
+        
+
+        
+        
+
 
 
         
@@ -21,6 +32,21 @@ namespace Characters.Interfaces{
         public override string ToString(){
             return type;
         }
+        public virtual void ModifySpeed(float modifier){
+            speed*=modifier;
+            Debug.Log(ToString()+" speed modified");
+        }
+        protected virtual IEnumerator PoisonDamage(){
+            Poisoned=false;
+            
+            gameObject.GetComponent<Renderer>().material.color=Color.magenta;
+            TakeDamage(3);
+            
+            yield return new WaitForSeconds(3);
+            
+            Poisoned=true;
+        }
+        
 
          
         

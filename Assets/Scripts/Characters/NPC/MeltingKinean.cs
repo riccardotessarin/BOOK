@@ -23,6 +23,7 @@ namespace Characters.NPC{
             base.Starter();
         }
         protected override void Updater(){
+            base.Updater();
             if(DetectionZone()){
                 //Debug.Log(secondType+" "+type+"detecting "+target.type);
                 transform.LookAt(target.transform);

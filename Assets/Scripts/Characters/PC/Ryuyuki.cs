@@ -7,6 +7,11 @@ namespace Characters.PC{
     public class Ryuyuki : PlayableCharacter
     {
         [SerializeField] protected Character lastTarget;
+        [SerializeField] protected float specialAttackRadius;
+        [SerializeField] protected float speedModifier;
+        [SerializeField] protected float maxlastTargetDistance;
+        
+        
         
         // Start is called before the first frame update
         protected override void Awaker(){
@@ -14,9 +19,11 @@ namespace Characters.PC{
             type="ryuyuki";
             hp=50;
             stamina = 50;
-            
+            specialAttackRadius = 10;
             speed= 60;
             baseAttackRange=10;
+            speedModifier=0.1f;
+            maxlastTargetDistance=20;
             
             
 
@@ -28,7 +35,22 @@ namespace Characters.PC{
             
             
         }*/
-        protected override void SpecialAttack(){}
+        protected override void Updater(){
+            base.Updater();
+            if(lastTarget)
+                DistanceCheckLastTarget();
+
+            
+
+        }
+        protected override void SpecialAttack(){
+            if(!isAttacking && lastTarget){
+                isAttacking=true;
+                StartCoroutine(SpecialEffect());
+                lastTarget=null;
+                isAttacking=false;
+            }
+        }
         protected override void RyuyukiBond(){
             Debug.Log(this.ToString()+": ryuyuki bond");
         }
@@ -56,18 +78,55 @@ namespace Characters.PC{
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
             RaycastHit hit;
-            Physics.Raycast(transform.position,transform.TransformDirection(Vector3.forward),out hit,baseAttackRange);
-            Character hitted=hit.collider.GetComponent<Character>();
-            if(hitted){
-                lastTarget=hitted;
-                hitted.SendMessage("TakeDamage",baseAttackPower,SendMessageOptions.DontRequireReceiver);
+            if (Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
+                Character hitted=hit.collider.GetComponent<Character>();
+                if(hitted){
+                    lastTarget=hitted;
+                    hitted.SendMessage("TakeDamage",basePower,SendMessageOptions.DontRequireReceiver);
+                    lastTarget.GetComponent<Renderer>().material.color= Color.green;
+                }
             }
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;
         }
-        protected override IEnumerator SpecialAttackDamage(){
-            yield return new WaitForSeconds(speed/120f);
+
+        protected override IEnumerator SpecialEffect(){
+            
+            Collider[] hitcolliders= Physics.OverlapSphere(lastTarget.transform.position,specialAttackRadius);
+            foreach(var collider in hitcolliders){
+                Character character= collider.GetComponent<Character>();
+                if(character && character.gameObject!= this.gameObject){
+                    character.ModifySpeed(speedModifier);                    
+                }
+            }
+            
+            yield return new WaitForSeconds(10);
+            foreach(var collider in hitcolliders){
+                Character character=collider.GetComponent<Character>();
+                if(character && character.gameObject!=this.gameObject)
+                    character.ModifySpeed(1/speedModifier);
+            }
+
         }
+
+        protected void DistanceCheckLastTarget(){
+            float distance= Vector3.Distance(transform.position,lastTarget.transform.position);
+            if (distance > maxlastTargetDistance)   
+                lastTarget=null;   
+        }
+
+        protected override void OnDrawGizmosSelected(){
+            base.OnDrawGizmosSelected();
+            
+            Gizmos.color=Color.cyan;
+            if(lastTarget)
+                Gizmos.DrawWireSphere(lastTarget.transform.position,specialAttackRadius);
+        }
+
+        
+
+
+        
         
     }
 }

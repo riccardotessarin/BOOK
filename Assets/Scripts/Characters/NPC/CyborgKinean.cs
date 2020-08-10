@@ -31,6 +31,7 @@ namespace Characters.NPC{
             base.Starter();
         }
         protected override void Updater(){
+            base.Updater();
             if (DetectionZone()){
                 
                 
@@ -44,7 +45,7 @@ namespace Characters.NPC{
         }
 
         protected override void Death(){
-            isDeath=true;
+            IsDeath=true;
         }
 
         
