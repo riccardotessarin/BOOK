@@ -44,8 +44,11 @@ namespace Characters.PC{
         }
         protected override void SpecialAttack(){
             if(!isAttacking && !targetEnemy){
-                
-                StartCoroutine(SpecialEffect());
+                if(currentHp<=specialAttackRecoil){
+                    Debug.Log("cannot do special attack, life too low");
+                }
+                else
+                    StartCoroutine(SpecialEffect());
                 
             }
         }
@@ -58,6 +61,15 @@ namespace Characters.PC{
         protected override void RayazBond(){
             Debug.Log(this.ToString()+"rayazbond");
         }
+        protected override void ReverseRyuyukiBond(){
+            Debug.Log(this.ToString()+": reverse ryuyuki bond");
+        }
+        protected override void ReverseGeneeBond(){
+            Debug.Log(this.ToString()+": reverse genee bond");
+        }
+        protected override void ReverseRayazBond(){
+            Debug.Log(this.ToString()+": reverse rayaz bond");
+        }
         protected override void TakeDamage(float damage){
             if (damage< currentHp)
                 currentHp-=damage;
@@ -69,6 +81,7 @@ namespace Characters.PC{
         }
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            currentHp=-baseAttackRecoil;
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -80,12 +93,11 @@ namespace Characters.PC{
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;
         }
-        protected  IEnumerator SpecialAttackDamage(){
-            yield return new WaitForSeconds(speed/120f);
-        }
+        
         protected override IEnumerator SpecialEffect(){
-            
+            //aggiungere effetto attira mob
             isAttacking=true;
+            currentHp=-specialAttackRecoil;
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();

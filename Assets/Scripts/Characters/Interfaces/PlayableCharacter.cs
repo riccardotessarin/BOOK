@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using User;
 using System;
+using System.Linq;
 //using Books;
 namespace Characters.Interfaces{
     public abstract class PlayableCharacter : Character
@@ -15,13 +16,19 @@ namespace Characters.Interfaces{
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
-        [SerializeField] protected float sprintSpeed;
+        
         
         [SerializeField] protected Camera camera;
+        [SerializeField] protected  Dictionary<string, bool> bondCheckDict = new Dictionary<string,bool>();
+        [SerializeField] protected  Dictionary<string, bool> testDict = new Dictionary<string,bool>();
+        [SerializeField] protected  float baseAttackRecoil;
+        [SerializeField] protected float specialAttackRecoil;
+        
         
 
-        Dictionary<string, Action> malusDic = new Dictionary<string,Action>();
-        Dictionary<Attack, Action> attackDic = new Dictionary<Attack,Action>();
+        private  Dictionary<string, Action> malusDic = new Dictionary<string,Action>();
+        private  Dictionary<string, Action> reverseDic = new Dictionary<string,Action>();
+        private Dictionary<Attack, Action> attackDic = new Dictionary<Attack,Action>();
         
         
         // [SerializeField] Book EquippedBook;
@@ -42,10 +49,19 @@ namespace Characters.Interfaces{
         }
 
         protected virtual void Awaker(){
-            camera = transform.GetChild(0).gameObject.GetComponent<Camera>();
+            
             malusDic.Add("ryuyuki",RyuyukiBond);
             malusDic.Add("genee", GeneeBond);
             malusDic.Add("rayaz", RayazBond);
+            reverseDic.Add("ryuyuki",ReverseRyuyukiBond);
+            reverseDic.Add("genee", ReverseGeneeBond);
+            reverseDic.Add("rayaz", ReverseRayazBond);
+            bondCheckDict["ryuyuki"]=false;
+            bondCheckDict["genee"]=false;
+            bondCheckDict["rayaz"]=false;
+            testDict["ryuyuki"]=false;
+            testDict["genee"]=false;
+            testDict["rayaz"]=false;
             attackDic.Add(Attack.BaseAttack,BaseAttack);
             attackDic.Add(Attack.SpecialAttack,SpecialAttack);
             attackDic.Add(Attack.Book,BookAttack);
@@ -57,20 +73,24 @@ namespace Characters.Interfaces{
             equippedAttack= Attack.BaseAttack;
             isAttacking=false;
             basePower=5;
+            baseAttackRecoil=3/100*hp;
+            specialAttackRecoil=15/100*hp;
         }
         protected virtual void Starter(){
             currentHp = hp;
             currentStamina = stamina;
+            currentSpeed=speed;
+
         }
         protected virtual void Updater(){
             MalusCheck();
             
-            if (Input.GetMouseButtonDown(0)){
+            /*if (Input.GetMouseButtonDown(0)){
                 Attacker();
-            }
+            }*/
         }
 
-        // Update is called once per frame
+       
         void Update()
         {
             
@@ -87,7 +107,11 @@ namespace Characters.Interfaces{
         }
         protected override  void BaseAttack(){
             if(!isAttacking){
-                StartCoroutine(BaseAttackDamage());
+                if (currentHp<=baseAttackRecoil){
+                    Debug.Log("cannot use base attack, not much life left");
+                }
+                else
+                    StartCoroutine(BaseAttackDamage());
             }
         }
         protected abstract void SpecialAttack();
@@ -95,19 +119,48 @@ namespace Characters.Interfaces{
         protected abstract void RyuyukiBond();
         protected abstract void GeneeBond();
         protected abstract void RayazBond();
+        protected abstract void ReverseRyuyukiBond();
+        protected abstract void ReverseGeneeBond();
+        protected abstract void ReverseRayazBond();
         void MalusCheck(){
-            
-            Collider[] hitColliders = Physics.OverlapSphere(this.transform.position,buffRadius);
+            ResetDictionary<string,bool>(testDict);
+            //Debug.Log(bondCheckDict["rayaz"]);
+            int layerMask = 1<<8;
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position,buffRadius,layerMask);
             foreach (var colliders in hitColliders){
-                if (this.gameObject != colliders.gameObject){
+               if(colliders.gameObject!=this.gameObject){
                     var pc = colliders.GetComponent<PlayableCharacter>();
-                    if (pc){
-                        malusDic[pc.ToString()].DynamicInvoke();
-                    }
+
+                //malusDic[pc.ToString()].DynamicInvoke();
+                    testDict[pc.ToString()]=true;
+               }
+            }
+            
+            foreach(var race in testDict.Keys.ToList() ){
+                //Debug.Log(testDict[race]+" "+race+" "+bondCheckDict[race]);
+                if (testDict[race]==false && bondCheckDict[race]==true){
+                    reverseDic[race].DynamicInvoke();
+                    bondCheckDict[race]=false;
+                }
+                else if (testDict[race]==true && bondCheckDict[race]==false){
+                    malusDic[race].DynamicInvoke();
+                    bondCheckDict[race]=true;
                 }
             }
-            Array.Clear(hitColliders,0,hitColliders.Length);
+
+            
         }
+        void ResetDictionary<K,V>(Dictionary<K,V> dict){
+            
+            foreach (var item in dict.Keys.ToList())
+            {
+                dict[item]=default;
+            }
+            
+        }
+
+        
+        
         
         
 
@@ -119,7 +172,7 @@ namespace Characters.Interfaces{
             Gizmos.DrawRay(transform.position,camera.transform.forward * baseAttackRange);
             
         }
-        void Attacker(){
+        public  void Attacker(){
             attackDic[equippedAttack].DynamicInvoke();
         }
 

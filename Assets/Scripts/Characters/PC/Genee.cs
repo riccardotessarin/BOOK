@@ -29,9 +29,14 @@ namespace Characters.PC{
         }*/
         protected override void SpecialAttack(){
             if(!isAttacking){
+                if(currentHp<=specialAttackRecoil){
+                    Debug.Log("cannot do special attack, life too low");
+                }
+                else{
                 isAttacking=true;
                 StartCoroutine(SpecialEffect());
                 isAttacking=false;
+                }
             }
         }
         protected override void RyuyukiBond(){
@@ -42,6 +47,15 @@ namespace Characters.PC{
         }
         protected override void RayazBond(){
             Debug.Log(this.ToString()+"rayazbond");
+        }
+        protected override void ReverseRyuyukiBond(){
+            Debug.Log(this.ToString()+": reverse ryuyuki bond");
+        }
+        protected override void ReverseGeneeBond(){
+            Debug.Log(this.ToString()+": reverse genee bond");
+        }
+        protected override void ReverseRayazBond(){
+            Debug.Log(this.ToString()+": reverse rayaz bond");
         }
         protected override void TakeDamage(float damage){
             if(!invicible){
@@ -57,6 +71,7 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            currentHp=-baseAttackRecoil;
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -69,7 +84,7 @@ namespace Characters.PC{
             isAttacking=false;
         }
         protected override IEnumerator SpecialEffect(){
-            
+            currentHp=-specialAttackRecoil;
             invicible=true;
             yield return new WaitForSeconds(15);
             invicible=false;

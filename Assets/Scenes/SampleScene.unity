@@ -248,7 +248,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -258,7 +260,6 @@ MonoBehaviour:
   buffRadius: 5
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 649381292}
   lastTarget: {fileID: 0}
   specialAttackRadius: 0
@@ -611,7 +612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adff59cdd509c4347b461b2d321d035a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  player: {fileID: 535642763}
 --- !u!4 &1016071536
 Transform:
   m_ObjectHideFlags: 0
@@ -662,7 +663,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   baseAttackRadius: 0
@@ -784,7 +787,9 @@ MonoBehaviour:
   currentHp: 0
   type: rayaz
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -794,7 +799,6 @@ MonoBehaviour:
   buffRadius: 0
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 528120954}
   specialAttackRadius: 0
   targetEnemy: {fileID: 0}
@@ -1006,7 +1010,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   baseAttackRadius: 2.5
@@ -1110,7 +1116,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -1120,7 +1128,6 @@ MonoBehaviour:
   buffRadius: 0
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 528120954}
   invicible: 0
 --- !u!4 &1278164021 stripped
@@ -1247,7 +1254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1455793521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,7 +1271,9 @@ MonoBehaviour:
   currentHp: 0
   type: genee
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -1274,7 +1283,6 @@ MonoBehaviour:
   buffRadius: 0
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 1340048049}
   invicible: 0
 --- !u!65 &1455793522
@@ -1387,7 +1395,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   baseAttackRadius: 2.5
@@ -1491,7 +1501,9 @@ MonoBehaviour:
   currentHp: 0
   type: 
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -1501,7 +1513,6 @@ MonoBehaviour:
   buffRadius: 0
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 1340048049}
   specialAttackRadius: 0
   targetEnemy: {fileID: 0}
@@ -1595,7 +1606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2127156189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,7 +1623,9 @@ MonoBehaviour:
   currentHp: 0
   type: ryuyuki
   speed: 0
+  currentSpeed: 0
   basePower: 0
+  currentBasePower: 0
   isAttacking: 0
   poisoned: 0
   stamina: 0
@@ -1622,7 +1635,6 @@ MonoBehaviour:
   buffRadius: 0
   traitor: 0
   baseAttackRange: 0
-  sprintSpeed: 0
   camera: {fileID: 1340048049}
   lastTarget: {fileID: 0}
   specialAttackRadius: 0

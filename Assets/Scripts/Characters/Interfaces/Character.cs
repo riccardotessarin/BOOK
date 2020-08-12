@@ -9,7 +9,9 @@ namespace Characters.Interfaces{
         public string type;
         
         [SerializeField] protected float speed;
+        [SerializeField] protected float currentSpeed;
         [SerializeField] protected int basePower;
+        [SerializeField] protected int currentBasePower;
         [SerializeField] public bool IsDeath{get;protected set;}
         [SerializeField] protected bool isAttacking;
         [SerializeField] bool poisoned;
@@ -33,7 +35,7 @@ namespace Characters.Interfaces{
             return type;
         }
         public virtual void ModifySpeed(float modifier){
-            speed*=modifier;
+            currentSpeed*=modifier;
             Debug.Log(ToString()+" speed modified");
         }
         protected virtual IEnumerator PoisonDamage(){

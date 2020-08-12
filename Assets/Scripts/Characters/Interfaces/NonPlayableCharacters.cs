@@ -26,6 +26,7 @@ namespace Characters.Interfaces{
         }
         protected virtual void Starter(){
             currentHp=hp;
+            currentSpeed=speed;
         }
         void Awake(){
             Awaker();

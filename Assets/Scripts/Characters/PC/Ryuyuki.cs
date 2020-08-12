@@ -45,10 +45,15 @@ namespace Characters.PC{
         }
         protected override void SpecialAttack(){
             if(!isAttacking && lastTarget){
-                isAttacking=true;
-                StartCoroutine(SpecialEffect());
-                lastTarget=null;
-                isAttacking=false;
+                if (currentHp<= specialAttackRecoil){
+                    Debug.Log("cannot do special attack, life too low");
+                }
+                else{
+                    isAttacking=true;
+                    StartCoroutine(SpecialEffect());
+                    lastTarget=null;
+                    isAttacking=false;
+                }
             }
         }
         protected override void RyuyukiBond(){
@@ -58,7 +63,16 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+"genee bond");
         }
         protected override void RayazBond(){
-            Debug.Log(this.ToString()+"rayazbond");
+            Debug.Log(this.ToString()+"rayaz bond");
+        }
+        protected override void ReverseRyuyukiBond(){
+            Debug.Log(this.ToString()+": reverse ryuyuki bond");
+        }
+        protected override void ReverseGeneeBond(){
+            Debug.Log(this.ToString()+": reverse genee bond");
+        }
+        protected override void ReverseRayazBond(){
+            Debug.Log(this.ToString()+": reverse rayaz bond");
         }
 
         protected override void TakeDamage(float damage){
@@ -77,13 +91,14 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            currentHp=-baseAttackRecoil;
             RaycastHit hit;
             if (Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
                 if(hitted){
                     lastTarget=hitted;
                     hitted.SendMessage("TakeDamage",basePower,SendMessageOptions.DontRequireReceiver);
-                    lastTarget.GetComponent<Renderer>().material.color= Color.green;
+                    
                 }
             }
             yield return new WaitForSeconds(speed/120f);
@@ -91,7 +106,7 @@ namespace Characters.PC{
         }
 
         protected override IEnumerator SpecialEffect(){
-            
+            currentHp=-specialAttackRecoil;
             Collider[] hitcolliders= Physics.OverlapSphere(lastTarget.transform.position,specialAttackRadius);
             foreach(var collider in hitcolliders){
                 Character character= collider.GetComponent<Character>();

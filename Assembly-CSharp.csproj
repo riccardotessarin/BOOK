@@ -50,7 +50,7 @@
      <Compile Include="Assets\Scripts\Characters\PC\Ryuyuki.cs" />
      <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Actions\ActionFactory.cs" />
-     <Compile Include="Assets\Scripts\StateMachine\Actions\Implementations\InGameInput.cs" />
+     <Compile Include="Assets\Scripts\StateMachine\Actions\Implementations\InGameInputActions.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Actions\Implementations\InGameMenuInput.cs" />
      <Compile Include="Assets\Scripts\StateMachine\Actions\Interfaces\IAction.cs" />
      <Compile Include="Assets\Scripts\StateMachine\States\InGameState.cs" />
