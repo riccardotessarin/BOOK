@@ -21,13 +21,9 @@ namespace Consumables.Books.Abilities {
 
 		public override int UseConsumable() {
 			// Define the behavior of the ability
-			if (Input.GetKeyDown(KeyCode.Mouse0)) {
-				fireballVFX = Instantiate(fireballVFX, transform) as GameObject;
-				fireballVFX.transform.parent = null;
-				Rigidbody rigidbody = fireballVFX.GetComponent<Rigidbody>();
-				rigidbody.velocity = transform.forward * fireballSpeed;
-
-			}
+			fireballVFX = Instantiate(fireballVFX, transform, true) as GameObject;
+			Rigidbody rigidbody = fireballVFX.GetComponent<Rigidbody>();
+			rigidbody.velocity = transform.forward * fireballSpeed;
 
 			RemoveCharge();     // Remove charge after the ability is used
 			return 0;           // Return attack damage
@@ -43,8 +39,8 @@ namespace Consumables.Books.Abilities {
 
 		}
 
-		private void OnTriggerEnter(Collider other) {
-			if (other.gameObject.GetComponent<NPC>() != null) {
+		private void OnCollisionEnter(Collision collision) {
+			if (collision.gameObject.GetComponent<NPC>() != null) {
 				Debug.Log("NPC hitted");
 				Destroy(this);
 				Instantiate(explosionVFX, transform.parent);
