@@ -77,7 +77,9 @@
     <Compile Include="Assets\Scripts\Consumables\Healables\Plants\IPlant.cs" />
     <Compile Include="Assets\Scripts\Consumables\Healables\Plants\Plant.cs" />
     <Compile Include="Assets\Scripts\Consumables\IConsumable.cs" />
+    <Compile Include="Assets\Scripts\Consumables\Pages\Abilities\FireballPage.cs" />
     <Compile Include="Assets\Scripts\Consumables\Pages\IPage.cs" />
+    <Compile Include="Assets\Scripts\Consumables\Pages\Page.cs" />
     <Compile Include="Assets\Scripts\EnumUtility.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\StateMachine\Actions\ActionFactory.cs" />
