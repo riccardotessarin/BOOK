@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
+using Attacks;
 
 namespace Characters.NPC{
     public class CyborgKinean : NonPlayableCharacters
@@ -10,9 +11,10 @@ namespace Characters.NPC{
         [SerializeField] float specialPower;
         [SerializeField] float specialDamageMultiplicator;
         [SerializeField] float maxAttackDistance;
-        [SerializeField] float SpecialDamage{
-            get=> specialPower*specialDamageMultiplicator;
-        }
+        [SerializeField] AttackType specialAttackAttribute;
+        [SerializeField] Damage specialDamage;
+        
+
         protected override void Awaker(){
             base.Awaker();
             hp = 50;
@@ -23,12 +25,13 @@ namespace Characters.NPC{
             basePower=2;
             specialPower=3;
             speed = 40;
-            baseDamageMultiplicator=2;
             maxAttackDistance=10;
-            specialDamageMultiplicator=1;
+            
+            
         }
         protected override void Starter(){
             base.Starter();
+            specialDamage=new Damage(specialPower,specialAttackAttribute);
         }
         protected override void Updater(){
             base.Updater();
@@ -59,6 +62,10 @@ namespace Characters.NPC{
             Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward)*maxAttackDistance);
         }
 
+        //return true if target is in range for a special attack
+        //and make this instance look at it,
+        // return false if this instance doesnt have a target or
+        // the target isn't in the area 
         bool SpecialAttackZone(){
             if (target){
                 Collider[] hitcolliders= Physics.OverlapSphere(transform.position,specialAttackRadius,PCLAYERMASK);
@@ -78,13 +85,15 @@ namespace Characters.NPC{
                 StartCoroutine(SpecialAttackDamage());
             }
         }
+
+        //Coroutine that activate the special attack
         IEnumerator SpecialAttackDamage(){
             isAttacking=true;
             gameObject.GetComponent<Renderer>().material.color=Color.red;
             RaycastHit hit;
             if(Physics.SphereCast(transform.position,transform.position.y/2,transform.forward,out hit,maxAttackDistance,PCLAYERMASK)){
                 Debug.Log("HIT");
-                hit.transform.SendMessage("TakeDamage",SpecialDamage,SendMessageOptions.DontRequireReceiver);
+                hit.transform.SendMessage("TakeDamage",specialDamage,SendMessageOptions.DontRequireReceiver);
             }
             else{
                 Debug.Log("MISS");

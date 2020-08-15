@@ -4,6 +4,7 @@ using UnityEngine;
 using User;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 //using Books;
 namespace Characters.Interfaces{
     public abstract class PlayableCharacter : Character
@@ -23,6 +24,9 @@ namespace Characters.Interfaces{
         [SerializeField] protected  Dictionary<string, bool> testDict = new Dictionary<string,bool>();
         [SerializeField] protected  float baseAttackRecoil;
         [SerializeField] protected float specialAttackRecoil;
+        [SerializeField] protected Image HealthBar;
+        [SerializeField] protected Image StaminaBar;
+        protected Damage baseDamage;
         
         
 
@@ -31,7 +35,7 @@ namespace Characters.Interfaces{
         private Dictionary<Attack, Action> attackDic = new Dictionary<Attack,Action>();
         
         
-        // [SerializeField] Book EquippedBook;
+        // enum with the type of Attack equipped
         public enum Attack{
             BaseAttack,
             SpecialAttack,
@@ -47,9 +51,9 @@ namespace Characters.Interfaces{
         {
             Starter();
         }
-
+        //method used in the Awake
         protected virtual void Awaker(){
-            
+            //Debug.Log("Awaker");
             malusDic.Add("ryuyuki",RyuyukiBond);
             malusDic.Add("genee", GeneeBond);
             malusDic.Add("rayaz", RayazBond);
@@ -73,15 +77,22 @@ namespace Characters.Interfaces{
             equippedAttack= Attack.BaseAttack;
             isAttacking=false;
             basePower=5;
-            baseAttackRecoil=3/100*hp;
-            specialAttackRecoil=15/100*hp;
+            
         }
+        //method used in the Start
         protected virtual void Starter(){
+            //Debug.Log("Starter");
             currentHp = hp;
+            FillBar(1,"health");
             currentStamina = stamina;
+            FillBar(1,"stamina");
+            baseAttackRecoil=hp*3/100;
+            specialAttackRecoil=hp*15/100;
+            
             currentSpeed=speed;
 
         }
+        //method used in Update
         protected virtual void Updater(){
             MalusCheck();
             
@@ -114,14 +125,20 @@ namespace Characters.Interfaces{
                     StartCoroutine(BaseAttackDamage());
             }
         }
+        /*Method used to start specialAttackCoroutine*/
         protected abstract void SpecialAttack();
-        protected void BookAttack(){}
+        protected void BookAttack(){
+            //TODO
+        }
+        //Method used to activate malus and bonus with the other races
         protected abstract void RyuyukiBond();
         protected abstract void GeneeBond();
         protected abstract void RayazBond();
         protected abstract void ReverseRyuyukiBond();
         protected abstract void ReverseGeneeBond();
         protected abstract void ReverseRayazBond();
+        //Method used to check if a bond it is needed to activate or
+        // to deactivate if the race is out of range
         void MalusCheck(){
             ResetDictionary<string,bool>(testDict);
             //Debug.Log(bondCheckDict["rayaz"]);
@@ -150,7 +167,9 @@ namespace Characters.Interfaces{
 
             
         }
-        void ResetDictionary<K,V>(Dictionary<K,V> dict){
+
+        //static method that reset value of a given dictionary
+        public static void ResetDictionary<K,V>(Dictionary<K,V> dict){
             
             foreach (var item in dict.Keys.ToList())
             {
@@ -172,12 +191,31 @@ namespace Characters.Interfaces{
             Gizmos.DrawRay(transform.position,camera.transform.forward * baseAttackRange);
             
         }
+
+        //method that invoke the right fuction in base of the equippedAttack
         public  void Attacker(){
             attackDic[equippedAttack].DynamicInvoke();
         }
 
+        //Coroutine to make base attack and check if hitted
         protected abstract IEnumerator BaseAttackDamage();
+        //Coroutine to activate special ability
         protected abstract IEnumerator SpecialEffect();
+
+        //method used to set UI health and stamina bars
+        protected void FillBar(float value, string type){
+            switch(type){
+                case "health":
+                    HealthBar.fillAmount=value;
+                    break;
+                case "stamina":
+                    StaminaBar.fillAmount=value;
+                    break;
+                default:
+                    break;
+            }
+            
+        }
         
 
         

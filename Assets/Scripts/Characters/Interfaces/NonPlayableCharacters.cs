@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Attacks;
 namespace Characters.Interfaces{
     public abstract class NonPlayableCharacters : Character
     {
@@ -10,11 +11,11 @@ namespace Characters.Interfaces{
         [SerializeField] protected PlayableCharacter target;
         //[SerializeField] protected bool hasTarget;
         [SerializeField] protected float detectionRadius;
-        [SerializeField] protected float baseDamageMultiplicator;
-        public const int PCLAYERMASK =1<<8; //layer 8
-        [SerializeField] protected float BaseDamage{
-            get=> basePower*baseDamageMultiplicator;
-        }
+        
+        
+        
+
+        protected Damage baseDamage;
 
         protected virtual void Awaker(){
             gameObject.layer = 9; //NPC layer
@@ -23,10 +24,12 @@ namespace Characters.Interfaces{
             target= null;
             isAttacking=false;
             
+            
         }
         protected virtual void Starter(){
             currentHp=hp;
             currentSpeed=speed;
+            baseDamage=new Damage(basePower,AttackType.Neutral);
         }
         void Awake(){
             Awaker();
@@ -67,6 +70,9 @@ namespace Characters.Interfaces{
                 StartCoroutine(BaseAttackDamage());
 
         }
+
+        //method that return true if in range for receiving a base Attack,
+        //false otherwise
         protected virtual bool BaseAttackZone(){
             if ( target){
                 
@@ -81,6 +87,10 @@ namespace Characters.Interfaces{
             }
             return false;
         }
+
+        //method that return true if at least a PC is in the zone,
+        //and set that as a target and makes this NPC instance look at it,
+        // Otherwise return false, if there aren't PCs or if it has already a target
         protected virtual bool DetectionZone(){
             
             Collider[] hitcolliders = Physics.OverlapSphere(transform.position,detectionRadius, PCLAYERMASK);
@@ -105,9 +115,9 @@ namespace Characters.Interfaces{
                 target=null;
                 return false;
         }
-        protected override void TakeDamage(float damage){
-            if (damage< currentHp){
-                currentHp-=damage;
+        protected override void TakeDamage(Damage damage){
+            if (damage.DamageRec< currentHp){
+                currentHp-=damage.DamageRec;
                 Debug.Log(gameObject.ToString()+" took damage");
             }
             else
@@ -118,7 +128,7 @@ namespace Characters.Interfaces{
             isAttacking=true;
             Color baseColor = gameObject.GetComponent<Renderer>().material.color;
             gameObject.GetComponent<Renderer>().material.color=Color.red;
-            target.SendMessage("TakeDamage",BaseDamage,SendMessageOptions.DontRequireReceiver);
+            target.SendMessage("TakeDamage",baseDamage,SendMessageOptions.DontRequireReceiver);
             yield return new WaitForSeconds(speed/60f);
             gameObject.GetComponent<Renderer>().material.color=baseColor;
             isAttacking=false;

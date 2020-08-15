@@ -15,7 +15,7 @@ namespace Characters.NPC{
             detectionRadius=10;
             basePower=2;
             speed=30;
-            baseDamageMultiplicator=2;
+            
 
             
         }

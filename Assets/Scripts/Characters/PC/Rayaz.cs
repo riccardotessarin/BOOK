@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
-using Attack;
+using Attacks;
 namespace Characters.PC{
     public class Rayaz : PlayableCharacter
     {
@@ -26,10 +26,12 @@ namespace Characters.PC{
             fogDuration=10;
             
             
+            
 
         }
         protected override void Starter(){
             base.Starter();
+            baseDamage=new Damage(basePower,AttackType.Basilisk);
         }
         /*protected override void BaseAttack(){
             
@@ -70,24 +72,28 @@ namespace Characters.PC{
         protected override void ReverseRayazBond(){
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
-        protected override void TakeDamage(float damage){
-            if (damage< currentHp)
-                currentHp-=damage;
+        protected override void TakeDamage(Damage damage){
+            if (damage.DamageRec< currentHp){
+                currentHp-=damage.DamageRec;
+                FillBar(currentHp/hp,"health");
+            }
             else{
                 currentHp=0;
+                FillBar(0,"health");
                 Death();
 
             }
         }
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            currentHp=-baseAttackRecoil;
+            currentHp-=baseAttackRecoil;
+            FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
                 if(hitted){
                     
-                    hitted.SendMessage("TakeDamage",basePower,SendMessageOptions.DontRequireReceiver);
+                    hitted.SendMessage("TakeDamage",baseDamage,SendMessageOptions.DontRequireReceiver);
                 }
             }
             yield return new WaitForSeconds(speed/120f);
@@ -97,7 +103,8 @@ namespace Characters.PC{
         protected override IEnumerator SpecialEffect(){
             //aggiungere effetto attira mob
             isAttacking=true;
-            currentHp=-specialAttackRecoil;
+            currentHp-=specialAttackRecoil;
+            FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -109,11 +116,14 @@ namespace Characters.PC{
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;
         }
+
+        //coroutine that is activated when the enemy hitted by specialAttack die
+        //creates an object PoisonFog and after a certain time destroys it 
         protected IEnumerator PFog(){
            //instanziare prefab poisonfog e poi distruggerlo
            PoisonFog fog= Instantiate<PoisonFog>(prefabFog,targetEnemy.transform);
            fog.Caster=this;
-           fog.Damage=fogDamage;
+           fog.Damage=new Damage(fogDamage,AttackType.Basilisk);
            yield return new WaitForSeconds(fogDuration);
            Destroy(fog.gameObject);
         }

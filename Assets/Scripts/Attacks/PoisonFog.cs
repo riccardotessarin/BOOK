@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
-namespace Attack{
+namespace Attacks{
     public class PoisonFog : MonoBehaviour
     {
         // Start is called before the first frame update
         public Character Caster{get;set;}
-        public float Damage{get;set;}
+        public Character.Damage Damage{get;set;}
         bool dealingDamage = false;
         void Update(){
             if(!dealingDamage)
@@ -19,7 +19,7 @@ namespace Attack{
             foreach (var collider in hitcolliders){
                 Character character= collider.GetComponent<Character>();
                 if(character && character.gameObject!= Caster.gameObject)
-                    character.SendMessage("TakeDamage",Damage);
+                    character.SendMessage("TakeDamage",Damage,SendMessageOptions.DontRequireReceiver);
             }
             yield return new WaitForSeconds(3);
             dealingDamage=false;

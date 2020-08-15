@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
+using Attacks;
 
 namespace Characters.PC{
     public class Ryuyuki : PlayableCharacter
@@ -18,6 +19,7 @@ namespace Characters.PC{
             base.Awaker();
             type="ryuyuki";
             hp=50;
+            //Debug.Log("Awaker Ryuyuki");
             stamina = 50;
             specialAttackRadius = 10;
             speed= 60;
@@ -26,15 +28,15 @@ namespace Characters.PC{
             maxlastTargetDistance=20;
             
             
+            
 
         }
         protected override void Starter(){
             base.Starter();
+            baseDamage=new Damage(basePower,AttackType.Niflheim);
+            //Debug.Log("Starter Ryuyuki");
         }
-        /*protected override void BaseAttack(){
-            
-            
-        }*/
+        
         protected override void Updater(){
             base.Updater();
             if(lastTarget)
@@ -75,13 +77,15 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
 
-        protected override void TakeDamage(float damage){
-            if (damage< currentHp){
+        protected override void TakeDamage(Damage damage){
+            if (damage.DamageRec< currentHp){
                 Debug.Log("taking damage");
-                currentHp-=damage;
+                currentHp-=damage.DamageRec;
+                FillBar(currentHp/hp,"health");
             }
             else{
                 currentHp=0;
+                FillBar(0,"health");
                 Death();
 
             }
@@ -91,13 +95,15 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            currentHp=-baseAttackRecoil;
+            Debug.Log(baseAttackRecoil);
+            currentHp-=baseAttackRecoil;
+            FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if (Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
                 if(hitted){
                     lastTarget=hitted;
-                    hitted.SendMessage("TakeDamage",basePower,SendMessageOptions.DontRequireReceiver);
+                    hitted.SendMessage("TakeDamage",baseDamage,SendMessageOptions.DontRequireReceiver);
                     
                 }
             }
@@ -106,12 +112,13 @@ namespace Characters.PC{
         }
 
         protected override IEnumerator SpecialEffect(){
-            currentHp=-specialAttackRecoil;
+            currentHp-=specialAttackRecoil;
+            FillBar(currentHp/hp,"health");
             Collider[] hitcolliders= Physics.OverlapSphere(lastTarget.transform.position,specialAttackRadius);
             foreach(var collider in hitcolliders){
                 Character character= collider.GetComponent<Character>();
                 if(character && character.gameObject!= this.gameObject){
-                    character.ModifySpeed(speedModifier);                    
+                    character.SendMessage("ModifySpeed",speedModifier,SendMessageOptions.DontRequireReceiver);                    
                 }
             }
             
@@ -119,11 +126,12 @@ namespace Characters.PC{
             foreach(var collider in hitcolliders){
                 Character character=collider.GetComponent<Character>();
                 if(character && character.gameObject!=this.gameObject)
-                    character.ModifySpeed(1/speedModifier);
+                    character.SendMessage("ModifySpeed",1/speedModifier,SendMessageOptions.DontRequireReceiver);
             }
 
         }
-
+        //check if lastTarget(the last target hitted, used for activating special effect )
+        // is in range, otherwise lastTarget becomes null
         protected void DistanceCheckLastTarget(){
             float distance= Vector3.Distance(transform.position,lastTarget.transform.position);
             if (distance > maxlastTargetDistance)   
