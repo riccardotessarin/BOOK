@@ -4,107 +4,99 @@ using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
 
-namespace Characters.NPC{
-    public class CyborgKinean : NonPlayableCharacters
-    {
+namespace Characters.NPC {
+    public class CyborgKinean : NonPlayableCharacters {
         [SerializeField] float specialAttackRadius;
         [SerializeField] float specialPower;
         [SerializeField] float specialDamageMultiplicator;
         [SerializeField] float maxAttackDistance;
         [SerializeField] AttackType specialAttackAttribute;
         [SerializeField] Damage specialDamage;
-        
 
-        protected override void Awaker(){
+
+        protected override void Awaker() {
             base.Awaker();
             hp = 50;
-            secondType="cyborg";
-            baseAttackRadius=2.5f;
-            detectionRadius=10;
-            specialAttackRadius=7;
-            basePower=2;
-            specialPower=3;
+            secondType = "cyborg";
+            baseAttackRadius = 2.5f;
+            detectionRadius = 10;
+            specialAttackRadius = 7;
+            basePower = 2;
+            specialPower = 3;
             speed = 40;
-            maxAttackDistance=10;
-            
-            
+            maxAttackDistance = 10;
         }
-        protected override void Starter(){
+
+        protected override void Starter() {
             base.Starter();
-            specialDamage=new Damage(specialPower,specialAttackAttribute);
+            specialDamage = new Damage(specialPower, specialAttackAttribute);
         }
-        protected override void Updater(){
+
+        protected override void Updater() {
             base.Updater();
-            if (DetectionZone()){
-                
-                
+
+            if (DetectionZone()) {
                 if (BaseAttackZone())
                     BaseAttack();
                 else if (SpecialAttackZone())
                     SpecialAttack();
-                
             }
-
         }
 
-        protected override void Death(){
-            IsDeath=true;
+        protected override void Death() {
+            IsDeath = true;
         }
 
-        
-        
 
-        protected override void OnDrawGizmosSelected(){
+        protected override void OnDrawGizmosSelected() {
             base.OnDrawGizmosSelected();
-            Gizmos.color=Color.cyan;
-            Gizmos.DrawWireSphere(transform.position,specialAttackRadius);
-            Gizmos.color=Color.red;
-            Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward)*maxAttackDistance);
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, specialAttackRadius);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * maxAttackDistance);
         }
 
         //return true if target is in range for a special attack
         //and make this instance look at it,
         // return false if this instance doesnt have a target or
         // the target isn't in the area 
-        bool SpecialAttackZone(){
-            if (target){
-                Collider[] hitcolliders= Physics.OverlapSphere(transform.position,specialAttackRadius,PCLAYERMASK);
-                foreach(var collider in hitcolliders){
-                    if(collider.gameObject == target.gameObject){
+        bool SpecialAttackZone() {
+            if (target) {
+                Collider[] hitcolliders = Physics.OverlapSphere(transform.position, specialAttackRadius, PCLAYERMASK);
+                foreach (var collider in hitcolliders) {
+                    if (collider.gameObject == target.gameObject) {
                         transform.LookAt(target.transform);
                         return true;
                     }
                 }
+
                 return false;
             }
-            return false;
-        } 
 
-        void SpecialAttack(){
-            if(!isAttacking){
+            return false;
+        }
+
+        void SpecialAttack() {
+            if (!isAttacking) {
                 StartCoroutine(SpecialAttackDamage());
             }
         }
 
         //Coroutine that activate the special attack
-        IEnumerator SpecialAttackDamage(){
-            isAttacking=true;
-            gameObject.GetComponent<Renderer>().material.color=Color.red;
+        IEnumerator SpecialAttackDamage() {
+            isAttacking = true;
+            gameObject.GetComponent<Renderer>().material.color = Color.red;
             RaycastHit hit;
-            if(Physics.SphereCast(transform.position,transform.position.y/2,transform.forward,out hit,maxAttackDistance,PCLAYERMASK)){
+            if (Physics.SphereCast(transform.position, transform.position.y / 2, transform.forward, out hit, maxAttackDistance, PCLAYERMASK)) {
                 Debug.Log("HIT");
-                hit.transform.SendMessage("TakeDamage",specialDamage,SendMessageOptions.DontRequireReceiver);
-            }
-            else{
+                hit.transform.SendMessage("TakeDamage", specialDamage, SendMessageOptions.DontRequireReceiver);
+            } else {
                 Debug.Log("MISS");
             }
-            yield return new WaitForSeconds(speed/60f);
-            gameObject.GetComponent<Renderer>().material.color=Color.white;
-            isAttacking=false;
 
-
+            yield return new WaitForSeconds(speed / 60f);
+            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            isAttacking = false;
         }
-
-
     }
 }

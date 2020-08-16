@@ -2,11 +2,9 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace UnityStandardAssets.Vehicles.Aeroplane
-{
-    [RequireComponent(typeof (AeroplaneController))]
-    public class AeroplaneUserControl4Axis : MonoBehaviour
-    {
+namespace UnityStandardAssets.Vehicles.Aeroplane {
+    [RequireComponent(typeof(AeroplaneController))]
+    public class AeroplaneUserControl4Axis : MonoBehaviour {
         // these max angles are only used on mobile, due to the way pitch and roll input are handled
         public float maxRollAngle = 80;
         public float maxPitchAngle = 80;
@@ -18,15 +16,13 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
         private float m_Yaw;
 
 
-        private void Awake()
-        {
+        private void Awake() {
             // Set up the reference to the aeroplane controller.
             m_Aeroplane = GetComponent<AeroplaneController>();
         }
 
 
-        private void FixedUpdate()
-        {
+        private void FixedUpdate() {
             // Read input for the pitch, yaw, roll and throttle of the aeroplane.
             float roll = CrossPlatformInputManager.GetAxis("Mouse X");
             float pitch = CrossPlatformInputManager.GetAxis("Mouse Y");
@@ -41,8 +37,7 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
         }
 
 
-        private void AdjustInputForMobileControls(ref float roll, ref float pitch, ref float throttle)
-        {
+        private void AdjustInputForMobileControls(ref float roll, ref float pitch, ref float throttle) {
             // because mobile tilt is used for roll and pitch, we help out by
             // assuming that a centered level device means the user
             // wants to fly straight and level!
@@ -51,8 +46,8 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
             // and the roll input is calculated to achieve that.
             // whereas on non-mobile, the input directly controls the roll of the aeroplane.
 
-            float intendedRollAngle = roll*maxRollAngle*Mathf.Deg2Rad;
-            float intendedPitchAngle = pitch*maxPitchAngle*Mathf.Deg2Rad;
+            float intendedRollAngle = roll * maxRollAngle * Mathf.Deg2Rad;
+            float intendedPitchAngle = pitch * maxPitchAngle * Mathf.Deg2Rad;
             roll = Mathf.Clamp((intendedRollAngle - m_Aeroplane.RollAngle), -1, 1);
             pitch = Mathf.Clamp((intendedPitchAngle - m_Aeroplane.PitchAngle), -1, 1);
         }

@@ -1,14 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using Attacks;
-namespace Characters.Interfaces{
-    public abstract class Character : MonoBehaviour
-    {
 
+namespace Characters.Interfaces {
+    public abstract class Character : MonoBehaviour {
         [SerializeField] protected float hp;
         [SerializeField] protected float currentHp;
         public string type;
-        
+
         [SerializeField] protected float speed;
         [SerializeField] protected float currentSpeed;
         [SerializeField] protected int basePower;
@@ -34,11 +33,6 @@ namespace Characters.Interfaces{
             public AttackType AttackType{get;}
         }
 
-        
-        
-
-
-
         /*Method used to deal damage to the character instance,
         it is used by both PC and NPC, it is protected so use with
         SendMessage method like this:
@@ -46,14 +40,17 @@ namespace Characters.Interfaces{
         protected abstract void TakeDamage(Damage damage); 
         /*Method used when the character hp reach 0,
         (not implemented yet), activate the event linked to the death of the character instance*/
+
         protected abstract void Death();
         /*Method that activate baseAttack Coroutine, 
         PCs use this woth a particular input,
         NPCs use this when an enemy enter in their damagezone*/
         protected abstract void BaseAttack();
-        public override string ToString(){
+
+        public override string ToString() {
             return type;
         }
+
         /*Method used for modify speed of character instance,
         protected so same as TakeDamage*/
         protected virtual void ModifySpeed(float modifier){
@@ -73,11 +70,5 @@ namespace Characters.Interfaces{
             
             Poisoned=true;
         }
-        
-
-         
-        
-
-
     }
 }

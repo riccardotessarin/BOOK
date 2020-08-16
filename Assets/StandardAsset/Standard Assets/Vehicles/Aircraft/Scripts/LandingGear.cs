@@ -1,13 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace UnityStandardAssets.Vehicles.Aeroplane
-{
-    public class LandingGear : MonoBehaviour
-    {
-
-        private enum GearState
-        {
+namespace UnityStandardAssets.Vehicles.Aeroplane {
+    public class LandingGear : MonoBehaviour {
+        private enum GearState {
             Raised = -1,
             Lowered = 1
         }
@@ -27,8 +23,7 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
         private AeroplaneController m_Plane;
 
         // Use this for initialization
-        private void Start()
-        {
+        private void Start() {
             m_Plane = GetComponent<AeroplaneController>();
             m_Animator = GetComponent<Animator>();
             m_Rigidbody = GetComponent<Rigidbody>();
@@ -36,15 +31,12 @@ namespace UnityStandardAssets.Vehicles.Aeroplane
 
 
         // Update is called once per frame
-        private void Update()
-        {
-            if (m_State == GearState.Lowered && m_Plane.Altitude > raiseAtAltitude && m_Rigidbody.velocity.y > 0)
-            {
+        private void Update() {
+            if (m_State == GearState.Lowered && m_Plane.Altitude > raiseAtAltitude && m_Rigidbody.velocity.y > 0){
                 m_State = GearState.Raised;
             }
 
-            if (m_State == GearState.Raised && m_Plane.Altitude < lowerAtAltitude && m_Rigidbody.velocity.y < 0)
-            {
+            if (m_State == GearState.Raised && m_Plane.Altitude < lowerAtAltitude && m_Rigidbody.velocity.y < 0){
                 m_State = GearState.Lowered;
             }
 

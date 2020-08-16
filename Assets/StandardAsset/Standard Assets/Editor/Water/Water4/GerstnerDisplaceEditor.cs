@@ -3,30 +3,25 @@ using System;
 using UnityEditor;
 
 
-namespace UnityStandardAssets.Water
-{
+namespace UnityStandardAssets.Water {
     [CustomEditor(typeof(GerstnerDisplace))]
-    public class GerstnerDisplaceEditor : Editor
-    {
+    public class GerstnerDisplaceEditor : Editor {
         private SerializedObject serObj;
 
-        public void OnEnable()
-        {
+        public void OnEnable() {
             serObj = new SerializedObject(target);
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             serObj.Update();
 
-            GameObject go = ((GerstnerDisplace)serObj.targetObject).gameObject;
-            WaterBase wb = (WaterBase)go.GetComponent(typeof(WaterBase));
+            GameObject go = ((GerstnerDisplace) serObj.targetObject).gameObject;
+            WaterBase wb = (WaterBase) go.GetComponent(typeof(WaterBase));
             Material sharedWaterMaterial = wb.sharedMaterial;
 
             GUILayout.Label("Animates vertices using up 4 generated waves", EditorStyles.miniBoldLabel);
 
-            if (sharedWaterMaterial)
-            {
+            if (sharedWaterMaterial){
                 Vector4 amplitude = WaterEditorUtility.GetMaterialVector("_GAmplitude", sharedWaterMaterial);
                 Vector4 frequency = WaterEditorUtility.GetMaterialVector("_GFrequency", sharedWaterMaterial);
                 Vector4 steepness = WaterEditorUtility.GetMaterialVector("_GSteepness", sharedWaterMaterial);
@@ -41,8 +36,7 @@ namespace UnityStandardAssets.Water
                 directionAB = EditorGUILayout.Vector4Field("Direction scale (Wave 1 (X,Y) and 2 (Z,W))", directionAB);
                 directionCD = EditorGUILayout.Vector4Field("Direction scale (Wave 3 (X,Y) and 4 (Z,W))", directionCD);
 
-                if (GUI.changed)
-                {
+                if (GUI.changed){
                     WaterEditorUtility.SetMaterialVector("_GAmplitude", amplitude, sharedWaterMaterial);
                     WaterEditorUtility.SetMaterialVector("_GFrequency", frequency, sharedWaterMaterial);
                     WaterEditorUtility.SetMaterialVector("_GSteepness", steepness, sharedWaterMaterial);

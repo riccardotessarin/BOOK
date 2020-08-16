@@ -1,11 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace UnityStandardAssets.Vehicles.Car
-{
-    [RequireComponent(typeof (AudioSource))]
-    public class WheelEffects : MonoBehaviour
-    {
+namespace UnityStandardAssets.Vehicles.Car {
+    [RequireComponent(typeof(AudioSource))]
+    public class WheelEffects : MonoBehaviour {
         public Transform SkidTrailPrefab;
         public static Transform skidTrailsDetachedParent;
         public ParticleSystem skidParticles;
@@ -18,16 +16,13 @@ namespace UnityStandardAssets.Vehicles.Car
         private WheelCollider m_WheelCollider;
 
 
-        private void Start()
-        {
+        private void Start() {
             skidParticles = transform.root.GetComponentInChildren<ParticleSystem>();
 
-            if (skidParticles == null)
-            {
+            if (skidParticles == null){
                 Debug.LogWarning(" no particle system found on car to generate smoke particles", gameObject);
             }
-            else
-            {
+            else{
                 skidParticles.Stop();
             }
 
@@ -35,57 +30,50 @@ namespace UnityStandardAssets.Vehicles.Car
             m_AudioSource = GetComponent<AudioSource>();
             PlayingAudio = false;
 
-            if (skidTrailsDetachedParent == null)
-            {
+            if (skidTrailsDetachedParent == null){
                 skidTrailsDetachedParent = new GameObject("Skid Trails - Detached").transform;
             }
         }
 
 
-        public void EmitTyreSmoke()
-        {
-            skidParticles.transform.position = transform.position - transform.up*m_WheelCollider.radius;
+        public void EmitTyreSmoke() {
+            skidParticles.transform.position = transform.position - transform.up * m_WheelCollider.radius;
             skidParticles.Emit(1);
-            if (!skidding)
-            {
+            if (!skidding){
                 StartCoroutine(StartSkidTrail());
             }
         }
 
 
-        public void PlayAudio()
-        {
+        public void PlayAudio() {
             m_AudioSource.Play();
             PlayingAudio = true;
         }
 
 
-        public void StopAudio()
-        {
+        public void StopAudio() {
             m_AudioSource.Stop();
             PlayingAudio = false;
         }
 
 
-        public IEnumerator StartSkidTrail()
-        {
+        public IEnumerator StartSkidTrail() {
             skidding = true;
             m_SkidTrail = Instantiate(SkidTrailPrefab);
-            while (m_SkidTrail == null)
-            {
+            while (m_SkidTrail == null){
                 yield return null;
             }
+
             m_SkidTrail.parent = transform;
-            m_SkidTrail.localPosition = -Vector3.up*m_WheelCollider.radius;
+            m_SkidTrail.localPosition = -Vector3.up * m_WheelCollider.radius;
         }
 
 
-        public void EndSkidTrail()
-        {
-            if (!skidding)
-            {
+        public void EndSkidTrail() {
+            if (!skidding){
                 return;
             }
+
             skidding = false;
             m_SkidTrail.parent = skidTrailsDetachedParent;
             Destroy(m_SkidTrail.gameObject, 10);

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using StateMachine.Actions.Interfaces;
-using UnityEngine.iOS;
 
 namespace StateMachine.Actions {
     public static class ActionFactory {
