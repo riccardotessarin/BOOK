@@ -255,9 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a89b0d63c2e1748b07a83dc70453b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pvCache: {fileID: 0}
-  findGameButton: {fileID: 197714724}
-  cancelButton: {fileID: 986310108}
 --- !u!114 &155718322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1036,21 +1033,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObservedComponentsFoldoutOpen: 1
   Group: 0
-  mixedModeIsReliable: 0
   prefixField: -1
-  observableSearch: 2
+  observableSearch: 0
   Synchronization: 0
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 1
   InstantiationId: 0
-  controllerActorNr: 0
-  ownershipCacheIsValid: 0
-  amController: 0
-  didAwake: 0
   isRuntimeInstantiated: 0
-  removedFromLocalViewList: 0
-  RpcMonoBehaviours: []
 --- !u!114 &2053198493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,10 +1053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1176a61e61c643268de059a6cd337dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pvCache: {fileID: 0}
-  multiplayerScene: 1
-  _photonView: {fileID: 0}
-  currentScene: 0
+  multiplayerScene: 0
 --- !u!4 &2053198494
 Transform:
   m_ObjectHideFlags: 0
