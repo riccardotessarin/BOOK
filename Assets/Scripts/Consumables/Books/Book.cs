@@ -36,7 +36,7 @@ namespace Consumables.Books {
 			}
 		}
 
-		public abstract int UseConsumable();
+		public abstract void UseConsumable();
 
 		private void Start() {
 			CurrentCharges = Charges;

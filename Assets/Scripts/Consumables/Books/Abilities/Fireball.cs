@@ -13,20 +13,20 @@ namespace Consumables.Books.Abilities {
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.Fireball;
 		public override int Charges => 3;
 
+		[SerializeField] private GameObject FireballBookIcon;
+		[SerializeField] private Sprite fireballSprite = Resources.Load<Sprite>("Sprites/FireballSprite");
 		[SerializeField] private GameObject fireballVFX;
-		[SerializeField] private GameObject explosionVFX;
 		[SerializeField] private int fireballSpeed;
 
 
-
-		public override int UseConsumable() {
+		
+		public override void UseConsumable() {
 			// Define the behavior of the ability
-			fireballVFX = Instantiate(fireballVFX, transform, true) as GameObject;
+			fireballVFX = Instantiate(fireballVFX, transform, true);
 			Rigidbody rigidbody = fireballVFX.GetComponent<Rigidbody>();
 			rigidbody.velocity = transform.forward * fireballSpeed;
 
 			RemoveCharge();     // Remove charge after the ability is used
-			return 0;           // Return attack damage
 		}
 
 		// Start is called before the first frame update
@@ -37,14 +37,6 @@ namespace Consumables.Books.Abilities {
 		// Update is called once per frame
 		void Update() {
 
-		}
-
-		private void OnCollisionEnter(Collision collision) {
-			if (collision.gameObject.GetComponent<NPC>() != null) {
-				Debug.Log("NPC hitted");
-				Destroy(this);
-				Instantiate(explosionVFX, transform.parent);
-			}
 		}
 	}
 }

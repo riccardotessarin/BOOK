@@ -15,7 +15,7 @@ namespace Consumables.Pages.Abilities {
 
 		public override EnumUtility.PageType Type => EnumUtility.PageType.Fireball;
 
-		public override int UseConsumable() {
+		public override void UseConsumable() {
 			throw new NotImplementedException();
 		}
 	}

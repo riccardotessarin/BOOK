@@ -1,5 +1,5 @@
 using System;
-using Assets.Scripts.Consumables.Books;
+using Consumables.Books;
 using Characters.Interfaces;
 using UnityEngine;
 
@@ -34,5 +34,5 @@ namespace Characters.PC
         public void UseSpecialAttack() {
             throw new NotImplementedException();
         }
-    }
+	}
 }

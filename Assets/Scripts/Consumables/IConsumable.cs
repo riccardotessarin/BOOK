@@ -13,7 +13,7 @@ namespace Consumables {
 		/// <returns>
 		/// Returns the damage dealt or health restored
 		/// </returns>
-		int UseConsumable();
+		void UseConsumable();
 
 		string ToString();
 	}

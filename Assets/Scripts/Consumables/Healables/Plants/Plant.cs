@@ -25,7 +25,7 @@ namespace Consumables.Healables.Plants {
 		4 - Remove the plant from inventory
 		5 - Return amount of health restored
 		*/
-		public abstract int UseConsumable();
+		public abstract void UseConsumable();
 
 		// Use this for initialization
 		void Start() {

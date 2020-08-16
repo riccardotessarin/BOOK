@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Assets.Scripts.Consumables.Books;
+using Consumables.Books;
 
 namespace Characters.Interfaces
 {

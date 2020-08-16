@@ -13,6 +13,6 @@ namespace Consumables.Pages {
 		public abstract EnumUtility.PageType Type { get; }
 
 		//Use consumables probably does nothing for pages
-		public abstract int UseConsumable();
+		public abstract void UseConsumable();
 	}
 }
