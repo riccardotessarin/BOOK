@@ -84,7 +84,7 @@ namespace User {
             } else if (consumable is IPlant plant) {
                 if (_plants.Count > 0) {
                     _plants.Remove(plant);
-                    // TODO: Display "plant eated"
+                    // TODO: Display "plant has been eaten"
                     success = true;
                 } else {
                     Debug.Log("Plant list error");
