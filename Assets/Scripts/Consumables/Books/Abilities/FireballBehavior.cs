@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Characters;
 using Characters.Interfaces;
 
 public class FireballBehavior : MonoBehaviour {
@@ -12,7 +13,7 @@ public class FireballBehavior : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.GetComponent<NPC>() != null) {
+		if (collision.gameObject.GetComponent<NonPlayableCharacters>() != null) {
 			Debug.Log("NPC hitted");
 			Instantiate(explosionVFX, transform.parent);
 			Destroy(gameObject);

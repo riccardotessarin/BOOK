@@ -2,6 +2,7 @@ using StateMachine.Actions.Interfaces;
 using StateMachine.States;
 using UnityEngine;
 using Characters.Interfaces;
+using Managers;
 
 namespace StateMachine.Actions.Implementations {
     public class InGameMenuInput : IAction{

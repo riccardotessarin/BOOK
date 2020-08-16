@@ -7,7 +7,7 @@ using Managers;
 using StateMachine.States;
 
 namespace StateMachine.Actions.Implementations{
-    public class InGameInputAction : IAction
+    public class InGameInputsAction : IAction
     {
         public PlayableCharacter Player{get;set;}
         public void Execute(){
