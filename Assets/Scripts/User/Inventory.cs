@@ -1,20 +1,104 @@
 using System;
 using System.Collections.Generic;
-using Books;
+using System.Linq;
+using Consumables;
+using Consumables.Books;
+using Consumables.Healables.Plants;
+using Consumables.Pages;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
 
-namespace User {
-    public class Inventory : MonoBehaviour{
-        private readonly IEnumerable<IBook> _books = new List<IBook>();
-        
-        public IBook SelectedBook { get; private set; }
+namespace User
+{
+	public class Inventory : MonoBehaviour{
+		private readonly IList<IBook> _books = new List<IBook>();
+		private readonly IList<IPlant> _plants = new List<IPlant>();
 
-        private void Update() {
-            if (Input.GetKeyDown(KeyCode.Q)){
-                //TODO: add function
-            }
-        }
-    }
+		public static Inventory Instance { get; private set; }
+
+		// Remember to handle null SelectedBook when the last charge is used and book is deleted
+		// Something like this inside an action:
+		/*
+		SelectedBook ?? SelectedBook : (PCBasicAbility);
+		 */
+		public IBook SelectedBook { get; private set; }
+
+		private void Awake() {
+			if (Instance == null) {
+				Instance = this;
+			} else {
+				Destroy(this);
+			}
+		}
+
+		/// <summary>
+		/// Try to add a consumable to the inventory, if it returns false then it is either an instant-use consumable
+		/// or the item list for this consumable is full
+		/// </summary>
+		/// <param name="consumable">Consumable item to be added to the inventory</param>
+		/// <returns>Returns true if item is handled correctly</returns>
+		public bool TryAddConsumableToInventory (IConsumable consumable) {
+			bool success = false;
+
+			if (consumable is IBook book) {
+				if (_books.Count < 3) {
+					_books.Add(book);
+					// TODO: Display "Book added to inventory"
+					success = true;
+				} else {
+					// TODO: Display "Maximum book capacity reached"
+				}
+			}
+			else if (consumable is IPlant plant) {
+				if (_plants.Count < 10) {
+					_plants.Add(plant);
+					// TODO: Display "plant added to inventory"
+					success = true;
+				} else {
+					// TODO: Display "Maximum plant capacity reached"
+				}
+			}
+			else if (consumable is IPage page) {
+				var compatibleBook = _books.FirstOrDefault(bookNotMax => bookNotMax.AddCharge(page));
+				success = compatibleBook != null;
+			}
+
+			return success;
+		}
+
+		/// <summary>
+		/// Try to remove a consumable from the inventory, if it returns false then this function has been wrongly used on an 
+		/// instant-use consumable or an error occured.
+		/// </summary>
+		/// <param name="consumable">Consumable item to be removed from the inventory</param>
+		/// <returns>Returns true if item is handled correctly</returns>
+		public bool TryRemoveConsumableFromInventory (IConsumable consumable) {
+			bool success = false;
+
+			if (consumable is IBook book) {
+				if (_books.Count > 0) {
+					_books.Remove(book);
+					// TODO: Display "Book destroyed"
+					success = true;
+				} else {
+					Debug.Log("Book list error");
+				}
+			} else if (consumable is IPlant plant) {
+				if (_plants.Count > 0) {
+					_plants.Remove(plant);
+					// TODO: Display "plant eated"
+					success = true;
+				} else {
+					Debug.Log("Plant list error");
+				}
+			}
+
+			return success;
+		}
+
+		private void Update() {
+
+		}
+	}
 }

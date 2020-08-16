@@ -18,10 +18,6 @@ namespace Characters.PC{
             speed= 60;
             baseAttackRange=10;
             invicible=false;
-            
-            
-            
-
         }
         protected override void Starter(){
             base.Starter();
@@ -105,3 +101,4 @@ namespace Characters.PC{
         
     }
 }
+

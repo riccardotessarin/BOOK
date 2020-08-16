@@ -8,7 +8,7 @@ namespace StateMachine.States{
     public class InGameState : State
     {
         protected override IEnumerable<IAction> Actions => actions ?? (actions = new List<IAction>(){
-            ActionFactory.GetActionOfType<InGameInputActions>()
+            ActionFactory.GetActionOfType<InGameInputAction>()
         });
     }
 }
