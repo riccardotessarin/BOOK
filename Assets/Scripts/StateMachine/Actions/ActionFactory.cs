@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using StateMachine.Actions.Interfaces;
-using UnityEngine.iOS;
 
 namespace StateMachine.Actions {
     public static class ActionFactory {
@@ -10,6 +9,7 @@ namespace StateMachine.Actions {
         public static IAction GetActionOfType<T>() where T : IAction, new() {
             if (!Actions.TryGetValue(typeof(T), out var action)){
                 Actions[typeof(T)] = Activator.CreateInstance(typeof(T)) as IAction;
+                action = Actions[typeof(T)];
             }
 
             return action;

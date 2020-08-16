@@ -6,9 +6,9 @@ using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
 
 namespace User {
-    public class Inventory : MonoBehaviour{
+    public class Inventory : MonoBehaviour {
         private readonly IEnumerable<IBook> _books = new List<IBook>();
-        
+
         public IBook SelectedBook { get; private set; }
 
         private void Update() {

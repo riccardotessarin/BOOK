@@ -1,5 +1,3 @@
 namespace Books {
-    public interface IBook {
-        
-    }
+    public interface IBook { }
 }

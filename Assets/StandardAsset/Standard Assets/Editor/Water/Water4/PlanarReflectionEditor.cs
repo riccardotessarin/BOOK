@@ -2,11 +2,9 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace UnityStandardAssets.Water
-{
+namespace UnityStandardAssets.Water {
     [CustomEditor(typeof(PlanarReflection))]
-    public class PlanarReflectionEditor : Editor
-    {
+    public class PlanarReflectionEditor : Editor {
         private SerializedObject serObj;
 
         //private SerializedProperty wavesFrequency;
@@ -18,8 +16,7 @@ namespace UnityStandardAssets.Water
 
         bool showKidsWithReflectionHint = false;
 
-        public void OnEnable()
-        {
+        public void OnEnable() {
             serObj = new SerializedObject(target);
 
             reflectionMask = serObj.FindProperty("reflectionMask");
@@ -27,8 +24,7 @@ namespace UnityStandardAssets.Water
             clearColor = serObj.FindProperty("clearColor");
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             GUILayout.Label("Render planar reflections and use GrabPass for refractions", EditorStyles.miniBoldLabel);
 
             serObj.Update();
@@ -38,13 +34,10 @@ namespace UnityStandardAssets.Water
             EditorGUILayout.PropertyField(clearColor, new GUIContent("Clear color"));
 
             showKidsWithReflectionHint = EditorGUILayout.BeginToggleGroup("Show all tiles", showKidsWithReflectionHint);
-            if (showKidsWithReflectionHint)
-            {
+            if (showKidsWithReflectionHint){
                 int i = 0;
-                foreach (Transform t in ((PlanarReflection)target).transform)
-                {
-                    if (t.GetComponent<WaterTile>())
-                    {
+                foreach (Transform t in ((PlanarReflection) target).transform){
+                    if (t.GetComponent<WaterTile>()){
                         if (i % 2 == 0)
                             EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.ObjectField(t, typeof(Transform), true);
@@ -53,13 +46,14 @@ namespace UnityStandardAssets.Water
                         i = (i + 1) % 2;
                     }
                 }
+
                 if (i > 0)
                     EditorGUILayout.EndHorizontal();
             }
+
             EditorGUILayout.EndToggleGroup();
 
             serObj.ApplyModifiedProperties();
         }
-
     }
 }

@@ -1,125 +1,130 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Characters.Interfaces{
-    public abstract class NonPlayableCharacters : Character
-    {
+
+namespace Characters.Interfaces {
+    public abstract class NonPlayableCharacters : Character {
         [SerializeField] protected float baseAttackRadius;
 
         public string secondType;
+
         [SerializeField] protected PlayableCharacter target;
+
         //[SerializeField] protected bool hasTarget;
         [SerializeField] protected float detectionRadius;
         [SerializeField] protected float baseDamageMultiplicator;
-        public const int PCLAYERMASK =1<<8; //layer 8
-        [SerializeField] protected float BaseDamage{
-            get=> basePower*baseDamageMultiplicator;
+        public const int PCLAYERMASK = 1 << 8; //layer 8
+
+        [SerializeField]
+        protected float BaseDamage {
+            get => basePower * baseDamageMultiplicator;
         }
 
-        protected virtual void Awaker(){
+        protected virtual void Awaker() {
             gameObject.layer = 9; //NPC layer
-            type= "kinean";
-            isDeath=false;
-            target= null;
-            isAttacking=false;
-            
+            type = "kinean";
+            isDeath = false;
+            target = null;
+            isAttacking = false;
         }
-        protected virtual void Starter(){
-            currentHp=hp;
+
+        protected virtual void Starter() {
+            currentHp = hp;
         }
-        void Awake(){
+
+        void Awake() {
             Awaker();
         }
 
         // Start is called before the first frame update
-        void Start()
-        {
+        void Start() {
             Starter();
-            
         }
-        protected virtual void Updater(){
 
-        }
+        protected virtual void Updater() { }
 
         // Update is called once per frame
-        void Update()
-        {
+        void Update() {
             if (!isDeath){
                 Updater();
             }
             else{
-                gameObject.GetComponent<Renderer>().material.color=Color.black;
+                gameObject.GetComponent<Renderer>().material.color = Color.black;
             }
-            
-            
         }
-        protected override void Death(){
-            isDeath=true;
-        }
-        protected override void BaseAttack(){
-            if(!isAttacking)
-                StartCoroutine(BaseAttackDamage());
 
+        protected override void Death() {
+            isDeath = true;
         }
-        protected virtual bool BaseAttackZone(){
-            if ( target){
-                
-                Collider[] hitcolliders =  Physics.OverlapSphere(transform.position,baseAttackRadius, PCLAYERMASK);
-                foreach(var collider in hitcolliders){
+
+        protected override void BaseAttack() {
+            if (!isAttacking)
+                StartCoroutine(BaseAttackDamage());
+        }
+
+        protected virtual bool BaseAttackZone() {
+            if (target){
+                Collider[] hitcolliders = Physics.OverlapSphere(transform.position, baseAttackRadius, PCLAYERMASK);
+                foreach (var collider in hitcolliders){
                     if (collider.gameObject == target.gameObject){
                         transform.LookAt(target.transform);
                         return true;
                     }
                 }
+
                 return false;
             }
+
             return false;
         }
-        protected virtual bool DetectionZone(){
-            
-            Collider[] hitcolliders = Physics.OverlapSphere(transform.position,detectionRadius, PCLAYERMASK);
-            if (hitcolliders.Length!=0){
+
+        protected virtual bool DetectionZone() {
+            Collider[] hitcolliders = Physics.OverlapSphere(transform.position, detectionRadius, PCLAYERMASK);
+            if (hitcolliders.Length != 0){
                 if (!target){
-                    target=hitcolliders[0].GetComponent<PlayableCharacter>();
+                    target = hitcolliders[0].GetComponent<PlayableCharacter>();
                     transform.LookAt(target.transform);
                     return true;
                 }
                 else{
-                    foreach(var collider in hitcolliders){
+                    foreach (var collider in hitcolliders){
                         if (collider.gameObject == target.gameObject){
                             transform.LookAt(target.transform);
                             return true;
                         }
                     }
-                    target=null;
+
+                    target = null;
                     return false;
                 }
             }
             else
-                target=null;
-                return false;
+                target = null;
+
+            return false;
         }
-        protected override void TakeDamage(float damage){
-            if (damage< currentHp)
-                currentHp-=damage;
+
+        protected override void TakeDamage(float damage) {
+            if (damage < currentHp)
+                currentHp -= damage;
             else
                 Death();
         }
 
-         protected virtual IEnumerator BaseAttackDamage(){
-            isAttacking=true;
-            gameObject.GetComponent<Renderer>().material.color=Color.red;
-            target.SendMessage("TakeDamage",BaseDamage,SendMessageOptions.DontRequireReceiver);
-            yield return new WaitForSeconds(speed/60f);
-            gameObject.GetComponent<Renderer>().material.color=Color.white;
-            isAttacking=false;
+        protected virtual IEnumerator BaseAttackDamage() {
+            isAttacking = true;
+            gameObject.GetComponent<Renderer>().material.color = Color.red;
+            target.SendMessage("TakeDamage", BaseDamage, SendMessageOptions.DontRequireReceiver);
+            yield return new WaitForSeconds(speed / 60f);
+            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            isAttacking = false;
         }
 
-        protected virtual void OnDrawGizmosSelected(){
-            Gizmos.color= Color.red;
-            Gizmos.DrawWireSphere(transform.position,baseAttackRadius);
-            Gizmos.color=Color.yellow;
-            Gizmos.DrawWireSphere(transform.position,detectionRadius);
+        protected virtual void OnDrawGizmosSelected() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, baseAttackRadius);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
     }
 }

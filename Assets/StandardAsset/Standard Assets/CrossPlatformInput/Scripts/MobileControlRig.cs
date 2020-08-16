@@ -5,8 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace UnityStandardAssets.CrossPlatformInput
-{
+namespace UnityStandardAssets.CrossPlatformInput {
     [ExecuteInEditMode]
     public class MobileControlRig : MonoBehaviour
 #if UNITY_EDITOR
@@ -26,25 +25,19 @@ namespace UnityStandardAssets.CrossPlatformInput
 		CheckEnableControlRig();
 	}
 #else
-        public int callbackOrder
-        {
-            get
-            {
-                return 1;
-            }
+        public int callbackOrder {
+            get { return 1; }
         }
 #endif
 
-        private void Start()
-        {
+        private void Start() {
 #if UNITY_EDITOR
             if (Application.isPlaying) //if in the editor, need to check if we are playing, as start is also called just after exiting play
 #endif
             {
                 UnityEngine.EventSystems.EventSystem system = GameObject.FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
 
-                if (system == null)
-                {//the scene have no event system, spawn one
+                if (system == null){ //the scene have no event system, spawn one
                     GameObject o = new GameObject("EventSystem");
 
                     o.AddComponent<UnityEngine.EventSystems.EventSystem>();
@@ -55,27 +48,23 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 #if UNITY_EDITOR
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             EditorApplication.update += Update;
         }
 
 
-        private void OnDisable()
-        {
+        private void OnDisable() {
             EditorApplication.update -= Update;
         }
 
 
-        private void Update()
-        {
+        private void Update() {
             CheckEnableControlRig();
         }
 #endif
 
 
-        private void CheckEnableControlRig()
-        {
+        private void CheckEnableControlRig() {
 #if MOBILE_INPUT
 		EnableControlRig(true);
 #else
@@ -84,17 +73,14 @@ namespace UnityStandardAssets.CrossPlatformInput
         }
 
 
-        private void EnableControlRig(bool enabled)
-        {
-            foreach (Transform t in transform)
-            {
+        private void EnableControlRig(bool enabled) {
+            foreach (Transform t in transform){
                 t.gameObject.SetActive(enabled);
             }
         }
 
 #if UNITY_EDITOR
-        public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget)
-        {
+        public void OnActiveBuildTargetChanged(BuildTarget previousTarget, BuildTarget newTarget) {
             CheckEnableControlRig();
         }
 #endif
