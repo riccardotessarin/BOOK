@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
+using Characters.PC;
+using Characters.Interfaces;
+using StateMachine.States;
+namespace Manager{
+    public class GameManager : MonoBehaviour {
+        [SerializeField] private PlayableCharacter player;
+        private State state;
+        // Start is called before the first frame update
+        private void Start() {
+            state= new InGameState();
+            state.player=player;
+         }
 
-public class GameManager : MonoBehaviour {
-    // Start is called before the first frame update
-    private void Start() { }
+        // Update is called once per frame
+        private void Update() {
+            state.Execute();
 
-    // Update is called once per frame
-    private void Update() {
-
-    }
+        }
+}
 }
