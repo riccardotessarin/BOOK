@@ -172,7 +172,6 @@ namespace Characters.Interfaces {
             }
         }
 
-
         protected virtual void OnDrawGizmosSelected() {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, buffRadius);
@@ -196,30 +195,12 @@ namespace Characters.Interfaces {
             switch (type) {
                 case "health":
                     HealthBar.fillAmount = value;
-                        ====== =
-                    Array.Clear(hitColliders, 0, hitColliders.Length);
-            }
-
-            protected void UseEquipAttack() {
-                switch (equippedAttack) {
-                    case Attack.BaseAttack:
-                        BaseAttack();
-                        break;
-                    case Attack.SpecialAttack:
-                        SpecialAttack();
-                            >>>>>>> networking
-                        break;
-                    case "stamina":
-                        StaminaBar.fillAmount = value;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            void OnDrawGizmosSelected() {
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(transform.position, buffRadius);
+                    break;
+                case "stamina":
+                    StaminaBar.fillAmount = value;
+                    break;
+                default:
+                    break;
             }
         }
     }
