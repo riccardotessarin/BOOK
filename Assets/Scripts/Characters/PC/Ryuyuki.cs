@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
+using MalusEBonus;
 
 namespace Characters.PC{
     public class Ryuyuki : PlayableCharacter
@@ -33,7 +34,6 @@ namespace Characters.PC{
         }
         protected override void Starter(){
             base.Starter();
-            baseDamage=new Damage(basePower,AttackType.Niflheim);
             //Debug.Log("Starter Ryuyuki");
         }
         
@@ -65,6 +65,11 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+"genee bond");
         }
         protected override void RayazBond(){
+            
+            Bonus bonus = new Bonus(true,MalusManager.Stats.BasePower,1.5f,"rayazBonus");
+            Bonus malus = new Bonus(false,MalusManager.Stats.Hp,0.7f,"rayazMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"rayaz bond");
         }
         protected override void ReverseRyuyukiBond(){
@@ -74,6 +79,9 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+": reverse genee bond");
         }
         protected override void ReverseRayazBond(){
+            
+            malusManager.Remove(MalusManager.Stats.BasePower,"rayazBonus");
+            malusManager.Remove(MalusManager.Stats.Hp,"rayazMalus");
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
 
@@ -81,6 +89,7 @@ namespace Characters.PC{
             if (damage.DamageRec< currentHp){
                 Debug.Log("taking damage");
                 currentHp-=damage.DamageRec;
+                
                 FillBar(currentHp/hp,"health");
             }
             else{
@@ -95,7 +104,7 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            Debug.Log(baseAttackRecoil);
+            baseDamage=new Damage(currentBasePower,AttackType.Niflheim);
             currentHp-=baseAttackRecoil;
             FillBar(currentHp/hp,"health");
             RaycastHit hit;

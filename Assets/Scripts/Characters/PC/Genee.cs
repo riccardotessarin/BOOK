@@ -21,7 +21,7 @@ namespace Characters.PC{
         }
         protected override void Starter(){
             base.Starter();
-            baseDamage=new Damage(basePower,AttackType.Neptunian);
+            
         }
         /*protected override void BaseAttack(){
             
@@ -74,6 +74,7 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            baseDamage=new Damage(currentBasePower,AttackType.Neptunian);
             currentHp-=baseAttackRecoil;
             FillBar(currentHp/hp,"health");
             RaycastHit hit;

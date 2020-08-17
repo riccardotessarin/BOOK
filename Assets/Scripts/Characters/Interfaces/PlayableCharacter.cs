@@ -5,15 +5,20 @@ using User;
 using System;
 using System.Linq;
 using UnityEngine.UI;
+using Consumables.Books;
+using Consumables.Healables.Plants;
+using MalusEBonus;
 
 //using Books;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
-        [SerializeField] protected int stamina;
-        [SerializeField] protected int currentStamina;
+        [SerializeField] protected float stamina;
+        [SerializeField] protected float currentStamina;
         Inventory inventory;
         [SerializeField] protected bool powerMode; //se true sto usando armi, se false consumabili
         [SerializeField] protected Attack equippedAttack;
+        [SerializeField] protected Book equippedBook;
+        [SerializeField] protected Plant equippedPlant;
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
@@ -27,9 +32,12 @@ namespace Characters.Interfaces {
         [SerializeField] protected Image HealthBar;
         [SerializeField] protected Image StaminaBar;
         protected Damage baseDamage;
-        private Dictionary<string, Action> malusDic = new Dictionary<string, Action>();
+        private Dictionary<string, Action> bondDic = new Dictionary<string, Action>();
         private Dictionary<string, Action> reverseDic = new Dictionary<string, Action>();
         private Dictionary<Attack, Action> attackDic = new Dictionary<Attack, Action>();
+
+        protected MalusManager malusManager;
+        
 
 
         // enum with the type of Attack equipped
@@ -51,9 +59,9 @@ namespace Characters.Interfaces {
         //method used in the Awake
         protected virtual void Awaker() {
             //Debug.Log("Awaker");
-            malusDic.Add("ryuyuki", RyuyukiBond);
-            malusDic.Add("genee", GeneeBond);
-            malusDic.Add("rayaz", RayazBond);
+            bondDic.Add("ryuyuki", RyuyukiBond);
+            bondDic.Add("genee", GeneeBond);
+            bondDic.Add("rayaz", RayazBond);
             reverseDic.Add("ryuyuki", ReverseRyuyukiBond);
             reverseDic.Add("genee", ReverseGeneeBond);
             reverseDic.Add("rayaz", ReverseRayazBond);
@@ -74,18 +82,25 @@ namespace Characters.Interfaces {
             equippedAttack = Attack.BaseAttack;
             isAttacking = false;
             basePower = 5;
+            if(!malusManager){
+                malusManager=new GameObject().AddComponent<MalusManager>();
+                malusManager.name="Malus Manager";
+                malusManager.player=this;
+            }
         }
 
         //method used in the Start
         protected virtual void Starter() {
             //Debug.Log("Starter");
             currentHp = hp;
+            
             FillBar(1, "health");
             currentStamina = stamina;
+            
             FillBar(1, "stamina");
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
-
+            currentBasePower=basePower;
             currentSpeed = speed;
         }
 
@@ -159,7 +174,7 @@ namespace Characters.Interfaces {
                     reverseDic[race].DynamicInvoke();
                     bondCheckDict[race] = false;
                 } else if (testDict[race] == true && bondCheckDict[race] == false) {
-                    malusDic[race].DynamicInvoke();
+                    bondDic[race].DynamicInvoke();
                     bondCheckDict[race] = true;
                 }
             }
@@ -192,16 +207,30 @@ namespace Characters.Interfaces {
 
         //method used to set UI health and stamina bars
         protected void FillBar(float value, string type) {
-            switch (type) {
-                case "health":
-                    HealthBar.fillAmount = value;
-                    break;
-                case "stamina":
-                    StaminaBar.fillAmount = value;
-                    break;
-                default:
-                    break;
+            if(HealthBar && StaminaBar){
+                switch (type) {
+                    case "health":
+                        HealthBar.fillAmount = value;
+                        break;
+                    case "stamina":
+                        StaminaBar.fillAmount = value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
+
+        protected virtual void ModifyStaminaMax(float modifier){
+            stamina*=modifier;
+            if(currentStamina>stamina)
+                currentStamina=stamina;
+            Debug.Log(ToString()+" maxStamina modified: "+stamina);
+        }
+
+
+
+
+
     }
 }

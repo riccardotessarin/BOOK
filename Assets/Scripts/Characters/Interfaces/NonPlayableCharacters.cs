@@ -29,7 +29,8 @@ namespace Characters.Interfaces {
         protected virtual void Starter() {
             currentHp = hp;
             currentSpeed = speed;
-            baseDamage = new Damage(basePower, AttackType.Neutral);
+            currentBasePower=basePower;
+            baseDamage = new Damage(currentBasePower, AttackType.Neutral);
         }
 
         void Awake() {

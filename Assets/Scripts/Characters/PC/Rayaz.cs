@@ -31,7 +31,7 @@ namespace Characters.PC{
         }
         protected override void Starter(){
             base.Starter();
-            baseDamage=new Damage(basePower,AttackType.Basilisk);
+            
         }
         /*protected override void BaseAttack(){
             
@@ -86,6 +86,7 @@ namespace Characters.PC{
         }
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
+            baseDamage=new Damage(currentBasePower,AttackType.Basilisk);
             currentHp-=baseAttackRecoil;
             FillBar(currentHp/hp,"health");
             RaycastHit hit;

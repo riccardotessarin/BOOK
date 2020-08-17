@@ -9,11 +9,11 @@ using StateMachine.States;
 namespace StateMachine.Actions.Implementations{
     public class InGameInputsAction : IAction
     {
-        public PlayableCharacter Player{get;set;}
+        private PlayableCharacter player= GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
         public void Execute(){
             
             if(Input.GetMouseButtonDown(0)){
-                Player.Attacker();
+                player.Attacker();
                 
             }
             if (Input.GetKeyUp(KeyCode.Q)) {

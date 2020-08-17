@@ -10,7 +10,6 @@ namespace StateMachine.States {
 
         public void Execute() {
             foreach (var action in Actions){
-                action.Player=player;
                 action.Execute();
             }
         }

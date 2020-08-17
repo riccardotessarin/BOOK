@@ -10,8 +10,8 @@ namespace Characters.Interfaces {
 
         [SerializeField] protected float speed;
         [SerializeField] protected float currentSpeed;
-        [SerializeField] protected int basePower;
-        [SerializeField] protected int currentBasePower;
+        [SerializeField] protected float basePower;
+        [SerializeField] protected float currentBasePower;
         [SerializeField] public bool IsDeath { get; protected set; }
         [SerializeField] protected bool isAttacking;
         [SerializeField] bool poisoned;
@@ -57,7 +57,19 @@ namespace Characters.Interfaces {
         protected so same as TakeDamage*/
         protected virtual void ModifySpeed(float modifier) {
             currentSpeed *= modifier;
-            Debug.Log(ToString() + " speed modified");
+            Debug.Log(ToString() + " speed modified: "+currentSpeed);
+        }
+        //modify hp max 
+        protected virtual void ModifyHpMax(float modifier){
+            hp*=modifier;
+            if(currentHp>hp)
+                currentHp=hp;
+            Debug.Log(ToString()+ " max hp modified: "+hp);
+        }
+
+        protected virtual void ModifyBasePower(float modifier){
+            currentBasePower*=modifier;
+            Debug.Log(ToString()+" basePower modified: "+currentBasePower);
         }
 
         /*Coroutine used for calculating in time damage caused by poisoned status
@@ -71,6 +83,14 @@ namespace Characters.Interfaces {
             yield return new WaitForSeconds(3);
 
             Poisoned = true;
+        }
+
+        protected virtual void RecoverHP(float hpRecovered){
+            if(currentHp+hpRecovered>hp)
+                currentHp=hp;
+            else
+                currentHp+=hpRecovered;
+            Debug.Log("hp recovered. Current hp: "+currentHp);
         }
     }
 }
