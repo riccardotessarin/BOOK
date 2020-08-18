@@ -2,6 +2,7 @@
 using System.Collections;
 using Characters;
 using Characters.Interfaces;
+using Attacks;
 
 public class FireballBehavior : MonoBehaviour {
 
@@ -13,29 +14,15 @@ public class FireballBehavior : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.GetComponent<NonPlayableCharacters>() != null) {
-			Debug.Log("NPC hitted");
-			Instantiate(explosionVFX, transform.parent);
-			Destroy(gameObject);
-		}
-
-		/*
-		enemy = collision.gameObject.GetComponent<NPC>();
+		Character enemy = collision.gameObject.GetComponent<NonPlayableCharacters>();
+		Character.Damage fireballDamage = new Character.Damage(600.0F /*damage dealt*/, AttackType.Inferno);
 		if (enemy != null) {
 			Debug.Log("NPC hitted");
-			Destroy(gameObject);
-			DealDamage(100, enemy);
+			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
 			Instantiate(explosionVFX, transform.parent);
+			Destroy(gameObject);
 		}
-		
-		 */
 	}
-
-	/*
-	private void DealDamage(int damage, type? enemy) {
-		enemy.currentHealth -= damage;
-	}
-	*/
 
 	// Update is called once per frame
 	void Update() {

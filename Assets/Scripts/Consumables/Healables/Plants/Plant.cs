@@ -3,6 +3,7 @@ using System.Collections;
 using MalusEBonus;
 using User;
 using Characters.Interfaces;
+using UnityEngine.Playables;
 
 namespace Consumables.Healables.Plants {
 	public abstract class Plant : MonoBehaviour, IPlant {
@@ -13,50 +14,47 @@ namespace Consumables.Healables.Plants {
 
 
 		public bool CheckCompatibility() {
-			bool compatible = false;
-			if (this.Type == /*Character.Type*/) {
-				compatible = true;
+			Character character = gameObject.AddComponent<Character>();
+			if (Type.ToString() == character.type) {
+				return true;
 			}
 
-			return compatible;
+			return false;
 		}
 
 		public void TriggerMalus() {
 			System.Random randomizer = new System.Random();
 			int malusChoice = randomizer.Next(3);
 			Bonus malus;
-			MalusManager malusManager = new MalusManager();
+			PlayableCharacter playableCharacter = GameObject.FindWithTag("player").GetComponent<PlayableCharacter>();
+			MalusManager malusManager = playableCharacter.malusManager;
 
-			//NOTE: It may be more efficient to add a malus "lifetime" timer into Bonus class
 			switch (malusChoice) {
 				case 0:
 					malus = new Bonus(false, MalusManager.Stats.Hp, 0.7f, "plantHealthMalus");
 					malusManager.Add(malus);
-					//TODO: Wait for time T
-					malusManager.Remove(MalusManager.Stats.Hp, "plantHealthMalus");
+					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
+					//malusManager.Remove(MalusManager.Stats.Hp, "plantHealthMalus");
 					break;
 				case 1:
 					malus = new Bonus(false, MalusManager.Stats.Stamina, 0.7f, "plantStaminaMalus");
 					malusManager.Add(malus);
-					//TODO: Wait for time T
-					malusManager.Remove(MalusManager.Stats.Stamina, "plantStaminaMalus");
+					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
 				case 2:
 					malus = new Bonus(false, MalusManager.Stats.Speed, 0.7f, "plantSpeedMalus");
 					malusManager.Add(malus);
-					//TODO: Wait for time T
-					malusManager.Remove(MalusManager.Stats.Speed, "plantSpeedMalus");
+					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
 			}
 
 		}
 
-		/*
-		1 - Check Compatibility and store bool in a variable
-		2 - Give health to player
-		3 - If compatibility is false trigger malus
-		4 - Remove the plant from inventory
-		*/
+		private IEnumerator WaitAndRemoveMalus(float waitTime, Bonus malus, MalusManager malusManager) {
+			yield return new WaitForSecondsRealtime(waitTime);
+			malusManager.Remove(malus.Stat, malus.Name);
+		}
+
 		public void UseConsumable() {
 			bool compatible = CheckCompatibility();
 			//TODO: Trigger a restore health function
