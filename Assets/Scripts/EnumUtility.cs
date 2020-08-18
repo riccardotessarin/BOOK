@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 public class EnumUtility {
+	public enum CharacterType { Genee, Rayaz, Ryuyuki } // Also used for plant types
 	public enum PageType { Fireball }
-	public enum PlantType { Genea, Venomyaz, Yukisnow }
 
 }
