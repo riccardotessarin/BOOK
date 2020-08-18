@@ -11,8 +11,11 @@ using UnityEngine.UIElements;
 
 namespace User {
     public class Inventory : MonoBehaviour {
-        private readonly IList<IBook> _books = new List<IBook>();
-        private readonly IList<IPlant> _plants = new List<IPlant>();
+        private readonly List<IBook> _books = new List<IBook>();
+        private readonly List<IPlant> _plants = new List<IPlant>();
+
+        public IList<IBook> Books{get=>_books;}
+        public IList<IPlant> Plants{get=>_plants;}
 
         public static Inventory Instance { get; private set; }
 

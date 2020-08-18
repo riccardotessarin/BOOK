@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using UnityEngine.UI;
 using Consumables.Books;
+using Consumables.Books.Abilities;
 using Consumables.Healables.Plants;
 using MalusEBonus;
 
@@ -15,10 +16,14 @@ namespace Characters.Interfaces {
         [SerializeField] protected float stamina;
         [SerializeField] protected float currentStamina;
         Inventory inventory;
-        [SerializeField] protected bool powerMode; //se true sto usando armi, se false consumabili
+        [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
+        public bool PowerMode{get=>powerMode; set=>powerMode=value;}
         [SerializeField] protected Attack equippedAttack;
-        [SerializeField] protected Book equippedBook;
-        [SerializeField] protected Plant equippedPlant;
+        [SerializeField] protected IBook equippedBook;
+        IList<IBook> listBooks;
+        
+        [SerializeField] protected IPlant equippedPlant;
+        IList<IPlant> listPlants;
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
@@ -37,14 +42,15 @@ namespace Characters.Interfaces {
         private Dictionary<Attack, Action> attackDic = new Dictionary<Attack, Action>();
 
         protected MalusManager malusManager;
+
         
 
 
         // enum with the type of Attack equipped
         public enum Attack {
-            BaseAttack,
-            SpecialAttack,
-            Book
+            BaseAttack, //0
+            SpecialAttack, //1
+            Book //2
         }
 
         void Awake() {
@@ -87,6 +93,14 @@ namespace Characters.Interfaces {
                 malusManager.name="Malus Manager";
                 malusManager.player=this;
             }
+            inventory= new GameObject().AddComponent<Inventory>();
+            inventory.name="Inventory";
+            UpdateObjectsLists();
+            /*Book fire=new GameObject().AddComponent<Fireball>();
+            fire.name="fireball";
+            if(!(inventory.TryAddConsumableToInventory(fire)))
+                Debug.Log("Insetion error book");*/
+            
         }
 
         //method used in the Start
@@ -102,15 +116,15 @@ namespace Characters.Interfaces {
             specialAttackRecoil = hp * 15 / 100;
             currentBasePower=basePower;
             currentSpeed = speed;
+            
         }
 
         //method used in Update
         protected virtual void Updater() {
             MalusCheck();
+            UpdateObjectsLists();
 
-            /*if (Input.GetMouseButtonDown(0)){
-                Attacker();
-            }*/
+            
         }
 
         void Update() {
@@ -140,7 +154,7 @@ namespace Characters.Interfaces {
         protected abstract void SpecialAttack();
 
         protected void BookAttack() {
-            //TODO
+            equippedBook.UseConsumable();
         }
 
         //Method used to activate malus and bonus with the other races
@@ -226,6 +240,101 @@ namespace Characters.Interfaces {
             if(currentStamina>stamina)
                 currentStamina=stamina;
             Debug.Log(ToString()+" maxStamina modified: "+stamina);
+        }
+
+        public void UseEquippedConsumable(){
+            if(equippedPlant!=null)
+                equippedPlant.UseConsumable();
+        }
+
+        protected void UpdateObjectsLists(){
+            listBooks= inventory.Books;
+            listPlants=inventory.Plants;
+        }
+
+
+        public void ScrollUpInventory(){
+            if(PowerMode){
+                int numBooks= listBooks.Count();
+                if(equippedAttack==Attack.BaseAttack){
+                    if(numBooks!=0){
+                        equippedAttack=Attack.Book;
+                        equippedBook=listBooks[numBooks-1];
+
+                    }
+                    else{
+                        equippedAttack=Attack.SpecialAttack;
+                    }
+                }
+                else if(equippedAttack==Attack.SpecialAttack){
+                    equippedAttack=Attack.BaseAttack;
+                }
+                else if (equippedAttack==Attack.Book){
+                    int index=listBooks.IndexOf(equippedBook);
+                    if (index==0){
+                        equippedAttack=Attack.SpecialAttack;
+                        equippedBook=null;
+                    }
+                    else{
+                        equippedBook=listBooks[index-1];
+                    }
+                }
+
+
+            }
+            else{
+                int count=listPlants.Count();
+                if(count>1){
+                    int index=listPlants.IndexOf(equippedPlant);
+                    if(index==0){
+                        equippedPlant=listPlants[count-1];
+                    }
+                    else{
+                        equippedPlant=listPlants[index-1];
+                    }
+                }
+
+            }
+        }
+
+        public void ScrollDownInventory(){
+            if(PowerMode){
+                int count= listBooks.Count();
+                if(equippedAttack==Attack.BaseAttack){
+                    equippedAttack=Attack.SpecialAttack;
+                }
+                else if (equippedAttack==Attack.SpecialAttack){
+                    if(count!=0){
+                        equippedAttack=Attack.Book;
+                        equippedBook=listBooks[0];
+                    }
+                    else{
+                        equippedAttack=Attack.BaseAttack;
+                    }
+                }
+                else if(equippedAttack==Attack.Book){
+                    int index=listBooks.IndexOf(equippedBook);
+                    if(index==count-1){
+                        equippedAttack=Attack.BaseAttack;
+                        equippedBook=null;
+                    }
+                    else{
+                        equippedBook=listBooks[index+1];
+                    }
+                }
+            }
+            else{
+                int count=listPlants.Count();
+                if(count>1){
+                    int index=listPlants.IndexOf(equippedPlant);
+                    if(index==count-1){
+                        equippedPlant=listPlants[0];
+                    }
+                    else{
+                        equippedPlant=listPlants[index+1];
+                    }
+                }
+            }
         }
 
 
