@@ -41,8 +41,8 @@ namespace Characters.Interfaces {
         private Dictionary<string, Action> reverseDic = new Dictionary<string, Action>();
         private Dictionary<Attack, Action> attackDic = new Dictionary<Attack, Action>();
 
-        protected MalusManager malusManager;
 
+        public MalusManager malusManager;
         
 
 

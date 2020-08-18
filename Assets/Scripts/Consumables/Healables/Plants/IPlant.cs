@@ -4,10 +4,10 @@ using System.Collections;
 namespace Consumables.Healables.Plants {
 	public interface IPlant : IHealable {
 
-		EnumUtility.PlantType Type { get; }
+		EnumUtility.CharacterType Type { get; } // Used charactertype to store which race is compatible
 
 		/// <summary>
-		/// Trigger a random malus.
+		/// Trigger a random malus when a non-compatible plant is eaten.
 		/// </summary>
 		/// <returns></returns>
 		void TriggerMalus();
@@ -15,7 +15,7 @@ namespace Consumables.Healables.Plants {
 		/// <summary>
 		/// Check if the current race and current plant are compatible.
 		/// </summary>
-		/// <returns></returns>
-		void CheckCompatibility();
+		/// <returns> True if plant is compatible </returns>
+		bool CheckCompatibility();
 	}
 }
