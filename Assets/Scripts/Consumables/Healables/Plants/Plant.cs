@@ -12,22 +12,33 @@ namespace Consumables.Healables.Plants {
 		public int HealthPercentage => 50;
 		public abstract EnumUtility.CharacterType Type { get; }
 
+		[SerializeField] private Texture plantIcon; //= Resources.Load<Texture>("Images/InfernoRareBook");
+		public Texture PlantIcon { get => plantIcon; }
 
-		public bool CheckCompatibility() {
-			Character character = gameObject.AddComponent<Character>();
-			if (Type.ToString() == character.type) {
+		public void UseConsumable() {
+			PlayableCharacter currentPlayer = GameObject.FindWithTag("player").GetComponent<PlayableCharacter>();
+			bool compatible = CheckCompatibility(currentPlayer);
+			//TODO: Trigger a restore health function
+			Inventory.Instance.TryRemoveConsumableFromInventory(this);
+			Destroy(this);
+			if (!compatible) {
+				TriggerMalus(currentPlayer);
+			}
+		}
+
+		public bool CheckCompatibility(PlayableCharacter currentPlayer) {
+			if (Type.ToString() == currentPlayer.type) {
 				return true;
 			}
 
 			return false;
 		}
 
-		public void TriggerMalus() {
+		public void TriggerMalus(PlayableCharacter currentPlayer) {
 			System.Random randomizer = new System.Random();
 			int malusChoice = randomizer.Next(3);
 			Bonus malus;
-			PlayableCharacter playableCharacter = GameObject.FindWithTag("player").GetComponent<PlayableCharacter>();
-			MalusManager malusManager = playableCharacter.malusManager;
+			MalusManager malusManager = currentPlayer.malusManager;
 
 			switch (malusChoice) {
 				case 0:
@@ -53,16 +64,6 @@ namespace Consumables.Healables.Plants {
 		private IEnumerator WaitAndRemoveMalus(float waitTime, Bonus malus, MalusManager malusManager) {
 			yield return new WaitForSecondsRealtime(waitTime);
 			malusManager.Remove(malus.Stat, malus.Name);
-		}
-
-		public void UseConsumable() {
-			bool compatible = CheckCompatibility();
-			//TODO: Trigger a restore health function
-			Inventory.Instance.TryRemoveConsumableFromInventory(this);
-			Destroy(this);
-			if (!compatible) {
-				TriggerMalus();
-			}
 		}
 
 		// Use this for initialization

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Characters.Interfaces;
-
+using UnityEngine.UI;
 
 namespace Consumables.Books.Abilities {
 	public class Fireball : Book {
@@ -14,9 +14,10 @@ namespace Consumables.Books.Abilities {
 		public override int Charges => 3;
 
 		[SerializeField] private GameObject FireballBookIcon;
-		[SerializeField] private Sprite fireballSprite = Resources.Load<Sprite>("Sprites/FireballSprite");
+		[SerializeField] private Texture fireballSprite = Resources.Load<Texture>("Images/InfernoRareBook");
+		public Texture FireballSprite { get => fireballSprite; }
 		[SerializeField] private GameObject fireballVFX;
-		[SerializeField] private int fireballSpeed;
+		[SerializeField] private int fireballSpeed = 10;
 
 
 		
