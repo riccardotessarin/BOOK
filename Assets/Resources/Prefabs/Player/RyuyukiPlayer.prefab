@@ -416,8 +416,10 @@ MonoBehaviour:
   camera: {fileID: 7888979364919593808}
   baseAttackRecoil: 0
   specialAttackRecoil: 0
-  HealthBar: {fileID: 0}
-  StaminaBar: {fileID: 0}
+  malusManager: {fileID: 0}
+  uIManager: {fileID: 0}
+  baseAttackSprite: {fileID: 2800000, guid: f50883935a92c5d4b86eed248c0fb404, type: 3}
+  specialAttackSprite: {fileID: 2800000, guid: f52f8a4e08e42d145b9debc7ad2804ac, type: 3}
   lastTarget: {fileID: 0}
   specialAttackRadius: 0
   speedModifier: 0

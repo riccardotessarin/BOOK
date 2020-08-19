@@ -90,11 +90,11 @@ namespace Characters.PC{
                 Debug.Log("taking damage");
                 currentHp-=damage.DamageRec;
                 
-                FillBar(currentHp/hp,"health");
+                uIManager.FillBar(currentHp/hp,"health");
             }
             else{
                 currentHp=0;
-                FillBar(0,"health");
+                uIManager.FillBar(0,"health");
                 Death();
 
             }
@@ -106,7 +106,7 @@ namespace Characters.PC{
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,AttackType.Niflheim);
             currentHp-=baseAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if (Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -122,7 +122,7 @@ namespace Characters.PC{
 
         protected override IEnumerator SpecialEffect(){
             currentHp-=specialAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             Collider[] hitcolliders= Physics.OverlapSphere(lastTarget.transform.position,specialAttackRadius);
             foreach(var collider in hitcolliders){
                 Character character= collider.GetComponent<Character>();

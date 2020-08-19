@@ -9,6 +9,7 @@ using Consumables.Books;
 using Consumables.Books.Abilities;
 using Consumables.Healables.Plants;
 using MalusEBonus;
+using Managers;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -34,8 +35,6 @@ namespace Characters.Interfaces {
         [SerializeField] protected Dictionary<string, bool> testDict = new Dictionary<string, bool>();
         [SerializeField] protected float baseAttackRecoil;
         [SerializeField] protected float specialAttackRecoil;
-        [SerializeField] protected Image HealthBar;
-        [SerializeField] protected Image StaminaBar;
         protected Damage baseDamage;
         private Dictionary<string, Action> bondDic = new Dictionary<string, Action>();
         private Dictionary<string, Action> reverseDic = new Dictionary<string, Action>();
@@ -43,6 +42,13 @@ namespace Characters.Interfaces {
 
 
         public MalusManager malusManager;
+        [SerializeField] protected UIManager uIManager;
+        public UIManager UIManager{get=>uIManager;}
+        [SerializeField] protected Texture baseAttackSprite;
+        [SerializeField] protected Texture specialAttackSprite;
+
+        public Texture BaseAttackSprite{get=>baseAttackSprite;}
+        public Texture SpecialAttackSprite{get=>specialAttackSprite;}
         
 
 
@@ -96,6 +102,7 @@ namespace Characters.Interfaces {
             inventory= new GameObject().AddComponent<Inventory>();
             inventory.name="Inventory";
             UpdateObjectsLists();
+            uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
             /*Book fire=new GameObject().AddComponent<Fireball>();
             fire.name="fireball";
             if(!(inventory.TryAddConsumableToInventory(fire)))
@@ -108,10 +115,10 @@ namespace Characters.Interfaces {
             //Debug.Log("Starter");
             currentHp = hp;
             
-            FillBar(1, "health");
+            uIManager.FillBar(1, "health");
             currentStamina = stamina;
             
-            FillBar(1, "stamina");
+            uIManager.FillBar(1, "stamina");
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
             currentBasePower=basePower;
@@ -220,20 +227,7 @@ namespace Characters.Interfaces {
         protected abstract IEnumerator SpecialEffect();
 
         //method used to set UI health and stamina bars
-        protected void FillBar(float value, string type) {
-            if(HealthBar && StaminaBar){
-                switch (type) {
-                    case "health":
-                        HealthBar.fillAmount = value;
-                        break;
-                    case "stamina":
-                        StaminaBar.fillAmount = value;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        
 
         protected virtual void ModifyStaminaMax(float modifier){
             stamina*=modifier;
@@ -255,19 +249,26 @@ namespace Characters.Interfaces {
 
         public void ScrollUpInventory(){
             if(PowerMode){
-                int numBooks= listBooks.Count();
+                int count= listBooks.Count();
                 if(equippedAttack==Attack.BaseAttack){
-                    if(numBooks!=0){
+                    if(count!=0){
                         equippedAttack=Attack.Book;
-                        equippedBook=listBooks[numBooks-1];
+                        equippedBook=listBooks[count-1];
+                        if(count==1){
+                            UIManager.ScrollUpMenu(SpecialAttackSprite);
+                        }
 
                     }
                     else{
                         equippedAttack=Attack.SpecialAttack;
+                        UIManager.ScrollUpMenu(BaseAttackSprite);
                     }
                 }
                 else if(equippedAttack==Attack.SpecialAttack){
                     equippedAttack=Attack.BaseAttack;
+                    if(count==0){
+                        UIManager.ScrollUpMenu(SpecialAttackSprite);
+                    }
                 }
                 else if (equippedAttack==Attack.Book){
                     int index=listBooks.IndexOf(equippedBook);
@@ -302,6 +303,9 @@ namespace Characters.Interfaces {
                 int count= listBooks.Count();
                 if(equippedAttack==Attack.BaseAttack){
                     equippedAttack=Attack.SpecialAttack;
+                    if(count==0){
+                        UIManager.ScrollDownMenu(BaseAttackSprite);
+                    }
                 }
                 else if (equippedAttack==Attack.SpecialAttack){
                     if(count!=0){
@@ -310,6 +314,7 @@ namespace Characters.Interfaces {
                     }
                     else{
                         equippedAttack=Attack.BaseAttack;
+                        UIManager.ScrollDownMenu(SpecialAttackSprite);
                     }
                 }
                 else if(equippedAttack==Attack.Book){

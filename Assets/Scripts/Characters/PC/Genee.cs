@@ -60,11 +60,11 @@ namespace Characters.PC{
             if(!invicible){
                 if (damage.DamageRec< currentHp){
                     currentHp-=damage.DamageRec;
-                    FillBar(currentHp/hp,"health");
+                    uIManager.FillBar(currentHp/hp,"health");
                 }
                 else{
                     currentHp=0;
-                    FillBar(0,"health");
+                    uIManager.FillBar(0,"health");
                     Death();
 
                 }
@@ -76,7 +76,7 @@ namespace Characters.PC{
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,AttackType.Neptunian);
             currentHp-=baseAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -92,7 +92,7 @@ namespace Characters.PC{
         // after a certain time remove this state
         protected override IEnumerator SpecialEffect(){
             currentHp-=specialAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             invicible=true;
             yield return new WaitForSeconds(15);
             invicible=false;

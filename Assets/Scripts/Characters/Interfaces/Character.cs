@@ -80,7 +80,7 @@ namespace Characters.Interfaces {
             gameObject.GetComponent<Renderer>().material.color = Color.magenta;
             TakeDamage(new Damage(3, AttackType.Basilisk));
 
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSecondsRealtime(3);
 
             Poisoned = true;
         }

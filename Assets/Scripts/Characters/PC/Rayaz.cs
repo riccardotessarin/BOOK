@@ -75,11 +75,11 @@ namespace Characters.PC{
         protected override void TakeDamage(Damage damage){
             if (damage.DamageRec< currentHp){
                 currentHp-=damage.DamageRec;
-                FillBar(currentHp/hp,"health");
+                uIManager.FillBar(currentHp/hp,"health");
             }
             else{
                 currentHp=0;
-                FillBar(0,"health");
+                uIManager.FillBar(0,"health");
                 Death();
 
             }
@@ -88,7 +88,7 @@ namespace Characters.PC{
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,AttackType.Basilisk);
             currentHp-=baseAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();
@@ -105,7 +105,7 @@ namespace Characters.PC{
             //aggiungere effetto attira mob
             isAttacking=true;
             currentHp-=specialAttackRecoil;
-            FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();

@@ -15,6 +15,7 @@ namespace StateMachine.Actions.Implementations {
             if (Input.GetKeyDown(KeyCode.Q)) {
                 GameManager.Instance.CurrentState = new GameState();
                 Debug.Log("switching to game state");
+                player.UIManager.ActivateMenu(false);
             }
             if(Input.GetKeyDown(KeyCode.F)){
                 player.PowerMode = !(player.PowerMode);
