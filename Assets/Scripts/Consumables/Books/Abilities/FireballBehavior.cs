@@ -8,6 +8,10 @@ public class FireballBehavior : MonoBehaviour {
 
 	[SerializeField] private GameObject explosionVFX;
 
+	private void Awake() {
+		explosionVFX = Resources.Load("") as GameObject;
+	}
+
 	// Use this for initialization
 	void Start() {
 

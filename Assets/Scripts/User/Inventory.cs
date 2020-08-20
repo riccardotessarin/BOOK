@@ -36,10 +36,14 @@ namespace User {
 			}
 
 			Book book = gameObject.AddComponent<Fireball>();
+			Book book2 = gameObject.AddComponent<FirePillar>();
 			Plant plant = gameObject.AddComponent<Genea>();
 
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
+			}
+			if (TryAddConsumableToInventory(book2)) {
+				Debug.Log("Fire Pillar added to inventory!");
 			}
 			if (TryAddConsumableToInventory(plant)) {
 				Debug.Log("Genea added to inventory!");

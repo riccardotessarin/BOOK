@@ -13,7 +13,6 @@ namespace Consumables.Books.Abilities {
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.Fireball;
 		public override int Charges => 3;
 
-		[SerializeField] private GameObject FireballBookIcon;
 		[SerializeField] private GameObject fireballPrefab;
 		[SerializeField] private int fireballSpeed = 10;
 

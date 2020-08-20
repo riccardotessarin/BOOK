@@ -16,7 +16,7 @@ namespace Consumables.Books {
 		public abstract int Charges { get; }
 		public int CurrentCharges { get; private set; }
 
-
+		[SerializeField] public GameObject bookDrop3DModel;
 		[SerializeField] public Texture bookIcon;
 		public Texture BookIcon { get => bookIcon; }
 		[SerializeField] public GameObject bookVFX;
