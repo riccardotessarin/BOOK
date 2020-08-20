@@ -12,8 +12,8 @@ namespace Consumables.Healables.Plants {
 		public int HealthPercentage => 50;
 		public abstract EnumUtility.CharacterType Type { get; }
 
-		[SerializeField] public Texture plantIcon;
-		public Texture PlantIcon { get => plantIcon; }
+		[SerializeField] protected Sprite plantIcon;
+		public Sprite PlantIcon { get => plantIcon; }
 
 		public void UseConsumable() {
 			PlayableCharacter currentPlayer = GameObject.FindWithTag("player").GetComponent<PlayableCharacter>();

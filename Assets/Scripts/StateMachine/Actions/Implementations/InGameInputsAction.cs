@@ -29,6 +29,7 @@ namespace StateMachine.Actions.Implementations{
             if(Input.GetKeyDown(KeyCode.F)){
                 player.PowerMode = !(player.PowerMode);
                 Debug.Log("PowerMode Active: "+player.PowerMode);
+                player.UIManager.SwitchMode(player.PowerMode);
             }
         }
         

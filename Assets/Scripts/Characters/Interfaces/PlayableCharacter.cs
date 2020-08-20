@@ -20,11 +20,16 @@ namespace Characters.Interfaces {
         [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
         public bool PowerMode{get=>powerMode; set=>powerMode=value;}
         [SerializeField] protected Attack equippedAttack;
-        [SerializeField] protected IBook equippedBook;
-        IList<IBook> listBooks;
         
-        [SerializeField] protected IPlant equippedPlant;
-        IList<IPlant> listPlants;
+        [SerializeField] protected Book equippedBook;
+        IList<Book> listBooks;
+        public IList<Book> ListBooks{get=>listBooks;}
+
+        
+        
+        [SerializeField] protected Plant equippedPlant;
+        IList<Plant> listPlants;
+        public IList<Plant> ListPlants{get=>listPlants;}
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
@@ -44,11 +49,11 @@ namespace Characters.Interfaces {
         public MalusManager malusManager;
         [SerializeField] protected UIManager uIManager;
         public UIManager UIManager{get=>uIManager;}
-        [SerializeField] protected Texture baseAttackSprite;
-        [SerializeField] protected Texture specialAttackSprite;
+        [SerializeField] protected Sprite baseAttackSprite;
+        [SerializeField] protected Sprite specialAttackSprite;
 
-        public Texture BaseAttackSprite{get=>baseAttackSprite;}
-        public Texture SpecialAttackSprite{get=>specialAttackSprite;}
+        public Sprite BaseAttackSprite{get=>baseAttackSprite;}
+        public Sprite SpecialAttackSprite{get=>specialAttackSprite;}
         
 
 
@@ -92,6 +97,7 @@ namespace Characters.Interfaces {
             traitor = false;
             powerMode = true;
             equippedAttack = Attack.BaseAttack;
+            
             isAttacking = false;
             basePower = 5;
             if(!malusManager){
@@ -102,17 +108,17 @@ namespace Characters.Interfaces {
             inventory= new GameObject().AddComponent<Inventory>();
             inventory.name="Inventory";
             UpdateObjectsLists();
+            
             uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-            /*Book fire=new GameObject().AddComponent<Fireball>();
-            fire.name="fireball";
-            if(!(inventory.TryAddConsumableToInventory(fire)))
-                Debug.Log("Insetion error book");*/
+            
             
         }
 
         //method used in the Start
         protected virtual void Starter() {
             //Debug.Log("Starter");
+            baseAttackSprite=Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
+            specialAttackSprite=Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
             
             uIManager.FillBar(1, "health");
@@ -123,6 +129,9 @@ namespace Characters.Interfaces {
             specialAttackRecoil = hp * 15 / 100;
             currentBasePower=basePower;
             currentSpeed = speed;
+            if(listPlants.Count()!=0){
+                equippedPlant=listPlants[0];
+            }
             
         }
 
@@ -257,6 +266,9 @@ namespace Characters.Interfaces {
                         if(count==1){
                             UIManager.ScrollUpMenu(SpecialAttackSprite);
                         }
+                        else{
+                            UIManager.ScrollUpMenu(listBooks[count-2].BookIcon);
+                        }
 
                     }
                     else{
@@ -269,15 +281,25 @@ namespace Characters.Interfaces {
                     if(count==0){
                         UIManager.ScrollUpMenu(SpecialAttackSprite);
                     }
+                    else{
+                        UIManager.ScrollUpMenu(listBooks[count-1].BookIcon);
+                    }
                 }
                 else if (equippedAttack==Attack.Book){
                     int index=listBooks.IndexOf(equippedBook);
                     if (index==0){
                         equippedAttack=Attack.SpecialAttack;
                         equippedBook=null;
+                        UIManager.ScrollUpMenu(BaseAttackSprite);
                     }
                     else{
                         equippedBook=listBooks[index-1];
+                        if(index==1){
+                            UIManager.ScrollUpMenu(SpecialAttackSprite);
+                        }
+                        else{
+                            UIManager.ScrollUpMenu(listBooks[index-2].BookIcon);
+                        }
                     }
                 }
 
@@ -289,9 +311,23 @@ namespace Characters.Interfaces {
                     int index=listPlants.IndexOf(equippedPlant);
                     if(index==0){
                         equippedPlant=listPlants[count-1];
+                        if(count==2){
+                            UIManager.ScrollUpMenu(equippedPlant.PlantIcon);
+                            UIManager.ScrollUpMenu(listPlants[0].PlantIcon);
+                        }
+                        else{
+                            UIManager.ScrollUpMenu(listPlants[count-2].PlantIcon);
+                        }
+
                     }
                     else{
                         equippedPlant=listPlants[index-1];
+                        if(count==2){
+                            UIManager.ScrollUpMenu(UIManager.VoidSPrite);
+                        }
+                        else{
+                            UIManager.ScrollUpMenu(listPlants[index-2].PlantIcon);
+                        }
                     }
                 }
 
@@ -306,11 +342,20 @@ namespace Characters.Interfaces {
                     if(count==0){
                         UIManager.ScrollDownMenu(BaseAttackSprite);
                     }
+                    else{
+                        UIManager.ScrollDownMenu(listBooks[0].BookIcon);
+                    }
                 }
                 else if (equippedAttack==Attack.SpecialAttack){
                     if(count!=0){
                         equippedAttack=Attack.Book;
                         equippedBook=listBooks[0];
+                        if(count==1){
+                            UIManager.ScrollDownMenu(BaseAttackSprite);
+                        }
+                        else{
+                            UIManager.ScrollDownMenu(listBooks[1].BookIcon);
+                        }
                     }
                     else{
                         equippedAttack=Attack.BaseAttack;
@@ -322,9 +367,17 @@ namespace Characters.Interfaces {
                     if(index==count-1){
                         equippedAttack=Attack.BaseAttack;
                         equippedBook=null;
+                        UIManager.ScrollDownMenu(SpecialAttackSprite);
                     }
                     else{
                         equippedBook=listBooks[index+1];
+                        if( index==count-2){
+                            UIManager.ScrollDownMenu(BaseAttackSprite);
+                        }
+                        else{
+                            UIManager.ScrollDownMenu(listBooks[index+2].BookIcon);
+                        }
+
                     }
                 }
             }
@@ -334,14 +387,30 @@ namespace Characters.Interfaces {
                     int index=listPlants.IndexOf(equippedPlant);
                     if(index==count-1){
                         equippedPlant=listPlants[0];
+                        if(count==2){
+                            UIManager.ScrollDownMenu(equippedPlant.PlantIcon);
+                            
+                        }
+                        UIManager.ScrollDownMenu(listPlants[1].PlantIcon);
                     }
                     else{
                         equippedPlant=listPlants[index+1];
+                        if(count==2){
+                            UIManager.ScrollDownMenu(UIManager.VoidSPrite);
+                        }
+                        else if(index==count-2){
+                            UIManager.ScrollDownMenu(listPlants[0].PlantIcon);
+                        }
+                        else{
+                            UIManager.ScrollDownMenu(listPlants[index+2].PlantIcon);
+                        }
                     }
                 }
             }
         }
 
+
+        
 
 
 

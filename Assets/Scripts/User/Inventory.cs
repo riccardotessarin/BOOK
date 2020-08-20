@@ -13,11 +13,11 @@ using UnityEngine.UIElements;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
-		private readonly List<IBook> _books = new List<IBook>();
-		private readonly List<IPlant> _plants = new List<IPlant>();
+		private readonly List<Book> _books = new List<Book>();
+		private readonly List<Plant> _plants = new List<Plant>();
 
-		public IList<IBook> Books{get=>_books;}
-		public IList<IPlant> Plants{get=>_plants;}
+		public IList<Book> Books{get=>_books;}
+		public IList<Plant> Plants{get=>_plants;}
 
 		public static Inventory Instance { get; private set; }
 
@@ -35,14 +35,41 @@ namespace User {
 				Destroy(this);
 			}
 
-			Book book = gameObject.AddComponent<Fireball>();
-			Plant plant = gameObject.AddComponent<Genea>();
+			Book book =new GameObject().AddComponent<Fireball>();
+			book.name="FireballBook";
+			Plant plant =new GameObject().AddComponent<Genea>();
+			plant.name="Genea1";
+			Book book1=new GameObject().AddComponent<FireColumn>();
+			book1.name="FireColumnBook";
+			Book book2=new GameObject().AddComponent<IceStalagmite>();
+			book2.name="IceStalagmiteBook";
+			Plant plant1= new GameObject().AddComponent<Rayaza>();
+			plant1.name="Rayaza1";
+			Plant plant2= new GameObject().AddComponent<Ryua>();
+			plant2.name="Ryua1";
+			Plant plant3= new GameObject().AddComponent<Genea>();
+			plant3.name="Genea2";
 
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
 			}
 			if (TryAddConsumableToInventory(plant)) {
 				Debug.Log("Genea added to inventory!");
+			}
+			if (TryAddConsumableToInventory(book1)){
+				Debug.Log("FireColumn added to inventory");
+			}
+			if(TryAddConsumableToInventory(book2)){
+				Debug.Log("IceSTalagmite added to Inventory");
+			}
+			if(TryAddConsumableToInventory(plant1)){
+				Debug.Log("Rayaza added to Inventory");
+			}
+			if(TryAddConsumableToInventory(plant2)){
+				Debug.Log("Ryua added to Inventory");
+			}
+			if(TryAddConsumableToInventory(plant3)){
+				Debug.Log("Genea added to Inventory");
 			}
 		}
 
@@ -55,7 +82,7 @@ namespace User {
 		public bool TryAddConsumableToInventory(IConsumable consumable) {
 			bool success = false;
 
-			if (consumable is IBook book) {
+			if (consumable is Book book) {
 				if (_books.Count < 3) {
 					_books.Add(book);
 					// TODO: Display "Book added to inventory"
@@ -63,7 +90,7 @@ namespace User {
 				} else {
 					// TODO: Display "Maximum book capacity reached"
 				}
-			} else if (consumable is IPlant plant) {
+			} else if (consumable is Plant plant) {
 				if (_plants.Count < 10) {
 					_plants.Add(plant);
 					// TODO: Display "plant added to inventory"
@@ -88,7 +115,7 @@ namespace User {
 		public bool TryRemoveConsumableFromInventory(IConsumable consumable) {
 			bool success = false;
 
-			if (consumable is IBook book) {
+			if (consumable is Book book) {
 				if (_books.Count > 0) {
 					_books.Remove(book);
 					// TODO: Display "Book destroyed"
@@ -96,7 +123,7 @@ namespace User {
 				} else {
 					Debug.Log("Book list error");
 				}
-			} else if (consumable is IPlant plant) {
+			} else if (consumable is Plant plant) {
 				if (_plants.Count > 0) {
 					_plants.Remove(plant);
 					// TODO: Display "plant has been eaten"

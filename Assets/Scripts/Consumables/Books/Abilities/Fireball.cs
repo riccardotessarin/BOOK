@@ -3,6 +3,7 @@ using System.Collections;
 using Characters.Interfaces;
 using UnityEngine.UI;
 
+
 namespace Consumables.Books.Abilities {
 	public class Fireball : Book {
 
@@ -18,7 +19,7 @@ namespace Consumables.Books.Abilities {
 		[SerializeField] private int fireballSpeed = 10;
 
 		private void Awake() {
-			bookIcon = Resources.Load<Texture>("Images/InfernoRareBook");
+			bookIcon = Resources.Load<Sprite>("Images/InfernoRareBook");
 			fireballPrefab = Resources.Load("Prefabs/Attacks/Fireball") as GameObject;
 		}
 

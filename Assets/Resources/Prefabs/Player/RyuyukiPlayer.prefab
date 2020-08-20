@@ -410,6 +410,8 @@ MonoBehaviour:
   currentStamina: 0
   powerMode: 0
   equippedAttack: 0
+  equippedBook: {fileID: 0}
+  equippedPlant: {fileID: 0}
   buffRadius: 5
   traitor: 0
   baseAttackRange: 0
@@ -418,8 +420,8 @@ MonoBehaviour:
   specialAttackRecoil: 0
   malusManager: {fileID: 0}
   uIManager: {fileID: 0}
-  baseAttackSprite: {fileID: 2800000, guid: f50883935a92c5d4b86eed248c0fb404, type: 3}
-  specialAttackSprite: {fileID: 2800000, guid: f52f8a4e08e42d145b9debc7ad2804ac, type: 3}
+  baseAttackSprite: {fileID: 0}
+  specialAttackSprite: {fileID: 0}
   lastTarget: {fileID: 0}
   specialAttackRadius: 0
   speedModifier: 0
