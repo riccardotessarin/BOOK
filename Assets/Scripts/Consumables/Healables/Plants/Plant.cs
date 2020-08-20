@@ -12,7 +12,7 @@ namespace Consumables.Healables.Plants {
 		public int HealthPercentage => 50;
 		public abstract EnumUtility.CharacterType Type { get; }
 
-		[SerializeField] private Texture plantIcon; //= Resources.Load<Texture>("Images/InfernoRareBook");
+		[SerializeField] public Texture plantIcon;
 		public Texture PlantIcon { get => plantIcon; }
 
 		public void UseConsumable() {

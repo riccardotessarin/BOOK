@@ -14,17 +14,18 @@ namespace Consumables.Books.Abilities {
 		public override int Charges => 3;
 
 		[SerializeField] private GameObject FireballBookIcon;
-		[SerializeField] private Texture fireballSprite = Resources.Load<Texture>("Images/InfernoRareBook");
-		public Texture FireballSprite { get => fireballSprite; }
-		[SerializeField] private GameObject fireballVFX;
+		[SerializeField] private GameObject fireballPrefab;
 		[SerializeField] private int fireballSpeed = 10;
 
+		private void Awake() {
+			bookIcon = Resources.Load<Texture>("Images/InfernoRareBook");
+			fireballPrefab = Resources.Load("Prefabs/Attacks/Fireball") as GameObject;
+		}
 
-		
 		public override void UseConsumable() {
 			// Define the behavior of the ability
-			fireballVFX = Instantiate(fireballVFX, transform, true);
-			Rigidbody rigidbody = fireballVFX.GetComponent<Rigidbody>();
+			bookVFX = Instantiate(fireballPrefab, transform, true);
+			Rigidbody rigidbody = bookVFX.GetComponent<Rigidbody>();
 			rigidbody.velocity = transform.forward * fireballSpeed;
 
 			RemoveCharge();     // Remove charge after the ability is used
