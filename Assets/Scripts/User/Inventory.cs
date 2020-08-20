@@ -35,11 +35,12 @@ namespace User {
 				Destroy(this);
 			}
 
+
 			Book book =new GameObject().AddComponent<Fireball>();
 			book.name="FireballBook";
 			Plant plant =new GameObject().AddComponent<Genea>();
 			plant.name="Genea1";
-			Book book1=new GameObject().AddComponent<FireColumn>();
+			Book book1=new GameObject().AddComponent<FirePillar>();
 			book1.name="FireColumnBook";
 			Book book2=new GameObject().AddComponent<IceStalagmite>();
 			book2.name="IceStalagmiteBook";
@@ -50,8 +51,12 @@ namespace User {
 			Plant plant3= new GameObject().AddComponent<Genea>();
 			plant3.name="Genea2";
 
+
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
+			}
+			if (TryAddConsumableToInventory(book2)) {
+				Debug.Log("Fire Pillar added to inventory!");
 			}
 			if (TryAddConsumableToInventory(plant)) {
 				Debug.Log("Genea added to inventory!");

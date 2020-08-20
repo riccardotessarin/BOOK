@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 public class EnumUtility {
 	public enum CharacterType { Genee, Rayaz, Ryuyuki } // Also used for plant types
-	public enum PageType { Fireball, FireColumn, IceStalagmite }
+
+
+	public enum PageType { Fireball, FirePillar,IceStalagmite }
+
 
 }

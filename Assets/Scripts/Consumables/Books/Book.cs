@@ -17,8 +17,13 @@ namespace Consumables.Books {
 		public int CurrentCharges { get; private set; }
 
 
+
 		[SerializeField] protected Sprite bookIcon;
 		public Sprite BookIcon { get => bookIcon; }
+
+		[SerializeField] public GameObject bookDrop3DModel;
+		
+
 		[SerializeField] public GameObject bookVFX;
 
 		public bool AddCharge(IPage page) {
