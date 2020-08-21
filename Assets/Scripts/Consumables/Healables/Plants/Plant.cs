@@ -4,6 +4,7 @@ using MalusEBonus;
 using User;
 using Characters.Interfaces;
 using UnityEngine.Playables;
+using System;
 
 namespace Consumables.Healables.Plants {
 	public abstract class Plant : MonoBehaviour, IPlant {
@@ -16,7 +17,7 @@ namespace Consumables.Healables.Plants {
 		public Sprite PlantIcon { get => plantIcon; }
 
 		public void UseConsumable() {
-			PlayableCharacter currentPlayer = GameObject.FindWithTag("player").GetComponent<PlayableCharacter>();
+			PlayableCharacter currentPlayer = GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
 			bool compatible = CheckCompatibility(currentPlayer);
 			//TODO: Trigger a restore health function
 			Inventory.Instance.TryRemoveConsumableFromInventory(this);
@@ -39,21 +40,25 @@ namespace Consumables.Healables.Plants {
 			int malusChoice = randomizer.Next(3);
 			Bonus malus;
 			MalusManager malusManager = currentPlayer.malusManager;
+			string malusName;
 
 			switch (malusChoice) {
 				case 0:
-					malus = new Bonus(false, MalusManager.Stats.Hp, 0.7f, "plantHealthMalus");
+					malusName = "plantHealthMalus" + DateTime.Now.ToString("s");
+					malus = new Bonus(false, MalusManager.Stats.Hp, 0.7f, malusName);
 					malusManager.Add(malus);
 					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					//malusManager.Remove(MalusManager.Stats.Hp, "plantHealthMalus");
 					break;
 				case 1:
-					malus = new Bonus(false, MalusManager.Stats.Stamina, 0.7f, "plantStaminaMalus");
+					malusName = "plantStaminaMalus" + DateTime.Now.ToString("s");
+					malus = new Bonus(false, MalusManager.Stats.Stamina, 0.7f, malusName);
 					malusManager.Add(malus);
 					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
 				case 2:
-					malus = new Bonus(false, MalusManager.Stats.Speed, 0.7f, "plantSpeedMalus");
+					malusName = "plantSpeedMalus" + DateTime.Now.ToString("s");
+					malus = new Bonus(false, MalusManager.Stats.Speed, 0.7f, malusName);
 					malusManager.Add(malus);
 					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
