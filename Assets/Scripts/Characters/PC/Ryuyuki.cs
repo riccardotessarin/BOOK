@@ -35,10 +35,16 @@ namespace Characters.PC{
         protected override void Starter(){
             base.Starter();
             //Debug.Log("Starter Ryuyuki");
+            baseAttackDescription=$"ice scale(Recoil: {baseAttackRecoil*100/hp}%)";
+            specialAttackDescription=$"the last scale,that hitted a target, explodes and freeze all characters in a certain area, slowing their speed (Recoil: {specialAttackRecoil*100/hp}%; Last target: {lastTarget!=null})";
         }
         
         protected override void Updater(){
             base.Updater();
+            specialAttackDescription=$"the last scale,that hitted a target, explodes and freeze all characters in a certain area, slowing their speed (Recoil: {specialAttackRecoil*100/hp}%; Last target: {lastTarget!=null})";
+            if (equippedAttack==Attack.SpecialAttack && PowerMode)
+                UIManager.ChangeDescriptionText(specialAttackDescription);
+
             if(lastTarget)
                 DistanceCheckLastTarget();
 

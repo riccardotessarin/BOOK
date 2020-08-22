@@ -25,6 +25,7 @@ namespace Consumables.Healables.Plants {
 			if (!compatible) {
 				TriggerMalus(currentPlayer);
 			}
+			Destroy(gameObject);
 		}
 
 		public bool CheckCompatibility(PlayableCharacter currentPlayer) {

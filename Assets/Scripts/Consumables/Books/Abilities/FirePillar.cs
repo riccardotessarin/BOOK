@@ -12,7 +12,8 @@ namespace Consumables.Books.Abilities {
 
 		[SerializeField] private GameObject firePillarPrefab;
 
-		private void Awake() {
+		protected override void Awaker() {
+			base.Awaker();
 			bookIcon = Resources.Load<Sprite>("Images/InfernoCommonBook");
 			firePillarPrefab = Resources.Load("Prefabs/Attacks/FirePillar") as GameObject;
 		}

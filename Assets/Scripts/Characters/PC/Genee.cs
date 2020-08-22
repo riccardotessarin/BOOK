@@ -18,9 +18,12 @@ namespace Characters.PC{
             speed= 60;
             baseAttackRange=10;
             invicible=false;
+            
         }
         protected override void Starter(){
             base.Starter();
+            baseAttackDescription=$"water projectiles(Recoil: {baseAttackRecoil*100/hp}%)";
+            specialAttackDescription=$"become invicible for a limited time(Recoil: {specialAttackRecoil*100/hp}%)";
             
         }
         /*protected override void BaseAttack(){

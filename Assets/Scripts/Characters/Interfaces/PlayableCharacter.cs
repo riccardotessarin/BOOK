@@ -54,6 +54,13 @@ namespace Characters.Interfaces {
 
         public Sprite BaseAttackSprite{get=>baseAttackSprite;}
         public Sprite SpecialAttackSprite{get=>specialAttackSprite;}
+
+        public const string INFINITY="\u221E";
+        
+        protected string baseAttackDescription; //max  circa 132 caratteri
+        protected string specialAttackDescription;
+        public string BaseAttackDescription{get=>baseAttackDescription;}
+        public string SpecialAttackDescription{get=>specialAttackDescription;}
         
 
 
@@ -170,8 +177,68 @@ namespace Characters.Interfaces {
         protected abstract void SpecialAttack();
 
         protected void BookAttack() {
+            int count=listBooks.Count();
+            int index=listBooks.IndexOf(equippedBook);
             equippedBook.UseConsumable();
+            UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+            if(equippedBook.CurrentCharges==0){
+                CheckChargeBook(index,count);
+            }
         }
+
+        private void CheckChargeBook(int index,int count){
+            if(count==1){
+                equippedAttack=Attack.BaseAttack;
+                equippedBook=null;
+                UIManager.DestroyCurrentObject(specialAttackSprite);
+                UIManager.ChangeChargeText(INFINITY);
+                UIManager.ChangeDescriptionText(BaseAttackDescription);
+            }
+            else if(count==2){
+                if(index==0){
+                    equippedBook=listBooks[0];
+                    UIManager.DestroyCurrentObject(baseAttackSprite);
+                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                    UIManager.ChangeDescriptionText(equippedBook.Description);
+                }
+                else{
+                    equippedAttack=Attack.BaseAttack;
+                    equippedBook=null;
+                    UIManager.DestroyCurrentObject(specialAttackSprite);
+                    UIManager.ChangeChargeText(INFINITY);
+                    UIManager.ChangeDescriptionText(baseAttackDescription);
+                }
+                    
+            }
+            else if (count>2){
+                if(index==0){
+                    equippedBook=listBooks[0];
+                    UIManager.DestroyCurrentObject(listBooks[1].BookIcon);
+                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                    UIManager.ChangeDescriptionText(equippedBook.Description);
+                }
+                else if(index==count-1){
+                    equippedAttack=Attack.BaseAttack;
+                    equippedBook=null;
+                    UIManager.DestroyCurrentObject(specialAttackSprite);
+                    UIManager.ChangeChargeText(INFINITY);
+                    UIManager.ChangeDescriptionText(baseAttackDescription);
+                }
+                else{
+                    equippedBook=listBooks[index];
+                    if(index==count-2){
+                        UIManager.DestroyCurrentObject(baseAttackSprite);
+                    }
+                    else{
+                        UIManager.DestroyCurrentObject(listBooks[index+2].BookIcon);
+                    }
+                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                    UIManager.ChangeDescriptionText(equippedBook.Description);
+                }
+            }
+        }
+
+
 
         //Method used to activate malus and bonus with the other races
         protected abstract void RyuyukiBond();
@@ -246,8 +313,60 @@ namespace Characters.Interfaces {
         }
 
         public void UseEquippedConsumable(){
-            if(equippedPlant!=null)
+            if(equippedPlant!=null){
+                int index=listPlants.IndexOf(equippedPlant);
+                int count=listPlants.Count();
                 equippedPlant.UseConsumable();
+                CheckPlantInventory(index,count);
+            }
+        }
+        private void CheckPlantInventory(int index,int count){
+            if(count==1){
+                equippedPlant=null;
+                UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
+                UIManager.ChangeDescriptionText("");
+                powerMode=!powerMode;
+                UIManager.SwitchMode(powerMode);
+            }
+            else if(count==2){
+                equippedPlant=listPlants[0];
+                if(index==0){
+                    UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
+                }
+                else if(index==1){
+                    UIManager.DestroyCurrentObject(equippedPlant.PlantIcon);
+                    UIManager.ScrollDownMenu(UIManager.VoidSPrite);
+                }
+                UIManager.ChangeDescriptionText(equippedPlant.Description);
+            }
+            else if(count==3){
+                if (index==0 ||index==count-1){
+                    equippedPlant=listPlants[0];
+                    UIManager.ScrollUpMenu(equippedPlant.PlantIcon);
+                    UIManager.ScrollUpMenu(UIManager.VoidSPrite);
+                }
+                else{
+                    equippedPlant=listPlants[index];
+                    UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
+                }
+                UIManager.ChangeDescriptionText(equippedPlant.Description);
+            }
+            else if(count>3){
+                if(index==0 || index==count-1){
+                    equippedPlant=ListPlants[0];
+                    UIManager.DestroyCurrentObject(ListPlants[1].PlantIcon);
+                }
+                else{
+                    equippedPlant=ListPlants[index];
+                    if(index==count-2){
+                        UIManager.DestroyCurrentObject(ListPlants[0].PlantIcon);
+                    }
+                    else{
+                        UIManager.DestroyCurrentObject(ListPlants[index+1].PlantIcon);
+                    }
+                }
+                UIManager.ChangeDescriptionText(equippedPlant.Description);
+            }
         }
 
         protected void UpdateObjectsLists(){
@@ -269,11 +388,14 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollUpMenu(listBooks[count-2].BookIcon);
                         }
+                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                        UIManager.ChangeDescriptionText(equippedBook.Description);
 
                     }
                     else{
                         equippedAttack=Attack.SpecialAttack;
                         UIManager.ScrollUpMenu(BaseAttackSprite);
+                        UIManager.ChangeDescriptionText(specialAttackDescription);
                     }
                 }
                 else if(equippedAttack==Attack.SpecialAttack){
@@ -284,6 +406,7 @@ namespace Characters.Interfaces {
                     else{
                         UIManager.ScrollUpMenu(listBooks[count-1].BookIcon);
                     }
+                    UIManager.ChangeDescriptionText(baseAttackDescription);
                 }
                 else if (equippedAttack==Attack.Book){
                     int index=listBooks.IndexOf(equippedBook);
@@ -291,6 +414,8 @@ namespace Characters.Interfaces {
                         equippedAttack=Attack.SpecialAttack;
                         equippedBook=null;
                         UIManager.ScrollUpMenu(BaseAttackSprite);
+                        UIManager.ChangeChargeText(INFINITY);
+                        UIManager.ChangeDescriptionText(specialAttackDescription);
                     }
                     else{
                         equippedBook=listBooks[index-1];
@@ -300,6 +425,8 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollUpMenu(listBooks[index-2].BookIcon);
                         }
+                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                        UIManager.ChangeDescriptionText(equippedBook.Description);
                     }
                 }
 
@@ -318,16 +445,23 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollUpMenu(listPlants[count-2].PlantIcon);
                         }
+                        UIManager.ChangeDescriptionText(equippedPlant.Description);
 
                     }
                     else{
+                        
                         equippedPlant=listPlants[index-1];
                         if(count==2){
                             UIManager.ScrollUpMenu(UIManager.VoidSPrite);
                         }
+                        else if (index<2){
+                            UIManager.ScrollUpMenu(listPlants[count-1].PlantIcon);
+                        }
                         else{
+                            
                             UIManager.ScrollUpMenu(listPlants[index-2].PlantIcon);
                         }
+                        UIManager.ChangeDescriptionText(equippedPlant.Description);
                     }
                 }
 
@@ -345,6 +479,7 @@ namespace Characters.Interfaces {
                     else{
                         UIManager.ScrollDownMenu(listBooks[0].BookIcon);
                     }
+                    UIManager.ChangeDescriptionText(specialAttackDescription);
                 }
                 else if (equippedAttack==Attack.SpecialAttack){
                     if(count!=0){
@@ -356,10 +491,13 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollDownMenu(listBooks[1].BookIcon);
                         }
+                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                        UIManager.ChangeDescriptionText(equippedBook.Description);
                     }
                     else{
                         equippedAttack=Attack.BaseAttack;
                         UIManager.ScrollDownMenu(SpecialAttackSprite);
+                        UIManager.ChangeDescriptionText(baseAttackDescription);
                     }
                 }
                 else if(equippedAttack==Attack.Book){
@@ -368,6 +506,8 @@ namespace Characters.Interfaces {
                         equippedAttack=Attack.BaseAttack;
                         equippedBook=null;
                         UIManager.ScrollDownMenu(SpecialAttackSprite);
+                        UIManager.ChangeChargeText(INFINITY);
+                        UIManager.ChangeDescriptionText(baseAttackDescription);
                     }
                     else{
                         equippedBook=listBooks[index+1];
@@ -377,6 +517,8 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollDownMenu(listBooks[index+2].BookIcon);
                         }
+                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                        UIManager.ChangeDescriptionText(equippedBook.Description);
 
                     }
                 }
@@ -392,6 +534,7 @@ namespace Characters.Interfaces {
                             
                         }
                         UIManager.ScrollDownMenu(listPlants[1].PlantIcon);
+                        UIManager.ChangeDescriptionText(equippedPlant.Description);
                     }
                     else{
                         equippedPlant=listPlants[index+1];
@@ -404,11 +547,15 @@ namespace Characters.Interfaces {
                         else{
                             UIManager.ScrollDownMenu(listPlants[index+2].PlantIcon);
                         }
+                        UIManager.ChangeDescriptionText(equippedPlant.Description);
                     }
                 }
             }
         }
 
+
+
+        
 
         
 

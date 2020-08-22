@@ -12,9 +12,10 @@ namespace Consumables.Books {
 		public abstract string Element { get; }
 		public abstract string Rarity { get; }
 		public abstract EnumUtility.PageType PageType { get; }
-
+		
 		public abstract int Charges { get; }
-		public int CurrentCharges { get; private set; }
+		
+		public int CurrentCharges { get; protected set;}
 
 
 
@@ -26,6 +27,12 @@ namespace Consumables.Books {
 
 		[SerializeField] public GameObject bookVFX;
 
+		protected virtual void Awaker(){
+			CurrentCharges=Charges;
+		}
+		private void Awake(){
+			Awaker();
+		}
 		public bool AddCharge(IPage page) {
 			if (CurrentCharges < Charges && PageType == page.Type) {
 				CurrentCharges++;
@@ -41,14 +48,14 @@ namespace Consumables.Books {
 			CurrentCharges--;
 			if (CurrentCharges == 0) {
 				Inventory.Instance.TryRemoveConsumableFromInventory(this);
-				Destroy(this);
+				Destroy(this.gameObject);
 			}
 		}
 
 		public abstract void UseConsumable();
 
-		private void Start() {
+		/*private void Start() {
 			CurrentCharges = Charges;
-		}
+		}*/
 	}
 }

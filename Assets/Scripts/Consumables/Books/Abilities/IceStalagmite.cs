@@ -13,7 +13,8 @@ namespace Consumables.Books.Abilities{
 
 		[SerializeField] private GameObject iceStalagmitePrefab;
 
-		private void Awake(){
+		protected override void Awaker(){
+			base.Awaker();
 			bookIcon=Resources.Load<Sprite>("Images/NifhleimCommonBook");
 			//iceStalagmitePrefab = Resources.Load("Prefabs/Attacks/IceStalagmite") as GameObject;
 		}

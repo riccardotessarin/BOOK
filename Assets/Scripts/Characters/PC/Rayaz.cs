@@ -31,7 +31,7 @@ namespace Characters.PC{
         }
         protected override void Starter(){
             base.Starter();
-            
+            baseAttackDescription=$"poisonous bullet(Recoil: {baseAttackRecoil*100/hp}%)";
         }
         /*protected override void BaseAttack(){
             

@@ -17,9 +17,11 @@ namespace Consumables.Books.Abilities {
 		[SerializeField] private GameObject fireballPrefab;
 		[SerializeField] private int fireballSpeed = 10;
 
-		private void Awake() {
+		protected override void Awaker() {
+			base.Awaker();
 			bookIcon = Resources.Load<Sprite>("Images/InfernoRareBook");
 			fireballPrefab = Resources.Load("Prefabs/Attacks/Fireball") as GameObject;
+			
 		}
 
 		public override void UseConsumable() {
