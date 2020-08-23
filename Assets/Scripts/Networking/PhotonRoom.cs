@@ -10,7 +10,7 @@ namespace Networking {
         [SerializeField] private int multiplayerScene;
         
         private PhotonView _photonView;
-        private int currentScene;
+        private int _currentScene;
     
         public static PhotonRoom Instance { get; private set; }
 
@@ -46,9 +46,9 @@ namespace Networking {
 #region Callbacks
 
         private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode) {
-            currentScene = scene.buildIndex;
+            _currentScene = scene.buildIndex;
 
-            if (currentScene == multiplayerScene) {
+            if (_currentScene == multiplayerScene) {
                 CreatePlayer();
             }
         }
@@ -73,7 +73,7 @@ namespace Networking {
         }
         
         private void CreatePlayer() {
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player"), transform.position, Quaternion.identity, 0);
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", "RyuyukiPlayer"), transform.position, Quaternion.identity, 0);
         }
     }
 }
