@@ -26,7 +26,7 @@ namespace Consumables.Books.Abilities {
 
 		public override void UseConsumable() {
 			// Define the behavior of the ability
-			bookVFX = Instantiate(fireballPrefab, transform, true);
+			bookVFX = Instantiate(fireballPrefab, transform,true);
 			Rigidbody rigidbody = bookVFX.GetComponent<Rigidbody>();
 			rigidbody.velocity = transform.forward * fireballSpeed;
 
