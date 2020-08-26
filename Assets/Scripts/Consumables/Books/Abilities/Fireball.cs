@@ -4,6 +4,7 @@ using Characters.Interfaces;
 using UnityEngine.UI;
 using System.Linq;
 using Photon.Pun;
+using Managers;
 
 namespace Consumables.Books.Abilities {
 	public class Fireball : Book {
@@ -16,9 +17,11 @@ namespace Consumables.Books.Abilities {
 		public override int Charges => 3;
 
 		[SerializeField] private GameObject fireballPrefab;
-		[SerializeField] private float fireballSpeed = 0.1F;
+		[SerializeField] private float fireballSpeed = 5F;
 
 		private GameObject player;
+
+		public Fireball(Transform container): base(container) { }
 
 		protected override void Awaker() {
 			base.Awaker();
@@ -27,37 +30,25 @@ namespace Consumables.Books.Abilities {
 			
 		}
 
+
 		public override void UseConsumable() {
 			var players = GameObject.FindGameObjectsWithTag("Player");
 			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
 			player = players.FirstOrDefault();
 			var playerTransform = player.transform;
+			//var playerPosition = new Vector3(player.transform.localPosition.x + 4, player.transform.position.y, player.transform.position.z);
 			// Define the behavior of the ability
-			bookVFX = Instantiate(fireballPrefab, playerTransform.position, playerTransform.rotation);
-			bookVFX.transform.parent = transform;
-			StartCoroutine(MoveFireball());
+			bookVFX = Object.Instantiate(fireballPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
+			bookVFX.transform.parent = container;
+			GameManager.Instance.StartCoroutine(MoveFireball());
 			RemoveCharge();     // Remove charge after the ability is used
 		}
 
 		private IEnumerator MoveFireball() {
 			while(true) {
 				yield return new WaitForEndOfFrame();
-				var fireballPosition = bookVFX.transform.position;
-				bookVFX.transform.position = fireballPosition + Vector3.forward * fireballSpeed;
+				bookVFX.transform.Translate(Vector3.forward * Time.unscaledDeltaTime * fireballSpeed, Space.Self);
 			}
-
 		}
-
-		#region UnityMethods
-		// Start is called before the first frame update
-		void Start() {
-			
-		}
-
-		// Update is called once per frame
-		void Update() {
-
-		}
-		#endregion
 	}
 }

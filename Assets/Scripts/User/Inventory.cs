@@ -13,6 +13,8 @@ using UnityEngine.UIElements;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
+		public Transform container;		// Check if public is correct
+
 		private readonly List<Book> _books = new List<Book>();
 		private readonly List<Plant> _plants = new List<Plant>();
 
@@ -35,15 +37,11 @@ namespace User {
 				Destroy(this);
 			}
 
-
-			Book book =new GameObject().AddComponent<Fireball>();
-			book.name="FireballBook";
-			Plant plant =new GameObject().AddComponent<Genea>();
+			Book book = new Fireball(container);
+			Plant plant = new GameObject().AddComponent<Genea>();
 			plant.name="Genea1";
-			Book book1=new GameObject().AddComponent<FirePillar>();
-			book1.name="FireColumnBook";
-			Book book2=new GameObject().AddComponent<IceStalagmite>();
-			book2.name="IceStalagmiteBook";
+			Book book1= new FirePillar(container);
+			Book book2=new IceStalagmite(container);
 			Plant plant1= new GameObject().AddComponent<Rayaza>();
 			plant1.name="Rayaza1";
 			Plant plant2= new GameObject().AddComponent<Ryua>();
@@ -76,6 +74,11 @@ namespace User {
 			if(TryAddConsumableToInventory(plant3)){
 				Debug.Log("Genea added to Inventory");
 			}
+		}
+
+		private void Start() {
+			var gO = new GameObject() { name = "BooksContainer" };
+			container = gO.transform;
 		}
 
 		/// <summary>
