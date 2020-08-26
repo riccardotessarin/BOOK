@@ -16,6 +16,7 @@ namespace Characters.Interfaces {
 
 
         protected Damage baseDamage;
+        [SerializeField] protected EnumUtility.AttackType typeDrop; 
 
 
         protected virtual void Awaker() {
@@ -24,13 +25,14 @@ namespace Characters.Interfaces {
             IsDeath = false;
             target = null;
             isAttacking = false;
+            looted=false;
         }
 
         protected virtual void Starter() {
             currentHp = hp;
             currentSpeed = speed;
             currentBasePower=basePower;
-            baseDamage = new Damage(currentBasePower, AttackType.Neutral);
+            baseDamage = new Damage(currentBasePower, EnumUtility.AttackType.Neutral);
         }
 
         void Awake() {
@@ -131,11 +133,14 @@ namespace Characters.Interfaces {
             isAttacking = false;
         }
 
+        protected abstract void SetDropLoot();
+
         protected virtual void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, baseAttackRadius);
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
+        
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
+using Consumables.Books.Abilities;
+using Consumables.Books;
 
 namespace Characters.NPC {
     public class CyborgKinean : NonPlayableCharacters {
@@ -10,8 +12,10 @@ namespace Characters.NPC {
         [SerializeField] float specialPower;
         [SerializeField] float specialDamageMultiplicator;
         [SerializeField] float maxAttackDistance;
-        [SerializeField] AttackType specialAttackAttribute;
+        [SerializeField] EnumUtility.AttackType specialAttackAttribute;
         [SerializeField] Damage specialDamage;
+        private bool rarityDrop;//True common / false rare
+
 
 
         protected override void Awaker() {
@@ -25,6 +29,9 @@ namespace Characters.NPC {
             specialPower = 3;
             speed = 40;
             maxAttackDistance = 10;
+            specialAttackAttribute=RandomAttackType();
+            typeDrop=specialAttackAttribute;
+            SetDropLoot();
         }
 
         protected override void Starter() {
@@ -97,6 +104,27 @@ namespace Characters.NPC {
             yield return new WaitForSeconds(speed / 60f);
             gameObject.GetComponent<Renderer>().material.color = Color.white;
             isAttacking = false;
+        }
+
+        private EnumUtility.AttackType RandomAttackType(){
+            return (EnumUtility.AttackType)Random.Range(1,6);
+        }
+        protected override void SetDropLoot(){
+            rarityDrop=Random.Range(0.1f,1.0f)<=0.7f;
+
+        }
+
+        public Book GetDrop(){
+            //TODO
+            GameObject ret=new GameObject();
+            if(rarityDrop){
+                ret.AddComponent<FirePillar>();
+            }
+            else{
+                ret.AddComponent<Fireball>();
+            }
+            ret.name=ret.GetComponent<Book>().Name;
+            return ret.GetComponent<Book>();
         }
     }
 }

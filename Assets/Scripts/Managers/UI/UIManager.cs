@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Characters.Interfaces;
-namespace Managers{
+using Consumables.Books;
+using Consumables.Healables.Plants;
+namespace Managers.UI{
     public class UIManager : MonoBehaviour
     {
         [SerializeField] private Image healthBar;
@@ -22,11 +24,13 @@ namespace Managers{
         [SerializeField]private Text chargeTextGame;
         [SerializeField]private string chargeString;
         [SerializeField]private Text descriptionText;
+        [SerializeField]private Text interactionText;
         private string descriptionAttack;
         private string descriptionPlant;
         
         private Sprite[] plantArray=new Sprite[3];
         private Sprite[] attackArray= new Sprite[3];
+        private string interactionString;
         
         
 
@@ -62,6 +66,7 @@ namespace Managers{
                 plantArray[i]=voidSprite;
             }
             attackOrPlant=true;
+            interactionString="";
             
 
         }
@@ -121,6 +126,9 @@ namespace Managers{
             else{
                 equippedSecondaryObjImage.sprite=attackArray[1];
             }
+            interactionText.text=interactionString;
+
+
         }
         public void ActivateMenu(bool on){
             inGameObjectMenu.gameObject.SetActive(on);
@@ -180,6 +188,79 @@ namespace Managers{
             centerObject.sprite=rightObject.sprite;
             rightObject.sprite=rightSprite;
         }
+
+        public void ChangeInteractionText(string text){
+            interactionString=text;
+        }
+
+        public void AddBook(Book book){
+            if(player.EquippedAttack==PlayableCharacter.Attack.BaseAttack){
+                if(player.PowerMode){
+                    leftObject.sprite=book.BookIcon;
+                }
+                attackArray[0]=book.BookIcon;
+            }
+            else if(player.EquippedAttack==PlayableCharacter.Attack.SpecialAttack){
+                if(player.ListBooks.Count==1){
+                    if(player.PowerMode){
+                        rightObject.sprite=book.BookIcon;
+                    }
+                    attackArray[2]=book.BookIcon;
+                }
+            }
+            else if(player.EquippedAttack==PlayableCharacter.Attack.Book){
+                int count=player.ListBooks.Count;
+                int index=player.ListBooks.IndexOf(player.EquippedBook);
+                if(count==2){
+                    if(player.PowerMode){
+                        rightObject.sprite=book.BookIcon;
+                    }
+                    attackArray[2]=book.BookIcon;
+                }
+                else if(count==3){
+                    if(index==1){
+                        if(player.PowerMode){
+                            rightObject.sprite=book.BookIcon;
+                        }
+                        attackArray[2]=book.BookIcon;
+                    }
+                }
+            }
+        }
+
+       public void AddPlant(Plant plant){
+           int count=player.ListPlants.Count;
+           if(count==1){
+               if(!player.PowerMode){
+                   centerObject.sprite=plant.PlantIcon;
+                   ChangeDescriptionText(plant.Description);
+               }
+               plantArray[1]=plant.PlantIcon;
+               descriptionPlant=plant.Description;
+           }
+           
+            else if(count==2){
+                if(!player.PowerMode){
+                    rightObject.sprite=plant.PlantIcon;
+                }
+                plantArray[2]=plant.PlantIcon;
+            }
+            else if(count>2){
+                int index=player.ListPlants.IndexOf(player.EquippedPlant);
+                if(index==0){
+                    if(!player.PowerMode){
+                        leftObject.sprite=plant.PlantIcon;
+                    }
+                    plantArray[0]=plant.PlantIcon;
+                }
+                else if(index==count-2){
+                    if(!player.PowerMode){
+                        rightObject.sprite=plant.PlantIcon;
+                    }
+                    plantArray[2]=plant.PlantIcon;
+                }
+            }
+        } 
         
     }
 }

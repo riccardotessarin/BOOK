@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Attacks;
+ 
 
 namespace Characters.Interfaces {
     public abstract class Character : MonoBehaviour {
@@ -12,9 +13,12 @@ namespace Characters.Interfaces {
         [SerializeField] protected float currentSpeed;
         [SerializeField] protected float basePower;
         [SerializeField] protected float currentBasePower;
-        [SerializeField] public bool IsDeath { get; protected set; }
+        [SerializeField] protected bool isDeath;
+        public bool IsDeath { get=>isDeath; protected set=>isDeath=value; }
         [SerializeField] protected bool isAttacking;
         [SerializeField] bool poisoned;
+        [SerializeField] protected bool looted; //false if has a dropLoot / true if it hasn't or it has been taken
+        public bool Looted{get=>looted; set=>looted=value;}
         public const int PCLAYERMASK = 1 << 8; //layer 8
         public const int NPCLAYERMASK = 1 << 9; // layer 9 
 
@@ -25,13 +29,13 @@ namespace Characters.Interfaces {
 
 
         public struct Damage {
-            public Damage(float damage, AttackType attackType) {
+            public Damage(float damage, EnumUtility.AttackType attackType) {
                 DamageRec = damage;
                 AttackType = attackType;
             }
 
             public float DamageRec { get; }
-            public AttackType AttackType { get; }
+            public EnumUtility.AttackType AttackType { get; }
         }
 
         /*Method used to deal damage to the character instance,
@@ -78,7 +82,7 @@ namespace Characters.Interfaces {
             Poisoned = false;
 
             gameObject.GetComponent<Renderer>().material.color = Color.magenta;
-            TakeDamage(new Damage(3, AttackType.Basilisk));
+            TakeDamage(new Damage(3, EnumUtility.AttackType.Basilisk));
 
             yield return new WaitForSecondsRealtime(3);
 

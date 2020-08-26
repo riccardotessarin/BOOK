@@ -31,6 +31,14 @@ namespace StateMachine.Actions.Implementations{
                 Debug.Log("PowerMode Active: "+player.PowerMode);
                 player.UIManager.SwitchMode(player.PowerMode);
             }
+            if(Input.GetKeyDown(KeyCode.X)){
+                Debug.Log("Trying to loot");
+                player.LootAction();
+            }
+            if(Input.GetKeyDown(KeyCode.E)){
+                Debug.Log("Trying to interact");
+                player.InteractAction();
+            }
         }
         
     }

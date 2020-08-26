@@ -40,7 +40,7 @@ namespace User {
 			book.name="FireballBook";
 			Plant plant =new GameObject().AddComponent<Genea>();
 			plant.name="Genea1";
-			Book book1=new GameObject().AddComponent<FirePillar>();
+			/*Book book1=new GameObject().AddComponent<FirePillar>();
 			book1.name="FireColumnBook";
 			Book book2=new GameObject().AddComponent<IceStalagmite>();
 			book2.name="IceStalagmiteBook";
@@ -49,19 +49,19 @@ namespace User {
 			Plant plant2= new GameObject().AddComponent<Ryua>();
 			plant2.name="Ryua1";
 			Plant plant3= new GameObject().AddComponent<Genea>();
-			plant3.name="Genea2";
+			plant3.name="Genea2";*/
 
 
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
 			}
-			if (TryAddConsumableToInventory(book2)) {
+			/*if (TryAddConsumableToInventory(book2)) {
 				Debug.Log("Fire Pillar added to inventory!");
-			}
+			}*/
 			if (TryAddConsumableToInventory(plant)) {
 				Debug.Log("Genea added to inventory!");
 			}
-			if (TryAddConsumableToInventory(book1)){
+			/*if (TryAddConsumableToInventory(book1)){
 				Debug.Log("FireColumn added to inventory");
 			}
 			if(TryAddConsumableToInventory(book2)){
@@ -75,7 +75,7 @@ namespace User {
 			}
 			if(TryAddConsumableToInventory(plant3)){
 				Debug.Log("Genea added to Inventory");
-			}
+			}*/
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace User {
 				var compatibleBook = _books.FirstOrDefault(bookNotMax => bookNotMax.AddCharge(page));
 				success = compatibleBook != null;
 			}
-
+			Debug.Log(consumable.Name+" added: "+success.ToString());
 			return success;
 		}
 

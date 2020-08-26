@@ -9,7 +9,10 @@ using Consumables.Books;
 using Consumables.Books.Abilities;
 using Consumables.Healables.Plants;
 using MalusEBonus;
-using Managers;
+using Managers.UI;
+using Consumables;
+using Characters.NPC;
+using Consumables.Pages;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -20,14 +23,16 @@ namespace Characters.Interfaces {
         [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
         public bool PowerMode{get=>powerMode; set=>powerMode=value;}
         [SerializeField] protected Attack equippedAttack;
-        
+        public Attack EquippedAttack{get=>equippedAttack;set=>equippedAttack=value;}
         [SerializeField] protected Book equippedBook;
+        public Book EquippedBook{get=>equippedBook;set=>equippedBook=value;}
         IList<Book> listBooks;
         public IList<Book> ListBooks{get=>listBooks;}
 
         
         
         [SerializeField] protected Plant equippedPlant;
+        public Plant EquippedPlant{get=>equippedPlant;set=>equippedPlant=value;}
         IList<Plant> listPlants;
         public IList<Plant> ListPlants{get=>listPlants;}
         [SerializeField] float buffRadius;
@@ -61,6 +66,13 @@ namespace Characters.Interfaces {
         protected string specialAttackDescription;
         public string BaseAttackDescription{get=>baseAttackDescription;}
         public string SpecialAttackDescription{get=>specialAttackDescription;}
+        private UIController uIController;
+        public UIController UIController{get=>uIController;}
+
+        [SerializeField]private float interactionDistance;
+        [SerializeField]private bool isLooting;
+
+        
         
 
 
@@ -106,6 +118,7 @@ namespace Characters.Interfaces {
             equippedAttack = Attack.BaseAttack;
             
             isAttacking = false;
+            isLooting=false;
             basePower = 5;
             if(!malusManager){
                 malusManager=new GameObject().AddComponent<MalusManager>();
@@ -117,8 +130,11 @@ namespace Characters.Interfaces {
             UpdateObjectsLists();
             
             uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-            
-            
+            uIController= new UIController();
+            uIController.player=this;
+            uIController.uIManager=this.uIManager;
+            interactionDistance=3;    
+            looted=false;
         }
 
         //method used in the Start
@@ -146,6 +162,7 @@ namespace Characters.Interfaces {
         protected virtual void Updater() {
             MalusCheck();
             UpdateObjectsLists();
+            InteractionTextRayCast();
 
             
         }
@@ -157,6 +174,19 @@ namespace Characters.Interfaces {
         void FixedUpdate() {
             if (Poisoned)
                 StartCoroutine(PoisonDamage());
+            
+            
+        }
+        protected void InteractionTextRayCast(){
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
+                
+                uIController.InteractionTextControl(hit,traitor);
+            }
+            else{
+                
+                uIController.ResetInteractionText();
+            }
         }
 
         protected override void Death() {
@@ -180,63 +210,10 @@ namespace Characters.Interfaces {
             int count=listBooks.Count();
             int index=listBooks.IndexOf(equippedBook);
             equippedBook.UseConsumable();
-            UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-            if(equippedBook.CurrentCharges==0){
-                CheckChargeBook(index,count);
-            }
+            uIController.CheckChargeBook(index,count);
         }
 
-        private void CheckChargeBook(int index,int count){
-            if(count==1){
-                equippedAttack=Attack.BaseAttack;
-                equippedBook=null;
-                UIManager.DestroyCurrentObject(specialAttackSprite);
-                UIManager.ChangeChargeText(INFINITY);
-                UIManager.ChangeDescriptionText(BaseAttackDescription);
-            }
-            else if(count==2){
-                if(index==0){
-                    equippedBook=listBooks[0];
-                    UIManager.DestroyCurrentObject(baseAttackSprite);
-                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                    UIManager.ChangeDescriptionText(equippedBook.Description);
-                }
-                else{
-                    equippedAttack=Attack.BaseAttack;
-                    equippedBook=null;
-                    UIManager.DestroyCurrentObject(specialAttackSprite);
-                    UIManager.ChangeChargeText(INFINITY);
-                    UIManager.ChangeDescriptionText(baseAttackDescription);
-                }
-                    
-            }
-            else if (count>2){
-                if(index==0){
-                    equippedBook=listBooks[0];
-                    UIManager.DestroyCurrentObject(listBooks[1].BookIcon);
-                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                    UIManager.ChangeDescriptionText(equippedBook.Description);
-                }
-                else if(index==count-1){
-                    equippedAttack=Attack.BaseAttack;
-                    equippedBook=null;
-                    UIManager.DestroyCurrentObject(specialAttackSprite);
-                    UIManager.ChangeChargeText(INFINITY);
-                    UIManager.ChangeDescriptionText(baseAttackDescription);
-                }
-                else{
-                    equippedBook=listBooks[index];
-                    if(index==count-2){
-                        UIManager.DestroyCurrentObject(baseAttackSprite);
-                    }
-                    else{
-                        UIManager.DestroyCurrentObject(listBooks[index+2].BookIcon);
-                    }
-                    UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                    UIManager.ChangeDescriptionText(equippedBook.Description);
-                }
-            }
-        }
+
 
 
 
@@ -289,6 +266,8 @@ namespace Characters.Interfaces {
             Gizmos.DrawWireSphere(transform.position, buffRadius);
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, camera.transform.forward * baseAttackRange);
+            Gizmos.color=Color.gray;
+            Gizmos.DrawRay(transform.position,camera.transform.forward*interactionDistance);
         }
 
         //method that invoke the right fuction in base of the equippedAttack
@@ -317,10 +296,10 @@ namespace Characters.Interfaces {
                 int index=listPlants.IndexOf(equippedPlant);
                 int count=listPlants.Count();
                 equippedPlant.UseConsumable();
-                CheckPlantInventory(index,count);
+                uIController.CheckPlantInventory(index,count);
             }
         }
-        private void CheckPlantInventory(int index,int count){
+        /*private void CheckPlantInventory(int index,int count){
             if(count==1){
                 equippedPlant=null;
                 UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
@@ -367,191 +346,149 @@ namespace Characters.Interfaces {
                 }
                 UIManager.ChangeDescriptionText(equippedPlant.Description);
             }
-        }
+        }*/
 
         protected void UpdateObjectsLists(){
             listBooks= inventory.Books;
             listPlants=inventory.Plants;
         }
-
-
-        public void ScrollUpInventory(){
-            if(PowerMode){
-                int count= listBooks.Count();
-                if(equippedAttack==Attack.BaseAttack){
-                    if(count!=0){
-                        equippedAttack=Attack.Book;
-                        equippedBook=listBooks[count-1];
-                        if(count==1){
-                            UIManager.ScrollUpMenu(SpecialAttackSprite);
-                        }
-                        else{
-                            UIManager.ScrollUpMenu(listBooks[count-2].BookIcon);
-                        }
-                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                        UIManager.ChangeDescriptionText(equippedBook.Description);
-
-                    }
-                    else{
-                        equippedAttack=Attack.SpecialAttack;
-                        UIManager.ScrollUpMenu(BaseAttackSprite);
-                        UIManager.ChangeDescriptionText(specialAttackDescription);
-                    }
-                }
-                else if(equippedAttack==Attack.SpecialAttack){
-                    equippedAttack=Attack.BaseAttack;
-                    if(count==0){
-                        UIManager.ScrollUpMenu(SpecialAttackSprite);
-                    }
-                    else{
-                        UIManager.ScrollUpMenu(listBooks[count-1].BookIcon);
-                    }
-                    UIManager.ChangeDescriptionText(baseAttackDescription);
-                }
-                else if (equippedAttack==Attack.Book){
-                    int index=listBooks.IndexOf(equippedBook);
-                    if (index==0){
-                        equippedAttack=Attack.SpecialAttack;
-                        equippedBook=null;
-                        UIManager.ScrollUpMenu(BaseAttackSprite);
-                        UIManager.ChangeChargeText(INFINITY);
-                        UIManager.ChangeDescriptionText(specialAttackDescription);
-                    }
-                    else{
-                        equippedBook=listBooks[index-1];
-                        if(index==1){
-                            UIManager.ScrollUpMenu(SpecialAttackSprite);
-                        }
-                        else{
-                            UIManager.ScrollUpMenu(listBooks[index-2].BookIcon);
-                        }
-                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                        UIManager.ChangeDescriptionText(equippedBook.Description);
-                    }
-                }
-
-
+        public Book GetDropBook(){
+            int count=listBooks.Count();
+            if(count!=0){
+                return listBooks[UnityEngine.Random.Range(0,count)];
             }
-            else{
-                int count=listPlants.Count();
-                if(count>1){
-                    int index=listPlants.IndexOf(equippedPlant);
-                    if(index==0){
-                        equippedPlant=listPlants[count-1];
-                        if(count==2){
-                            UIManager.ScrollUpMenu(equippedPlant.PlantIcon);
-                            UIManager.ScrollUpMenu(listPlants[0].PlantIcon);
-                        }
-                        else{
-                            UIManager.ScrollUpMenu(listPlants[count-2].PlantIcon);
-                        }
-                        UIManager.ChangeDescriptionText(equippedPlant.Description);
-
-                    }
-                    else{
-                        
-                        equippedPlant=listPlants[index-1];
-                        if(count==2){
-                            UIManager.ScrollUpMenu(UIManager.VoidSPrite);
-                        }
-                        else if (index<2){
-                            UIManager.ScrollUpMenu(listPlants[count-1].PlantIcon);
-                        }
-                        else{
-                            
-                            UIManager.ScrollUpMenu(listPlants[index-2].PlantIcon);
-                        }
-                        UIManager.ChangeDescriptionText(equippedPlant.Description);
-                    }
-                }
-
+            else
+                return null;
+        }
+        public Plant GetDropPlant(){
+            int count=listPlants.Count();
+            if(count!=0){
+                return listPlants[UnityEngine.Random.Range(0,count)];
             }
+            else
+                return null;
         }
 
-        public void ScrollDownInventory(){
-            if(PowerMode){
-                int count= listBooks.Count();
-                if(equippedAttack==Attack.BaseAttack){
-                    equippedAttack=Attack.SpecialAttack;
-                    if(count==0){
-                        UIManager.ScrollDownMenu(BaseAttackSprite);
-                    }
-                    else{
-                        UIManager.ScrollDownMenu(listBooks[0].BookIcon);
-                    }
-                    UIManager.ChangeDescriptionText(specialAttackDescription);
-                }
-                else if (equippedAttack==Attack.SpecialAttack){
-                    if(count!=0){
-                        equippedAttack=Attack.Book;
-                        equippedBook=listBooks[0];
-                        if(count==1){
-                            UIManager.ScrollDownMenu(BaseAttackSprite);
-                        }
-                        else{
-                            UIManager.ScrollDownMenu(listBooks[1].BookIcon);
-                        }
-                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                        UIManager.ChangeDescriptionText(equippedBook.Description);
-                    }
-                    else{
-                        equippedAttack=Attack.BaseAttack;
-                        UIManager.ScrollDownMenu(SpecialAttackSprite);
-                        UIManager.ChangeDescriptionText(baseAttackDescription);
-                    }
-                }
-                else if(equippedAttack==Attack.Book){
-                    int index=listBooks.IndexOf(equippedBook);
-                    if(index==count-1){
-                        equippedAttack=Attack.BaseAttack;
-                        equippedBook=null;
-                        UIManager.ScrollDownMenu(SpecialAttackSprite);
-                        UIManager.ChangeChargeText(INFINITY);
-                        UIManager.ChangeDescriptionText(baseAttackDescription);
-                    }
-                    else{
-                        equippedBook=listBooks[index+1];
-                        if( index==count-2){
-                            UIManager.ScrollDownMenu(BaseAttackSprite);
-                        }
-                        else{
-                            UIManager.ScrollDownMenu(listBooks[index+2].BookIcon);
-                        }
-                        UIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
-                        UIManager.ChangeDescriptionText(equippedBook.Description);
 
+        public void LootAction(){
+            RaycastHit hit;
+            if( !isAttacking && !isLooting && Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance) ){
+                Character hitted=hit.collider.GetComponent<Character>();
+                if(hitted && hitted.IsDeath && !hitted.Looted){
+                    if(hitted is PlayableCharacter && traitor){
+                        StartCoroutine(Loot(hitted,typeof(PlayableCharacter)));
                     }
-                }
-            }
-            else{
-                int count=listPlants.Count();
-                if(count>1){
-                    int index=listPlants.IndexOf(equippedPlant);
-                    if(index==count-1){
-                        equippedPlant=listPlants[0];
-                        if(count==2){
-                            UIManager.ScrollDownMenu(equippedPlant.PlantIcon);
-                            
-                        }
-                        UIManager.ScrollDownMenu(listPlants[1].PlantIcon);
-                        UIManager.ChangeDescriptionText(equippedPlant.Description);
+                    else if(hitted is MeltingKinean && hitted.GetComponent<MeltingKinean>().Drop){
+                        StartCoroutine(Loot(hitted,typeof(MeltingKinean)));
                     }
-                    else{
-                        equippedPlant=listPlants[index+1];
-                        if(count==2){
-                            UIManager.ScrollDownMenu(UIManager.VoidSPrite);
-                        }
-                        else if(index==count-2){
-                            UIManager.ScrollDownMenu(listPlants[0].PlantIcon);
-                        }
-                        else{
-                            UIManager.ScrollDownMenu(listPlants[index+2].PlantIcon);
-                        }
-                        UIManager.ChangeDescriptionText(equippedPlant.Description);
+                    else if(hitted is CyborgKinean){
+                        StartCoroutine(Loot(hitted,typeof(CyborgKinean)));
                     }
                 }
             }
         }
+        private IEnumerator Loot(Character dead, Type deadType){
+            isAttacking=true;
+            isLooting=true;
+            dead.Looted=true;
+            if(deadType==typeof(PlayableCharacter)){
+                PlayableCharacter deadPC=dead.GetComponent<PlayableCharacter>();
+                Book dropBook=deadPC.GetDropBook();
+                Plant dropPlant=deadPC.GetDropPlant();
+                bool plantAdded=inventory.TryAddConsumableToInventory(dropPlant);
+                bool bookAdded=inventory.TryAddConsumableToInventory(dropBook);
+                if(!plantAdded && !bookAdded){
+                    deadPC.Looted=false;
+                }
+                else{
+                    Debug.Log("Looting Traitor");
+                    if(bookAdded){
+                        uIManager.AddBook(dropBook);
+                    }
+                    if(plantAdded){
+                        UIManager.AddPlant(dropPlant);
+                        if(listPlants.Count()==1){
+                            equippedPlant=dropPlant;
+                        }
+                    }
+                }
+            }
+            else if(deadType==typeof(MeltingKinean)){
+                MeltingKinean deadNPC=dead.GetComponent<MeltingKinean>();
+                if(deadNPC.DropPage){
+                    Page page=deadNPC.GetDropPage();
+                    bool affectEquippedBook= (equippedBook.CurrentCharges<equippedBook.Charges && equippedBook.PageType==page.Type);
+                    if(!inventory.TryAddConsumableToInventory(page)){
+                        deadNPC.Looted=false;
+                    }
+                    else{
+                        if(affectEquippedBook){
+                            uIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
+                        }
+                    }
+                }
+            }
+            else if(deadType==typeof(CyborgKinean)){
+                CyborgKinean deadNPC=dead.GetComponent<CyborgKinean>();
+                Book dropBook=deadNPC.GetDrop();
+                if(!inventory.TryAddConsumableToInventory(dropBook)){
+                    deadNPC.Looted=false;
+                }
+                else{
+                    uIManager.AddBook(dropBook);
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+            isAttacking=false;
+            isLooting=false;
+            
+
+        }
+
+        public void InteractAction(){
+            RaycastHit hit;
+            if(!isAttacking && !isLooting &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
+                if(hit.collider.GetComponent<Plant>()){
+                    StartCoroutine(InteractPlant(hit.collider.GetComponent<Plant>()));
+                }
+                else if(hit.collider.GetComponent<PlayableCharacter>()){
+                    StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
+                }
+            }
+        }
+
+        private IEnumerator InteractPlant(Plant interacted){
+            isAttacking=true;
+            isLooting=true;
+            if(!inventory.TryAddConsumableToInventory(interacted)){
+                //failed interaction
+            }
+            else{
+                uIManager.AddPlant(interacted);
+            }
+            yield return new WaitForSeconds(0.5f);
+            isAttacking=false;
+            isLooting=false;
+        }
+
+        private IEnumerator ReviveTeamMember(PlayableCharacter revived){
+            isAttacking=true;
+            isLooting=true;
+            yield return new WaitForSecondsRealtime(3f);
+            revived.SendMessage("Revive",SendMessageOptions.DontRequireReceiver);
+            isLooting=false;
+            isAttacking=false;
+
+        }
+
+        private void Revive(){
+            Debug.Log($"{gameObject.ToString()} revived");
+            currentHp=hp/6;
+            isDeath=false;
+        }
+
+
+
 
 
 

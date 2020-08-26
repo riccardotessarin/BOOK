@@ -9,6 +9,13 @@ public class EnumUtility {
 
 
 	public enum PageType { Fireball, FirePillar,IceStalagmite }
-
+	public enum AttackType{
+		Neutral,
+        Basilisk, //toxic
+        Inferno, //fire
+        Niflheim, //ice
+        Neptunian, //water
+        Raijin //electric}
+	}
 
 }

@@ -26,13 +26,16 @@ namespace StateMachine.Actions.Implementations {
             if(Input.GetAxis("Mouse ScrollWheel")!=0){
                 var input=Input.GetAxis("Mouse ScrollWheel");
                 if(input>0f){
-                    player.ScrollUpInventory();
+                    player.UIController.ScrollUpInventory(); 
                 }
                 else if(input<0f){
-                    player.ScrollDownInventory();
+                    player.UIController.ScrollDownInventory();
                 }
-
-
+            }
+            if(Input.GetMouseButtonDown(0)){
+                GameManager.Instance.CurrentState = new GameState();
+                Debug.Log("switching to game state");
+                player.UIManager.ActivateMenu(false);
             }
         }
     }

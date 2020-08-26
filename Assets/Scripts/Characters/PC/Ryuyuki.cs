@@ -110,7 +110,7 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            baseDamage=new Damage(currentBasePower,AttackType.Niflheim);
+            baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Niflheim);
             currentHp-=baseAttackRecoil;
             uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;

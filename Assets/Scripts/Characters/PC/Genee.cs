@@ -77,7 +77,7 @@ namespace Characters.PC{
 
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            baseDamage=new Damage(currentBasePower,AttackType.Neptunian);
+            baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Neptunian);
             currentHp-=baseAttackRecoil;
             uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;

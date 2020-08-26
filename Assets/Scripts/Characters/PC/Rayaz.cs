@@ -86,7 +86,7 @@ namespace Characters.PC{
         }
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;
-            baseDamage=new Damage(currentBasePower,AttackType.Basilisk);
+            baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Basilisk);
             currentHp-=baseAttackRecoil;
             uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
@@ -124,7 +124,7 @@ namespace Characters.PC{
            //instanziare prefab poisonfog e poi distruggerlo
            PoisonFog fog= Instantiate<PoisonFog>(prefabFog,targetEnemy.transform);
            fog.Caster=this;
-           fog.Damage=new Damage(fogDamage,AttackType.Basilisk);
+           fog.Damage=new Damage(fogDamage,EnumUtility.AttackType.Basilisk);
            yield return new WaitForSeconds(fogDuration);
            Destroy(fog.gameObject);
         }
