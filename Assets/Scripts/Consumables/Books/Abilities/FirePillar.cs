@@ -7,7 +7,7 @@ namespace Consumables.Books.Abilities {
 	public class FirePillar : Book {
 		public override string Name => "Fire Pillar";
 		public override string Description => "It places a trap which activates a fire pillar when the enemy steps on it.";
-		public override string Element => "Fire";
+		public override EnumUtility.AttackType Element => EnumUtility.AttackType.Inferno;
 		public override string Rarity => "Common";
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.FirePillar;
 		public override int Charges => 5;

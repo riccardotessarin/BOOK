@@ -4,7 +4,7 @@ namespace Consumables.Books
 {
 	public interface IBook : IConsumable
 	{
-		string Element { get; }
+		EnumUtility.AttackType Element { get; }
 		string Rarity { get; }
 		EnumUtility.PageType PageType { get; }
 		int Charges { get; }
