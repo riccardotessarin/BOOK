@@ -8,7 +8,14 @@ public class EnumUtility {
 	public enum CharacterType { Genee, Rayaz, Ryuyuki } // Also used for plant types
 
 
-	public enum PageType { Fireball, FirePillar,IceStalagmite }
+	public enum PageType {
+		BlindingCloud, VenomousNeedle,
+		FirePillar, Fireball,
+		IceStalagmite, BodyFreeze,
+		WaterShield, SurgingTide,
+		LightningSpeed, ElectricalDischarge
+	}
+
 	public enum AttackType{
 		Neutral,
         Basilisk, //toxic
