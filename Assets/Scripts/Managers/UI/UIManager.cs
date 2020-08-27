@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Characters.Interfaces;
 using Consumables.Books;
 using Consumables.Healables.Plants;
+using System.Linq;
 namespace Managers.UI{
     public class UIManager : MonoBehaviour
     {
@@ -31,8 +32,14 @@ namespace Managers.UI{
         private Sprite[] plantArray=new Sprite[3];
         private Sprite[] attackArray= new Sprite[3];
         private string interactionString;
+        [SerializeField] private Image statusArea;
+        [SerializeField] private Image bonusPrefab;
+        [SerializeField] private Image malusPrefab;
+        private Dictionary<string,Image> statusImageDict=new Dictionary<string, Image>();
+        private Vector3 statusVector;
         
         
+
 
         public void FillBar(float value, string type) {
             if(healthBar && staminaBar){
@@ -61,6 +68,9 @@ namespace Managers.UI{
             chargeTextGame=equippedPrimaryObjImage.transform.GetChild(0).GetComponent<Text>();
             chargeTextMenu=centerObject.transform.GetChild(0).GetComponent<Text>();
             voidSprite=Resources.Load<Sprite>("Images/voidSprite");
+            bonusPrefab=Resources.Load<GameObject>("Prefabs/UI/Bonus").GetComponent<Image>();
+            malusPrefab=Resources.Load<GameObject>("Prefabs/UI/Malus").GetComponent<Image>();
+            statusVector= new Vector3(bonusPrefab.rectTransform.position.x,bonusPrefab.rectTransform.position.y,bonusPrefab.rectTransform.rect.width);
             equippedSecondaryObjImage.sprite=voidSprite;
             for(int i=0;i<3;i++){
                 plantArray[i]=voidSprite;
@@ -127,6 +137,7 @@ namespace Managers.UI{
                 equippedSecondaryObjImage.sprite=attackArray[1];
             }
             interactionText.text=interactionString;
+            SetStatusBar();
 
 
         }
@@ -262,5 +273,32 @@ namespace Managers.UI{
             }
         } 
         
+        public void AddBonusImage(Sprite sprite, bool bonus,string name){
+            Image image;
+            if(bonus){
+                image=Instantiate(bonusPrefab,bonusPrefab.rectTransform);
+            }
+            else{
+                image=Instantiate(malusPrefab,malusPrefab.rectTransform);
+            }
+            image.rectTransform.SetParent(statusArea.rectTransform);
+            image.rectTransform.GetChild(0).GetComponent<Image>().sprite=sprite;
+            statusImageDict[name]=image;
+        }
+        public void RemoveBonusImage(string name){
+            Image image=statusImageDict[name];
+            if(!statusImageDict.Remove(name)){
+                Debug.Log("Error in removing image");
+            }
+            Destroy(image.gameObject);
+        }
+
+        private void SetStatusBar(){
+            float pos=statusVector.x;
+            foreach(var key in statusImageDict.Keys){
+                statusImageDict[key].rectTransform.position=new Vector3(pos,statusVector.y,0);
+                pos=pos-statusVector.z;
+            }
+        }
     }
 }

@@ -15,7 +15,8 @@ public class EnumUtility {
         Inferno, //fire
         Niflheim, //ice
         Neptunian, //water
-        Raijin //electric}
+        Raijin, //electric}
+        Nothing
 	}
 
 }

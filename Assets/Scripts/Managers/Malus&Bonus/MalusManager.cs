@@ -11,12 +11,19 @@ namespace MalusEBonus{
             Hp,
             Stamina,
             BasePower,
-            Speed
+            Speed,
+            Recoil,
+            DamageReduction,
+            Weakness,
+            ElementalPower
+            
+
         }
 
         public PlayableCharacter player;
         private List<Bonus> bonusList;
         private Dictionary<Stats,string> statDict = new Dictionary<Stats, string>();
+        private Dictionary<Stats,Sprite> imageDict= new Dictionary<Stats, Sprite>();
 
         void Awake(){
             bonusList=new List<Bonus>();
@@ -24,6 +31,18 @@ namespace MalusEBonus{
             statDict[Stats.Stamina]="ModifyStaminaMax";
             statDict[Stats.BasePower]="ModifyBasePower";
             statDict[Stats.Speed]="ModifySpeed";
+            statDict[Stats.Recoil]="ModifyRecoil";
+            statDict[Stats.DamageReduction]="ModifyDamageReceived"; //only genee
+            statDict[Stats.Weakness]="ModifyWeakness";
+            statDict[Stats.ElementalPower]="ModifyElementalPower";
+            imageDict[Stats.Hp]=Resources.Load<Sprite>("Images/healthSprite");
+            imageDict[Stats.Stamina]=Resources.Load<Sprite>("Images/staminaSprite");
+            imageDict[Stats.BasePower]=Resources.Load<Sprite>("Images/baseAttackSprite");
+            imageDict[Stats.Speed]=Resources.Load<Sprite>("Images/speedSprite");
+            imageDict[Stats.Recoil]=Resources.Load<Sprite>("Images/recoilSprite");
+            imageDict[Stats.DamageReduction]=Resources.Load<Sprite>("Images/DamageSprite");
+            //player weakness;
+
         }
 
         public bool Add(Bonus bonus){
@@ -33,6 +52,7 @@ namespace MalusEBonus{
             }
             else{
                 bonusList.Add(bonus);
+                
                 ActivateBonus(bonus);
                 return true;
             }

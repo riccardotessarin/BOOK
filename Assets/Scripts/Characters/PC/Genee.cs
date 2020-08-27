@@ -7,6 +7,8 @@ namespace Characters.PC{
     public class Genee : PlayableCharacter
     {
         [SerializeField] bool invicible;
+        [SerializeField] float damageReceivedMultiplicator=1;
+
         
         // Start is called before the first frame update
         protected override void Awaker(){
@@ -61,8 +63,9 @@ namespace Characters.PC{
         }
         protected override void TakeDamage(Damage damage){
             if(!invicible){
-                if (damage.DamageRec< currentHp){
-                    currentHp-=damage.DamageRec;
+                float dam= (damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec)*damageReceivedMultiplicator;
+                if (dam< currentHp){
+                    currentHp-=dam;
                     uIManager.FillBar(currentHp/hp,"health");
                 }
                 else{
@@ -100,6 +103,21 @@ namespace Characters.PC{
             yield return new WaitForSeconds(15);
             invicible=false;
 
+        }
+
+        protected void ModifyDamageReceived(float modifier){
+            damageReceivedMultiplicator*=modifier;
+            Debug.Log(ToString()+" damage received modified:"+ damageReceivedMultiplicator);
+        }
+
+        protected override void ModifyWeakness(float modifier){
+            if(modifier<1){
+                weakness=EnumUtility.AttackType.Raijin;
+            }
+            else{
+                weakness=EnumUtility.AttackType.Nothing;
+            }
+            Debug.Log(ToString()+ "weakness modified");
         }
         
         

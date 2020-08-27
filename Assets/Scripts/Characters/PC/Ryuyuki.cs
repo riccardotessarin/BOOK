@@ -92,9 +92,10 @@ namespace Characters.PC{
         }
 
         protected override void TakeDamage(Damage damage){
-            if (damage.DamageRec< currentHp){
+            float dam= damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec;
+            if (dam< currentHp){
                 Debug.Log("taking damage");
-                currentHp-=damage.DamageRec;
+                currentHp-=dam;
                 
                 uIManager.FillBar(currentHp/hp,"health");
             }
@@ -159,6 +160,15 @@ namespace Characters.PC{
             Gizmos.color=Color.cyan;
             if(lastTarget)
                 Gizmos.DrawWireSphere(lastTarget.transform.position,specialAttackRadius);
+        }
+        protected override void ModifyWeakness(float modifier){
+            if(modifier<1){
+                weakness=EnumUtility.AttackType.Inferno;
+            }
+            else{
+                weakness=EnumUtility.AttackType.Nothing;
+            }
+            Debug.Log(ToString()+ "weakness modified");
         }
 
         

@@ -71,6 +71,8 @@ namespace Characters.Interfaces {
 
         [SerializeField]private float interactionDistance;
         [SerializeField]private bool isLooting;
+        [SerializeField]protected EnumUtility.AttackType weakness;
+        public const float weaknessMultiplicator=1.2f;
 
         
         
@@ -135,6 +137,7 @@ namespace Characters.Interfaces {
             uIController.uIManager=this.uIManager;
             interactionDistance=3;    
             looted=false;
+            weakness=EnumUtility.AttackType.Nothing;
         }
 
         //method used in the Start
@@ -486,6 +489,16 @@ namespace Characters.Interfaces {
             currentHp=hp/6;
             isDeath=false;
         }
+
+        protected void ModifyRecoil(float modifier){
+            baseAttackRecoil*=modifier;
+            specialAttackRecoil*=modifier;
+            Debug.Log(ToString()+" recoil Modified: "+baseAttackRecoil.ToString()+" "+specialAttackRecoil.ToString());
+        }
+
+        protected abstract void ModifyWeakness(float modifier);
+
+        protected virtual void ModifyElementalPower(float modifier){}
 
 
 

@@ -73,8 +73,9 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
         protected override void TakeDamage(Damage damage){
-            if (damage.DamageRec< currentHp){
-                currentHp-=damage.DamageRec;
+            float dam= damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec;
+            if (dam< currentHp){
+                currentHp-=dam;
                 uIManager.FillBar(currentHp/hp,"health");
             }
             else{
@@ -127,6 +128,15 @@ namespace Characters.PC{
            fog.Damage=new Damage(fogDamage,EnumUtility.AttackType.Basilisk);
            yield return new WaitForSeconds(fogDuration);
            Destroy(fog.gameObject);
+        }
+        protected override void ModifyWeakness(float modifier){
+            if(modifier<1){
+                weakness=EnumUtility.AttackType.Neptunian;
+            }
+            else{
+                weakness=EnumUtility.AttackType.Nothing;
+            }
+            Debug.Log(ToString()+ "weakness modified");
         }
 
     }
