@@ -5,9 +5,10 @@ using User;
 using Characters.Interfaces;
 using UnityEngine.Playables;
 using System;
+using Managers;
 
 namespace Consumables.Healables.Plants {
-	public abstract class Plant : MonoBehaviour, IPlant {
+	public abstract class Plant : IPlant {
 		public abstract string Name { get; }
 		public abstract string Description { get; }
 		public int HealthPercentage => 50;
@@ -16,16 +17,25 @@ namespace Consumables.Healables.Plants {
 		[SerializeField] protected Sprite plantIcon;
 		public Sprite PlantIcon { get => plantIcon; }
 
+		protected Transform container;
+
+		public Plant(Transform container) {
+			this.container = container;
+			Awaker();
+		}
+
+		protected virtual void Awaker() {	}
+
 		public void UseConsumable() {
 			PlayableCharacter currentPlayer = GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
 			bool compatible = CheckCompatibility(currentPlayer);
 			//TODO: Trigger a restore health function
 			Inventory.Instance.TryRemoveConsumableFromInventory(this);
-			Destroy(this);
+			//Destroy(this);
 			if (!compatible) {
 				TriggerMalus(currentPlayer);
 			}
-			Destroy(gameObject);
+			//Destroy(gameObject);
 		}
 
 		public bool CheckCompatibility(PlayableCharacter currentPlayer) {
@@ -48,20 +58,20 @@ namespace Consumables.Healables.Plants {
 					malusName = "plantHealthMalus" + DateTime.Now.ToString("s");
 					malus = new Bonus(false, MalusManager.Stats.Hp, 0.7f, malusName);
 					malusManager.Add(malus);
-					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
+					GameManager.Instance.StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					//malusManager.Remove(MalusManager.Stats.Hp, "plantHealthMalus");
 					break;
 				case 1:
 					malusName = "plantStaminaMalus" + DateTime.Now.ToString("s");
 					malus = new Bonus(false, MalusManager.Stats.Stamina, 0.7f, malusName);
 					malusManager.Add(malus);
-					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
+					GameManager.Instance.StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
 				case 2:
 					malusName = "plantSpeedMalus" + DateTime.Now.ToString("s");
 					malus = new Bonus(false, MalusManager.Stats.Speed, 0.7f, malusName);
 					malusManager.Add(malus);
-					StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
+					GameManager.Instance.StartCoroutine(WaitAndRemoveMalus(30.0F, malus, malusManager));
 					break;
 			}
 

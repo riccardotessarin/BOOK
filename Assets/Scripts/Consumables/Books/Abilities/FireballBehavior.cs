@@ -23,9 +23,9 @@ public class FireballBehavior : MonoBehaviour {
 		if (enemy != null) {
 			Debug.Log("NPC hitted");
 			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
-			Instantiate(explosionVFX, transform.parent);
-			Destroy(gameObject);
 		}
+		Instantiate(explosionVFX, transform.parent);
+		Destroy(gameObject);
 	}
 
 	// Update is called once per frame

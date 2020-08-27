@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
+using Managers;
 
 namespace Consumables.Books.Abilities {
 	public class FirePillar : Book {
@@ -11,6 +13,10 @@ namespace Consumables.Books.Abilities {
 		public override int Charges => 5;
 
 		[SerializeField] private GameObject firePillarPrefab;
+		private GameObject player;
+
+
+		public FirePillar(Transform container) : base(container) {	}
 
 		protected override void Awaker() {
 			base.Awaker();
@@ -20,19 +26,16 @@ namespace Consumables.Books.Abilities {
 
 		public override void UseConsumable() {
 			// TODO: Instatiate on the ground, where player is aiming
-			bookVFX = Instantiate(firePillarPrefab, transform, true);
-
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
+			player = players.FirstOrDefault();
+			var playerTransform = player.transform;
+			//var playerPosition = new Vector3(player.transform.localPosition.x + 4, player.transform.position.y, player.transform.position.z);
+			// Define the behavior of the ability
+			bookVFX = Object.Instantiate(firePillarPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
+			bookVFX.transform.parent = container;
+			//GameManager.Instance.StartCoroutine(PlacePillar());
 			RemoveCharge();     // Remove charge after the ability is used
-		}
-
-		// Use this for initialization
-		void Start() {
-
-		}
-
-		// Update is called once per frame
-		void Update() {
-
 		}
 	}
 }

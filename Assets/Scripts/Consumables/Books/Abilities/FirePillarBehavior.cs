@@ -19,6 +19,7 @@ namespace Consumables.Books.Abilities {
 
 		}
 
+		/*
 		private void OnTriggerEnter(Collider other) {
 			Transform child = gameObject.transform.GetChild(0);
 			ParticleSystem particle = child.GetComponent<ParticleSystem>();
@@ -26,15 +27,19 @@ namespace Consumables.Books.Abilities {
 				particle.Play();
 			}
 		}
+
+		*/
 		private void OnCollisionEnter(Collision collision) {
 			//gameObject.GetComponentInChildren<Renderer>().enabled = true;
 			//gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
-			Transform child = gameObject.transform.GetChild(0);
-			ParticleSystem particle = child.GetComponent<ParticleSystem>();
-			if(!particle.isPlaying) {
-				particle.Play();
+			Character enemy = collision.gameObject.GetComponent<PlayableCharacter>();
+			if (enemy != null) {
+				Transform child = gameObject.transform.GetChild(0);
+				ParticleSystem particle = child.GetComponent<ParticleSystem>();
+				if (!particle.isPlaying) {
+					particle.Play();
+				}
 			}
-			
 
 			//ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
 			//ps.enableEmission = true;

@@ -13,6 +13,8 @@ namespace Consumables.Books.Abilities{
 
 		[SerializeField] private GameObject iceStalagmitePrefab;
 
+		public IceStalagmite(Transform container) : base(container) {	}
+
 		protected override void Awaker(){
 			base.Awaker();
 			bookIcon=Resources.Load<Sprite>("Images/NifhleimCommonBook");
@@ -21,21 +23,8 @@ namespace Consumables.Books.Abilities{
 
 		public override void UseConsumable() {
 			// TODO: Instatiate on the ground, where player is aiming
-			//bookVFX = Instantiate(iceStalagmitePrefab, transform, true);
 
 			RemoveCharge();     // Remove charge after the ability is used
-		}
-
-		// Start is called before the first frame update
-		void Start()
-		{
-			
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-			
 		}
 	}
 }

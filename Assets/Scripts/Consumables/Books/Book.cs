@@ -2,11 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using User;
 
 namespace Consumables.Books {
-	public abstract class Book : MonoBehaviour, IBook {
+	public abstract class Book : IBook {
 		public abstract string Name { get; }
 		public abstract string Description { get; }
 		public abstract string Element { get; }
@@ -17,22 +18,24 @@ namespace Consumables.Books {
 		
 		public int CurrentCharges { get; protected set;}
 
+		protected Transform container;
 
-
-		[SerializeField] protected Sprite bookIcon;
+		protected Sprite bookIcon;
 		public Sprite BookIcon { get => bookIcon; }
 
-		[SerializeField] public GameObject bookDrop3DModel;
-		
 
-		[SerializeField] public GameObject bookVFX;
+		protected GameObject bookVFX;
+
+		public Book(Transform container) {
+			this.container = container;
+			Awaker();
+		}
 
 		protected virtual void Awaker(){
 			CurrentCharges=Charges;
 		}
-		private void Awake(){
-			Awaker();
-		}
+
+
 		public bool AddCharge(IPage page) {
 			if (CurrentCharges < Charges && PageType == page.Type) {
 				CurrentCharges++;
@@ -48,7 +51,6 @@ namespace Consumables.Books {
 			CurrentCharges--;
 			if (CurrentCharges == 0) {
 				Inventory.Instance.TryRemoveConsumableFromInventory(this);
-				Destroy(this.gameObject);
 			}
 		}
 
