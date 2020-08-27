@@ -20,8 +20,10 @@ namespace Consumables.Books.Drops {
 		public override void PickDrop() {
 			var inventory = Inventory.Instance;
 			Book fireball = new Fireball(inventory.booksContainer);
-			inventory.TryAddConsumableToInventory(fireball);
-			Destroy(this.gameObject);
+			var success = inventory.TryAddConsumableToInventory(fireball);
+			if(success) {
+				Destroy(this.gameObject);
+			}
 		}
 
 		// Use this for initialization

@@ -15,8 +15,10 @@ namespace Consumables.Healables.Plants.Drops {
 		public override void PickDrop() {
 			var inventory = Inventory.Instance;
 			Plant genea = new Rayaza(inventory.booksContainer);
-			inventory.TryAddConsumableToInventory(genea);
-			Destroy(this.gameObject);
+			var success = inventory.TryAddConsumableToInventory(genea);
+			if(success) {
+				Destroy(this.gameObject);
+			}
 		}
 
 		void Awake() {

@@ -10,7 +10,11 @@ namespace Consumables.Healables.Plants.Drops {
 		public abstract string Description { get; }
 		public int HealthPercentage => 50;
 		public abstract EnumUtility.CharacterType Type { get; }
-
+		
+		/// <summary>
+		/// Try to pick up the drop and add it to the player's inventory.
+		/// The gameObject is destroyed only if the player has space in his inventory.
+		/// </summary>
 		public abstract void PickDrop();
 
 		#region UnityMethods

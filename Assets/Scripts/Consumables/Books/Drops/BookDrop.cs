@@ -13,6 +13,10 @@ namespace Consumables.Books.Drops {
 		public abstract EnumUtility.PageType PageType { get; }
 		public abstract int Charges { get; }
 
+		/// <summary>
+		/// Try to pick up the drop and add it to the player's inventory.
+		/// The gameObject is destroyed only if the player has space in his inventory.
+		/// </summary>
 		public abstract void PickDrop();
 
 		#region UnityMethods
