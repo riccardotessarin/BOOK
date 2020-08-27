@@ -13,7 +13,8 @@ using UnityEngine.UIElements;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
-		public Transform container;		// Check if public is correct
+		public Transform booksContainer;     // Check if public is correct
+		public Transform plantsContainer;
 
 		private readonly List<Book> _books = new List<Book>();
 		private readonly List<Plant> _plants = new List<Plant>();
@@ -37,18 +38,13 @@ namespace User {
 				Destroy(this);
 			}
 
-			Book book = new Fireball(container);
-			Plant plant = new GameObject().AddComponent<Genea>();
-			plant.name="Genea1";
-			Book book1= new FirePillar(container);
-			Book book2=new IceStalagmite(container);
-			Plant plant1= new GameObject().AddComponent<Rayaza>();
-			plant1.name="Rayaza1";
-			Plant plant2= new GameObject().AddComponent<Ryua>();
-			plant2.name="Ryua1";
-			Plant plant3= new GameObject().AddComponent<Genea>();
-			plant3.name="Genea2";
-
+			Book book = new Fireball(booksContainer);
+			Plant plant = new Genea(plantsContainer);
+			Book book1= new FirePillar(booksContainer);
+			Book book2=new IceStalagmite(booksContainer);
+			Plant plant1= new Rayaza(plantsContainer);
+			Plant plant2= new Ryua(plantsContainer);
+			Plant plant3 = new Genea(plantsContainer);
 
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
@@ -78,7 +74,9 @@ namespace User {
 
 		private void Start() {
 			var gO = new GameObject() { name = "BooksContainer" };
-			container = gO.transform;
+			booksContainer = gO.transform;
+			var gO2 = new GameObject() { name = "PlantsContainer" };
+			plantsContainer = gO2.transform;
 		}
 
 		/// <summary>
