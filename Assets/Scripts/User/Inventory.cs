@@ -79,13 +79,13 @@ namespace User {
 			}
 			if(TryAddConsumableToInventory(plant1)){
 				Debug.Log("Rayaza added to Inventory");
-			}
-			if(TryAddConsumableToInventory(plant2)){
+			}*/
+			if (TryAddConsumableToInventory(plant2)){
 				Debug.Log("Ryua added to Inventory");
 			}
 			if(TryAddConsumableToInventory(plant3)){
 				Debug.Log("Genea added to Inventory");
-			}*/
+			}
 		}
 
 		private void Start() {

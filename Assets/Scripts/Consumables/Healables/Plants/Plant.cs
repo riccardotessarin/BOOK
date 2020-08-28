@@ -39,10 +39,9 @@ namespace Consumables.Healables.Plants {
 		}
 
 		public bool CheckCompatibility(PlayableCharacter currentPlayer) {
-			if (Type.ToString() == currentPlayer.type) {
+			if (Type == currentPlayer.RaceType) {
 				return true;
 			}
-
 			return false;
 		}
 
