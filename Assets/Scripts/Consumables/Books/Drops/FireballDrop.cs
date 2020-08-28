@@ -17,13 +17,13 @@ namespace Consumables.Books.Drops {
 			bookDrop3DModel = Resources.Load<GameObject>("");
 		}
 
-		public override void PickDrop() {
-			var inventory = Inventory.Instance;
-			Book fireball = new Fireball(inventory.booksContainer);
-			var success = inventory.TryAddConsumableToInventory(fireball);
+		public override bool PickDrop(Inventory inventory) {
+			Book book = new Fireball(inventory.booksContainer);
+			var success = inventory.TryAddConsumableToInventory(book);
 			if(success) {
 				Destroy(this.gameObject);
 			}
+			return success;
 		}
 
 		// Use this for initialization

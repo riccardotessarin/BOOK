@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using User;
 
 namespace Consumables.Books.Drops {
 	public abstract class BookDrop : MonoBehaviour {
@@ -17,7 +18,7 @@ namespace Consumables.Books.Drops {
 		/// Try to pick up the drop and add it to the player's inventory.
 		/// The gameObject is destroyed only if the player has space in his inventory.
 		/// </summary>
-		public abstract void PickDrop();
+		public abstract bool PickDrop(Inventory inventory);
 
 		#region UnityMethods
 		// Use this for initialization
