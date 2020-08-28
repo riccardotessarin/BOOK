@@ -12,13 +12,13 @@ namespace Consumables.Healables.Plants.Drops {
 
 		public override EnumUtility.CharacterType Type => EnumUtility.CharacterType.Rayaz;
 
-		public override void PickDrop() {
-			var inventory = Inventory.Instance;
-			Plant genea = new Rayaza(inventory.booksContainer);
-			var success = inventory.TryAddConsumableToInventory(genea);
+		public override bool PickDrop(Inventory inventory) {
+			Plant plant = new Rayaza(inventory.booksContainer);
+			var success = inventory.TryAddConsumableToInventory(plant);
 			if(success) {
 				Destroy(this.gameObject);
 			}
+			return success;
 		}
 
 		void Awake() {
