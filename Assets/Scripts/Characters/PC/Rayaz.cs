@@ -16,6 +16,7 @@ namespace Characters.PC{
         protected override void Awaker(){
             base.Awaker();
             type="rayaz";
+            raceType=EnumUtility.CharacterType.Rayaz;
             hp=50;
             stamina = 50;
             specialAttackRadius=10;

@@ -19,6 +19,8 @@ using Consumables.Books.Drops;
 //using Books;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
+        [SerializeField] protected EnumUtility.CharacterType raceType;
+        public EnumUtility.CharacterType RaceType{get=>raceType;}
         [SerializeField] protected float stamina;
         [SerializeField] protected float currentStamina;
         Inventory inventory;
@@ -75,6 +77,8 @@ namespace Characters.Interfaces {
         [SerializeField]private bool isLooting;
         [SerializeField]protected EnumUtility.AttackType weakness;
         public const float weaknessMultiplicator=1.2f;
+        [SerializeField] protected Sprite weaknessSprite;
+        public Sprite WeaknessSprite{get=>weaknessSprite;}
 
         
         

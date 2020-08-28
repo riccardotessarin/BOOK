@@ -19,6 +19,7 @@ namespace Characters.PC{
         protected override void Awaker(){
             base.Awaker();
             type="ryuyuki";
+            raceType=EnumUtility.CharacterType.Ryuyuki;
             hp=50;
             //Debug.Log("Awaker Ryuyuki");
             stamina = 50;

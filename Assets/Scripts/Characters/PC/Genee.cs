@@ -14,6 +14,7 @@ namespace Characters.PC{
         protected override void Awaker(){
             base.Awaker();
             type="genee";
+            raceType=EnumUtility.CharacterType.Genee;
             hp=50;
             stamina = 50;
             
