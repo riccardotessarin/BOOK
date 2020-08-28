@@ -32,7 +32,7 @@ namespace Consumables.Books.Abilities {
 		private void OnCollisionEnter(Collision collision) {
 			//gameObject.GetComponentInChildren<Renderer>().enabled = true;
 			//gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
-			Character enemy = collision.gameObject.GetComponent<PlayableCharacter>();
+			Character enemy = collision.gameObject.GetComponent<Character>();
 			if (enemy != null) {
 				Transform child = gameObject.transform.GetChild(0);
 				ParticleSystem particle = child.GetComponent<ParticleSystem>();

@@ -11,7 +11,7 @@ namespace Consumables.Books.Abilities {
 
 		public override string Name => "Fireball";
 		public override string Description => "Throw a ball of fire";
-		public override string Element => "Fire";
+		public override EnumUtility.AttackType Element => EnumUtility.AttackType.Inferno;
 		public override string Rarity => "Rare";
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.Fireball;
 		public override int Charges => 3;

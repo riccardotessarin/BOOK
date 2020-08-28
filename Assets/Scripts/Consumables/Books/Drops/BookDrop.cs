@@ -8,7 +8,7 @@ namespace Consumables.Books.Drops {
 
 		public abstract string Name { get; }
 		public abstract string Description { get; }
-		public abstract string Element { get; }
+		public abstract EnumUtility.AttackType Element { get; }
 		public abstract string Rarity { get; }
 		public abstract EnumUtility.PageType PageType { get; }
 		public abstract int Charges { get; }

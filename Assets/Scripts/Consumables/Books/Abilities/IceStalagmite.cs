@@ -6,7 +6,7 @@ namespace Consumables.Books.Abilities{
 	{
 		public override string Name => "Ice Stalagmite";
 		public override string Description => "Set a trap that create a stalagmite of ice";
-		public override string Element => "Ice";
+		public override EnumUtility.AttackType Element => EnumUtility.AttackType.Niflheim;
 		public override string Rarity => "Common";
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.IceStalagmite;
 		public override int Charges => 3;

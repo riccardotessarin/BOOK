@@ -10,7 +10,7 @@ namespace Consumables.Books {
 	public abstract class Book : IBook {
 		public abstract string Name { get; }
 		public abstract string Description { get; }
-		public abstract string Element { get; }
+		public abstract EnumUtility.AttackType Element { get; }
 		public abstract string Rarity { get; }
 		public abstract EnumUtility.PageType PageType { get; }
 		

@@ -19,6 +19,16 @@ namespace User {
 		private readonly List<Book> _books = new List<Book>();
 		private readonly List<Plant> _plants = new List<Plant>();
 
+		public Dictionary<EnumUtility.AttackType, EnumUtility.PageType[]> BookDropDictionary =
+			new Dictionary<EnumUtility.AttackType, EnumUtility.PageType[]> {
+				{ EnumUtility.AttackType.Inferno, new[]{ EnumUtility.PageType.FirePillar, EnumUtility.PageType.Fireball } },
+				{ EnumUtility.AttackType.Niflheim, new[]{ EnumUtility.PageType.IceStalagmite, EnumUtility.PageType.BodyFreeze } },
+				{ EnumUtility.AttackType.Basilisk, new[]{ EnumUtility.PageType.BlindingCloud, EnumUtility.PageType.VenomousNeedle } },
+				{ EnumUtility.AttackType.Neptunian, new[]{ EnumUtility.PageType.WaterShield, EnumUtility.PageType.SurgingTide } },
+				{ EnumUtility.AttackType.Raijin, new[]{ EnumUtility.PageType.LightningSpeed, EnumUtility.PageType.ElectricalDischarge } }
+			};
+
+
 		public IList<Book> Books{get=>_books;}
 		public IList<Plant> Plants{get=>_plants;}
 
@@ -37,6 +47,12 @@ namespace User {
 			} else {
 				Destroy(this);
 			}
+
+			/*
+			foreach (KeyValuePair<EnumUtility.AttackType, EnumUtility.PageType[]> kvp in BookDropDictionary) {
+				Debug.Log("Key = " + kvp.Key + "Value = " + kvp.Value);
+			}
+			*/
 
 			Book book = new Fireball(booksContainer);
 			Plant plant = new Genea(plantsContainer);
