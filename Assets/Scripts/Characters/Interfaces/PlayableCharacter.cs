@@ -13,6 +13,8 @@ using Managers.UI;
 using Consumables;
 using Characters.NPC;
 using Consumables.Pages;
+using Consumables.Healables.Plants.Drops;
+using Consumables.Books.Drops;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -451,7 +453,7 @@ namespace Characters.Interfaces {
         public void InteractAction(){
             RaycastHit hit;
             if(!isAttacking && !isLooting &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
-                if(hit.collider.GetComponent<Plant>()){
+                if(hit.collider.GetComponent<PlantDrop>()){
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<Plant>()));
                 }
                 else if(hit.collider.GetComponent<PlayableCharacter>()){

@@ -5,6 +5,7 @@ using Characters.Interfaces;
 using Attacks;
 using Consumables.Books.Abilities;
 using Consumables.Books;
+using Consumables.Books.Drops;
 
 namespace Characters.NPC {
     public class CyborgKinean : NonPlayableCharacters {
@@ -118,12 +119,11 @@ namespace Characters.NPC {
             //TODO
             GameObject ret=new GameObject();
             if(rarityDrop){
-                ret.AddComponent<FirePillar>();
             }
             else{
-                ret.AddComponent<Fireball>();
+                ret.AddComponent<FireballDrop>();
             }
-            ret.name=ret.GetComponent<Book>().Name;
+            ret.name=ret.GetComponent<BookDrop>().Name;
             return ret.GetComponent<Book>();
         }
     }

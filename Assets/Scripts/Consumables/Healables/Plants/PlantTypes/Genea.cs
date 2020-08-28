@@ -8,8 +8,12 @@ namespace Consumables.Healables.Plants.PlantTypes {
 		public override string Description => "Plant for Genee race.";
 
 		public override EnumUtility.CharacterType Type => EnumUtility.CharacterType.Genee;
-		void Awake(){
-			plantIcon=(Sprite)Resources.LoadAll("Images/pngwing.com",typeof(Sprite))[0];
+
+		public Genea(Transform container) : base(container) { }
+
+		protected override void Awaker() {
+			base.Awaker();
+			plantIcon = (Sprite)Resources.LoadAll("Images/pngwing.com", typeof(Sprite))[0];
 		}
 
 		// Use this for initialization

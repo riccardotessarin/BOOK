@@ -5,6 +5,7 @@ using Characters.Interfaces;
 using System.Linq;
 using Consumables.Healables.Plants;
 using Characters.NPC;
+using Consumables.Healables.Plants.Drops;
 namespace Managers.UI{
     public class UIController 
     {
@@ -319,7 +320,7 @@ namespace Managers.UI{
                     }
                 }
             }
-            else if(hit.collider.GetComponent<Plant>()){
+            else if(hit.collider.GetComponent<PlantDrop>()){
                 Debug.Log("interact");
                 uIManager.ChangeInteractionText("Press 'E' to interact");
             }
