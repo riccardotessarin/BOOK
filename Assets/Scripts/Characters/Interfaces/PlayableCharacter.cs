@@ -80,6 +80,12 @@ namespace Characters.Interfaces {
         [SerializeField] protected Sprite weaknessSprite;
         public Sprite WeaknessSprite{get=>weaknessSprite;}
 
+        [SerializeField] protected Sprite elementSprite;
+        public Sprite ElementSprite{get=>elementSprite;}
+
+        [SerializeField] protected EnumUtility.AttackType elementType;
+        [SerializeField]protected bool activateElementBonus; 
+
         
         
 
@@ -144,6 +150,7 @@ namespace Characters.Interfaces {
             interactionDistance=3;    
             looted=false;
             weakness=EnumUtility.AttackType.Nothing;
+            activateElementBonus=false;
         }
 
         //method used in the Start
@@ -504,7 +511,16 @@ namespace Characters.Interfaces {
 
         protected abstract void ModifyWeakness(float modifier);
 
-        protected virtual void ModifyElementalPower(float modifier){}
+        protected virtual void ModifyElementalPower(float modifier){
+            if(modifier>1){
+                activateElementBonus=true;
+            }
+            else{
+                activateElementBonus=false;
+            }
+
+            Debug.Log(ToString()+"activate element bonus");
+        }
 
 
 

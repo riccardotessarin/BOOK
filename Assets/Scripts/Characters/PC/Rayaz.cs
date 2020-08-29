@@ -17,6 +17,7 @@ namespace Characters.PC{
             base.Awaker();
             type="rayaz";
             raceType=EnumUtility.CharacterType.Rayaz;
+            weaknessSprite=Resources.Load<Sprite>("Images/WaterPowerSprite");
             hp=50;
             stamina = 50;
             specialAttackRadius=10;
@@ -25,6 +26,8 @@ namespace Characters.PC{
             targetEnemy=null;
             fogDamage=2;
             fogDuration=10;
+            elementType=EnumUtility.AttackType.Basilisk;
+            elementSprite=Resources.Load<Sprite>("Images/PoisonPowerSprite");
             
             
             

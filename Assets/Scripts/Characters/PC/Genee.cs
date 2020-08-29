@@ -17,10 +17,12 @@ namespace Characters.PC{
             raceType=EnumUtility.CharacterType.Genee;
             hp=50;
             stamina = 50;
-            
+            weaknessSprite=Resources.Load<Sprite>("Images/ElectricPowerAttack");
             speed= 60;
             baseAttackRange=10;
             invicible=false;
+            elementType=EnumUtility.AttackType.Neptunian;
+            elementSprite=Resources.Load<Sprite>("Images/WaterPowerSprite");
             
         }
         protected override void Starter(){

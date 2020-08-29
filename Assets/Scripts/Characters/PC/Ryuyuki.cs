@@ -20,6 +20,7 @@ namespace Characters.PC{
             base.Awaker();
             type="ryuyuki";
             raceType=EnumUtility.CharacterType.Ryuyuki;
+            weaknessSprite=Resources.Load<Sprite>("Images/FirePowerSprite");
             hp=50;
             //Debug.Log("Awaker Ryuyuki");
             stamina = 50;
@@ -28,6 +29,8 @@ namespace Characters.PC{
             baseAttackRange=10;
             speedModifier=0.1f;
             maxlastTargetDistance=20;
+            elementType=EnumUtility.AttackType.Niflheim;
+            elementSprite=Resources.Load<Sprite>("Images/IcePowerSprite");
             
             
             
@@ -66,9 +69,15 @@ namespace Characters.PC{
             }
         }
         protected override void RyuyukiBond(){
+            Bonus malus=new Bonus(false,MalusManager.Stats.Weakness,0.7f,"ryuyukiMalus");
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+": ryuyuki bond");
         }
         protected override void GeneeBond(){
+            Bonus bonus= new Bonus(true,MalusManager.Stats.Recoil,0.7f,"geneeBonus");
+            Bonus malus=new Bonus(false,MalusManager.Stats.Stamina,0.7f,"geneeMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"genee bond");
         }
         protected override void RayazBond(){
@@ -80,9 +89,12 @@ namespace Characters.PC{
             Debug.Log(this.ToString()+"rayaz bond");
         }
         protected override void ReverseRyuyukiBond(){
+            malusManager.Remove(MalusManager.Stats.Weakness,"ryuyukiMalus");
             Debug.Log(this.ToString()+": reverse ryuyuki bond");
         }
         protected override void ReverseGeneeBond(){
+            malusManager.Remove(MalusManager.Stats.Recoil,"geneeBonus");
+            malusManager.Remove(MalusManager.Stats.Stamina,"geneeMalus");
             Debug.Log(this.ToString()+": reverse genee bond");
         }
         protected override void ReverseRayazBond(){
@@ -171,6 +183,8 @@ namespace Characters.PC{
             }
             Debug.Log(ToString()+ "weakness modified");
         }
+
+         
 
         
 

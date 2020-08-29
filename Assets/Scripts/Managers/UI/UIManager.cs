@@ -36,7 +36,8 @@ namespace Managers.UI{
         [SerializeField] private Image bonusPrefab;
         [SerializeField] private Image malusPrefab;
         private Dictionary<string,Image> statusImageDict=new Dictionary<string, Image>();
-        private Vector3 statusVector;
+        [SerializeField]private Vector3 statusVector;
+        
         
         
 
@@ -273,16 +274,20 @@ namespace Managers.UI{
             }
         } 
         
-        public void AddBonusImage(Sprite sprite, bool bonus,string name){
+        public void AddBonusImage(Sprite sprite, bool bonus,string name, bool block){
             Image image;
             if(bonus){
-                image=Instantiate(bonusPrefab,bonusPrefab.rectTransform);
+                image=Instantiate(bonusPrefab,statusArea.transform);
             }
             else{
-                image=Instantiate(malusPrefab,malusPrefab.rectTransform);
+                image=Instantiate(malusPrefab,statusArea.transform);
             }
-            image.rectTransform.SetParent(statusArea.rectTransform);
+            
+            
             image.rectTransform.GetChild(0).GetComponent<Image>().sprite=sprite;
+            if(block){
+                image.rectTransform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            }
             statusImageDict[name]=image;
         }
         public void RemoveBonusImage(string name){
