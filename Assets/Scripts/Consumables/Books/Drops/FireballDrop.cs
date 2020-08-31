@@ -13,7 +13,9 @@ namespace Consumables.Books.Drops {
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.Fireball;
 		public override int Charges => 3;
 
-		private void Awake() {
+		protected override void Awaker() {
+			base.Awaker();
+			bookIcon = Resources.Load<Sprite>("Images/InfernoRareBook");
 			bookDrop3DModel = Resources.Load<GameObject>("");
 		}
 

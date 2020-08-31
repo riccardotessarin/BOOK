@@ -13,7 +13,9 @@ namespace Consumables.Books.Drops {
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.BlindingCloud;
 		public override int Charges => 5;
 
-		private void Awake() {
+		protected override void Awaker() {
+			base.Awaker();
+			bookIcon = Resources.Load<Sprite>("Images/BasiliskCommonBook");
 			bookDrop3DModel = Resources.Load<GameObject>("");
 		}
 

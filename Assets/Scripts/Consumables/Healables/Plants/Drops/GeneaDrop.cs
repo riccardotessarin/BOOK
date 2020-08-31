@@ -21,7 +21,9 @@ namespace Consumables.Healables.Plants.Drops {
 			return success;
 		}
 
-		void Awake() {
+		protected override void Awaker() {
+			base.Awaker();
+			plantIcon = (Sprite)Resources.LoadAll("Images/pngwing.com", typeof(Sprite))[0];
 			plantDrop3DModel = Resources.Load<GameObject>("");
 		}
 
