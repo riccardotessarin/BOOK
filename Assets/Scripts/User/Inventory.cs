@@ -4,13 +4,13 @@ using System.Linq;
 using Consumables;
 using Consumables.Books;
 using Consumables.Books.Abilities;
-using Consumables.Books.Drops;
 using Consumables.Healables.Plants;
 using Consumables.Healables.Plants.PlantTypes;
 using Consumables.Pages;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
+using Consumables.Books.Drops;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
@@ -20,19 +20,17 @@ namespace User {
 		private readonly List<Book> _books = new List<Book>();
 		private readonly List<Plant> _plants = new List<Plant>();
 
-		public Dictionary<EnumUtility.AttackType, BookDrop[]> BookDropDictionary =
-			new Dictionary<EnumUtility.AttackType, BookDrop[]>();
-
-		/*
-		public Dictionary<EnumUtility.AttackType, EnumUtility.PageType[]> BookDropDictionary2 =
-			new Dictionary<EnumUtility.AttackType, EnumUtility.PageType[]> {
-				{ EnumUtility.AttackType.Inferno, new[]{ EnumUtility.PageType.FirePillar, EnumUtility.PageType.Fireball } },
-				{ EnumUtility.AttackType.Niflheim, new[]{ EnumUtility.PageType.IceStalagmite, EnumUtility.PageType.BodyFreeze } },
-				{ EnumUtility.AttackType.Basilisk, new[]{ EnumUtility.PageType.BlindingCloud, EnumUtility.PageType.VenomousNeedle } },
-				{ EnumUtility.AttackType.Neptunian, new[]{ EnumUtility.PageType.WaterShield, EnumUtility.PageType.SurgingTide } },
-				{ EnumUtility.AttackType.Raijin, new[]{ EnumUtility.PageType.LightningSpeed, EnumUtility.PageType.ElectricalDischarge } }
+		public static Dictionary<EnumUtility.AttackType, Type[]> BookDropDictionary =
+			new Dictionary<EnumUtility.AttackType, Type[]> {
+				{ EnumUtility.AttackType.Inferno, new[]{typeof(FirePillarDrop), typeof(FireballDrop)} },
+				{ EnumUtility.AttackType.Niflheim, new[]{ typeof(IceStalagmiteDrop), typeof(BodyFreezeDrop)} },
+				{ EnumUtility.AttackType.Basilisk, new[]{ typeof(BlindingCloudDrop), typeof(VenomousNeedleDrop) } },
+				{ EnumUtility.AttackType.Neptunian, new[]{ typeof(WaterShieldDrop), typeof(SurgingTideDrop) } },
+				{ EnumUtility.AttackType.Raijin, new[]{typeof(LightningSpeedDrop), typeof(ElectricalDischargeDrop)} }
 			};
-		*/
+
+		
+
 
 		public IList<Book> Books{get=>_books;}
 		public IList<Plant> Plants{get=>_plants;}
@@ -53,12 +51,6 @@ namespace User {
 				Destroy(this);
 			}
 
-			BookDropDictionary.Add(EnumUtility.AttackType.Inferno, new BookDrop[] { new GameObject().AddComponent<FirePillarDrop>(), new GameObject().AddComponent<FireballDrop>() });
-			BookDropDictionary.Add(EnumUtility.AttackType.Niflheim, new BookDrop[] { new GameObject().AddComponent<IceStalagmiteDrop>(), new GameObject().AddComponent<BodyFreezeDrop>() });
-			BookDropDictionary.Add(EnumUtility.AttackType.Basilisk, new BookDrop[] { new GameObject().AddComponent<BlindingCloudDrop>(), new GameObject().AddComponent<VenomousNeedleDrop>() });
-			BookDropDictionary.Add(EnumUtility.AttackType.Neptunian, new BookDrop[] { new GameObject().AddComponent<WaterShieldDrop>(), new GameObject().AddComponent<SurgingTideDrop>() });
-			BookDropDictionary.Add(EnumUtility.AttackType.Raijin, new BookDrop[] { new GameObject().AddComponent<LightningSpeedDrop>(), new GameObject().AddComponent<ElectricalDischargeDrop>() });
-
 			/*
 			foreach (KeyValuePair<EnumUtility.AttackType, EnumUtility.PageType[]> kvp in BookDropDictionary) {
 				Debug.Log("Key = " + kvp.Key + "Value = " + kvp.Value);
@@ -76,19 +68,18 @@ namespace User {
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
 			}
-			if (TryAddConsumableToInventory(book1)) {
+			/*if (TryAddConsumableToInventory(book2)) {
 				Debug.Log("Fire Pillar added to inventory!");
-			}
+			}*/
 			if (TryAddConsumableToInventory(plant)) {
 				Debug.Log("Genea added to inventory!");
-			}
-			if (TryAddConsumableToInventory(book2)) {
-				Debug.Log("Ice Stalagmite added to Inventory");
 			}
 			/*if (TryAddConsumableToInventory(book1)){
 				Debug.Log("FireColumn added to inventory");
 			}
-			
+			if(TryAddConsumableToInventory(book2)){
+				Debug.Log("IceSTalagmite added to Inventory");
+			}
 			if(TryAddConsumableToInventory(plant1)){
 				Debug.Log("Rayaza added to Inventory");
 			}*/

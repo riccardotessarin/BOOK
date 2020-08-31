@@ -19,6 +19,7 @@ using Consumables.Books.Drops;
 //using Books;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
+        public bool IsAttacking{get=>isAttacking;}
         [SerializeField] protected EnumUtility.CharacterType raceType;
         public EnumUtility.CharacterType RaceType{get=>raceType;}
         [SerializeField] protected float stamina;
@@ -74,7 +75,6 @@ namespace Characters.Interfaces {
         public UIController UIController{get=>uIController;}
 
         [SerializeField]private float interactionDistance;
-        [SerializeField]private bool isLooting;
         [SerializeField]protected EnumUtility.AttackType weakness;
         public const float weaknessMultiplicator=1.2f;
         [SerializeField] protected Sprite weaknessSprite;
@@ -132,7 +132,6 @@ namespace Characters.Interfaces {
             equippedAttack = Attack.BaseAttack;
             
             isAttacking = false;
-            isLooting=false;
             basePower = 5;
             if(!malusManager){
                 malusManager=new GameObject().AddComponent<MalusManager>();
@@ -223,10 +222,15 @@ namespace Characters.Interfaces {
         protected abstract void SpecialAttack();
 
         protected void BookAttack() {
-            int count=listBooks.Count();
-            int index=listBooks.IndexOf(equippedBook);
-            equippedBook.UseConsumable();
-            uIController.CheckChargeBook(index,count);
+            if(equippedBook.Element!=weakness){
+                int count=listBooks.Count();
+                int index=listBooks.IndexOf(equippedBook);
+                equippedBook.UseConsumable();
+                uIController.CheckChargeBook(index,count);
+            }
+            else{
+                Debug.Log("Cannot use book because of weakness");
+            }
         }
 
 
@@ -252,9 +256,10 @@ namespace Characters.Interfaces {
             foreach (var colliders in hitColliders) {
                 if (colliders.gameObject != this.gameObject) {
                     var pc = colliders.GetComponent<PlayableCharacter>();
-
+                    if(!pc.IsDeath){
                     //malusDic[pc.ToString()].DynamicInvoke();
-                    testDict[pc.ToString()] = true;
+                        testDict[pc.ToString()] = true;
+                    }
                 }
             }
 
@@ -388,7 +393,7 @@ namespace Characters.Interfaces {
 
         public void LootAction(){
             RaycastHit hit;
-            if( !isAttacking && !isLooting && Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance) ){
+            if( !isAttacking  && Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance) ){
                 Character hitted=hit.collider.GetComponent<Character>();
                 if(hitted && hitted.IsDeath && !hitted.Looted){
                     if(hitted is PlayableCharacter && traitor){
@@ -405,7 +410,6 @@ namespace Characters.Interfaces {
         }
         private IEnumerator Loot(Character dead, Type deadType){
             isAttacking=true;
-            isLooting=true;
             dead.Looted=true;
             if(deadType==typeof(PlayableCharacter)){
                 PlayableCharacter deadPC=dead.GetComponent<PlayableCharacter>();
@@ -419,10 +423,10 @@ namespace Characters.Interfaces {
                 else{
                     Debug.Log("Looting Traitor");
                     if(bookAdded){
-                        uIManager.AddBook(dropBook);
+                        uIManager.AddBook(dropBook.BookIcon);
                     }
                     if(plantAdded){
-                        UIManager.AddPlant(dropPlant);
+                        UIManager.AddPlant(dropPlant.PlantIcon,dropPlant.Description);
                         if(listPlants.Count()==1){
                             equippedPlant=dropPlant;
                         }
@@ -446,26 +450,26 @@ namespace Characters.Interfaces {
             }
             else if(deadType==typeof(CyborgKinean)){
                 CyborgKinean deadNPC=dead.GetComponent<CyborgKinean>();
-                Book dropBook=deadNPC.GetDrop();
-                if(!inventory.TryAddConsumableToInventory(dropBook)){
+                BookDrop dropBook=deadNPC.GetDrop();
+                Sprite booksprite=dropBook.BookIcon;
+                if(!dropBook.PickDrop(inventory)){
                     deadNPC.Looted=false;
                 }
                 else{
-                    uIManager.AddBook(dropBook);
+                    uIManager.AddBook(booksprite);
                 }
             }
             yield return new WaitForSeconds(0.5f);
             isAttacking=false;
-            isLooting=false;
             
 
         }
 
         public void InteractAction(){
             RaycastHit hit;
-            if(!isAttacking && !isLooting &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
+            if(!isAttacking  &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
                 if(hit.collider.GetComponent<PlantDrop>()){
-                    StartCoroutine(InteractPlant(hit.collider.GetComponent<Plant>()));
+                    StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
                 }
                 else if(hit.collider.GetComponent<PlayableCharacter>()){
                     StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
@@ -473,26 +477,27 @@ namespace Characters.Interfaces {
             }
         }
 
-        private IEnumerator InteractPlant(Plant interacted){
+        private IEnumerator InteractPlant(PlantDrop interacted){
             isAttacking=true;
-            isLooting=true;
-            if(!inventory.TryAddConsumableToInventory(interacted)){
+            Sprite plantSprite=interacted.PlantIcon;
+            string description=interacted.Description;
+            if(!interacted.PickDrop(inventory)){
                 //failed interaction
             }
             else{
-                uIManager.AddPlant(interacted);
+                uIManager.AddPlant(plantSprite,description);
             }
             yield return new WaitForSeconds(0.5f);
             isAttacking=false;
-            isLooting=false;
+   
         }
 
         private IEnumerator ReviveTeamMember(PlayableCharacter revived){
             isAttacking=true;
-            isLooting=true;
+  
             yield return new WaitForSecondsRealtime(3f);
             revived.SendMessage("Revive",SendMessageOptions.DontRequireReceiver);
-            isLooting=false;
+
             isAttacking=false;
 
         }

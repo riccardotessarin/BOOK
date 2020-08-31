@@ -11,33 +11,34 @@ namespace StateMachine.Actions.Implementations{
     {
         private PlayableCharacter player= GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
         public void Execute(){
-            
-            if(Input.GetMouseButtonDown(0)){
-                if(player.PowerMode)
-                    player.Attacker();
-                else{
-                    player.UseEquippedConsumable();
+            if(!player.IsAttacking || player.IsDeath){
+                if(Input.GetMouseButtonDown(0)){
+                    if(player.PowerMode)
+                        player.Attacker();
+                    else{
+                        player.UseEquippedConsumable();
+                    }
+                    
                 }
-                
-            }
-            if (Input.GetKeyDown(KeyCode.Q)) {
-                GameManager.Instance.CurrentState = new PauseMenuState();
-                Debug.Log("Changing to pause menu state");
-                player.UIManager.ActivateMenu(true);
+                if (Input.GetKeyDown(KeyCode.Q)) {
+                    GameManager.Instance.CurrentState = new PauseMenuState();
+                    Debug.Log("Changing to pause menu state");
+                    player.UIManager.ActivateMenu(true);
 
-            }
-            if(Input.GetKeyDown(KeyCode.F)){
-                player.PowerMode = !(player.PowerMode);
-                Debug.Log("PowerMode Active: "+player.PowerMode);
-                player.UIManager.SwitchMode(player.PowerMode);
-            }
-            if(Input.GetKeyDown(KeyCode.X)){
-                Debug.Log("Trying to loot");
-                player.LootAction();
-            }
-            if(Input.GetKeyDown(KeyCode.E)){
-                Debug.Log("Trying to interact");
-                player.InteractAction();
+                }
+                if(Input.GetKeyDown(KeyCode.F)){
+                    player.PowerMode = !(player.PowerMode);
+                    Debug.Log("PowerMode Active: "+player.PowerMode);
+                    player.UIManager.SwitchMode(player.PowerMode);
+                }
+                if(Input.GetKeyDown(KeyCode.X)){
+                    Debug.Log("Trying to loot");
+                    player.LootAction();
+                }
+                if(Input.GetKeyDown(KeyCode.E)){
+                    Debug.Log("Trying to interact");
+                    player.InteractAction();
+                }
             }
         }
         

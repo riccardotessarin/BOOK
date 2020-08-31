@@ -7,6 +7,7 @@ using Consumables.Pages.Abilities;
 using Consumables;
 
 
+
 namespace Characters.NPC {
     public class MeltingKinean : NonPlayableCharacters {
         private EnumUtility.PageType pageDrop;
@@ -66,7 +67,7 @@ namespace Characters.NPC {
             return page;
         }
 
-        //public HealthStabilizer GetDRopHS(){}
+        //public HealthStabilizer GetDropHS(){}
 
         
 

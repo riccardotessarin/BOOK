@@ -63,6 +63,12 @@ namespace Characters.Interfaces {
 
         protected override void Death() {
             IsDeath = true;
+            StartCoroutine(DeathVanishing());
+        }
+
+        protected IEnumerator DeathVanishing(){
+            yield return new WaitForSecondsRealtime(120f);
+            Destroy(this.gameObject);
         }
 
         protected override void BaseAttack() {

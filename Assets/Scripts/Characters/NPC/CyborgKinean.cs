@@ -6,6 +6,7 @@ using Attacks;
 using Consumables.Books.Abilities;
 using Consumables.Books;
 using Consumables.Books.Drops;
+using User;
 
 namespace Characters.NPC {
     public class CyborgKinean : NonPlayableCharacters {
@@ -115,16 +116,13 @@ namespace Characters.NPC {
 
         }
 
-        public Book GetDrop(){
+        public BookDrop GetDrop(){
+            int i=rarityDrop ? 1:0;
             //TODO
             GameObject ret=new GameObject();
-            if(rarityDrop){
-            }
-            else{
-                ret.AddComponent<FireballDrop>();
-            }
+            ret.AddComponent(Inventory.BookDropDictionary[specialAttackAttribute][i]);
             ret.name=ret.GetComponent<BookDrop>().Name;
-            return ret.GetComponent<Book>();
+            return ret.GetComponent<BookDrop>();
         }
     }
 }

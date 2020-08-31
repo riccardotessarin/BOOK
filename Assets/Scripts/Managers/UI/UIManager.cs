@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Characters.Interfaces;
 using Consumables.Books;
-using Consumables.Healables.Plants;
+using Consumables.Healables.Plants.Drops;
+using Consumables.Books.Drops;
 using System.Linq;
 namespace Managers.UI{
     public class UIManager : MonoBehaviour
@@ -205,19 +206,19 @@ namespace Managers.UI{
             interactionString=text;
         }
 
-        public void AddBook(Book book){
+        public void AddBook(Sprite book){
             if(player.EquippedAttack==PlayableCharacter.Attack.BaseAttack){
                 if(player.PowerMode){
-                    leftObject.sprite=book.BookIcon;
+                    leftObject.sprite=book;
                 }
-                attackArray[0]=book.BookIcon;
+                attackArray[0]=book;
             }
             else if(player.EquippedAttack==PlayableCharacter.Attack.SpecialAttack){
                 if(player.ListBooks.Count==1){
                     if(player.PowerMode){
-                        rightObject.sprite=book.BookIcon;
+                        rightObject.sprite=book;
                     }
-                    attackArray[2]=book.BookIcon;
+                    attackArray[2]=book;
                 }
             }
             else if(player.EquippedAttack==PlayableCharacter.Attack.Book){
@@ -225,51 +226,51 @@ namespace Managers.UI{
                 int index=player.ListBooks.IndexOf(player.EquippedBook);
                 if(count==2){
                     if(player.PowerMode){
-                        rightObject.sprite=book.BookIcon;
+                        rightObject.sprite=book;
                     }
-                    attackArray[2]=book.BookIcon;
+                    attackArray[2]=book;
                 }
                 else if(count==3){
                     if(index==1){
                         if(player.PowerMode){
-                            rightObject.sprite=book.BookIcon;
+                            rightObject.sprite=book;
                         }
-                        attackArray[2]=book.BookIcon;
+                        attackArray[2]=book;
                     }
                 }
             }
         }
 
-       public void AddPlant(Plant plant){
+       public void AddPlant(Sprite plant, string description){
            int count=player.ListPlants.Count;
            if(count==1){
                if(!player.PowerMode){
-                   centerObject.sprite=plant.PlantIcon;
-                   ChangeDescriptionText(plant.Description);
+                   centerObject.sprite=plant;
+                   ChangeDescriptionText(description);
                }
-               plantArray[1]=plant.PlantIcon;
-               descriptionPlant=plant.Description;
+               plantArray[1]=plant;
+               descriptionPlant=description;
            }
            
             else if(count==2){
                 if(!player.PowerMode){
-                    rightObject.sprite=plant.PlantIcon;
+                    rightObject.sprite=plant;
                 }
-                plantArray[2]=plant.PlantIcon;
+                plantArray[2]=plant;
             }
             else if(count>2){
                 int index=player.ListPlants.IndexOf(player.EquippedPlant);
                 if(index==0){
                     if(!player.PowerMode){
-                        leftObject.sprite=plant.PlantIcon;
+                        leftObject.sprite=plant;
                     }
-                    plantArray[0]=plant.PlantIcon;
+                    plantArray[0]=plant;
                 }
                 else if(index==count-2){
                     if(!player.PowerMode){
-                        rightObject.sprite=plant.PlantIcon;
+                        rightObject.sprite=plant;
                     }
-                    plantArray[2]=plant.PlantIcon;
+                    plantArray[2]=plant;
                 }
             }
         } 
@@ -277,12 +278,12 @@ namespace Managers.UI{
         public void AddBonusImage(Sprite sprite, bool bonus,string name, bool block){
             Image image;
             if(bonus){
-                image=Instantiate(bonusPrefab,statusArea.transform);
+                image=Instantiate(bonusPrefab,new Vector3(190,0,0),new Quaternion(0,0,0,0));
             }
             else{
-                image=Instantiate(malusPrefab,statusArea.transform);
+                image=Instantiate(malusPrefab,new Vector3(190,0,0),new Quaternion(0,0,0,0));
             }
-            
+            image.rectTransform.SetParent(statusArea.transform,false);
             
             image.rectTransform.GetChild(0).GetComponent<Image>().sprite=sprite;
             if(block){
@@ -299,10 +300,10 @@ namespace Managers.UI{
         }
 
         private void SetStatusBar(){
-            float pos=statusVector.x;
+            int i=0;
             foreach(var key in statusImageDict.Keys){
-                statusImageDict[key].rectTransform.position=new Vector3(pos,statusVector.y,0);
-                pos=pos-statusVector.z;
+                statusImageDict[key].rectTransform.localPosition=new Vector3(190-49*i,0,0);
+                i++;
             }
         }
     }
