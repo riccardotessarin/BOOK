@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
-
+using System.Collections;
 
 namespace Consumables.Books.Abilities {
 	class FirePillarBehavior : MonoBehaviour {
@@ -19,19 +19,7 @@ namespace Consumables.Books.Abilities {
 
 		}
 
-		/*
-		private void OnTriggerEnter(Collider other) {
-			Transform child = gameObject.transform.GetChild(0);
-			ParticleSystem particle = child.GetComponent<ParticleSystem>();
-			if (!particle.isPlaying) {
-				particle.Play();
-			}
-		}
-
-		*/
 		private void OnCollisionEnter(Collision collision) {
-			//gameObject.GetComponentInChildren<Renderer>().enabled = true;
-			//gameObject.transform.GetChild(0).gameObject.GetComponent<Renderer>().enabled = true;
 			Character enemy = collision.gameObject.GetComponent<Character>();
 			if (enemy != null) {
 				Transform child = gameObject.transform.GetChild(0);
@@ -39,22 +27,18 @@ namespace Consumables.Books.Abilities {
 				if (!particle.isPlaying) {
 					particle.Play();
 				}
-			}
-
-			//ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
-			//ps.enableEmission = true;
-			/*
-			Character enemy = collision.gameObject.GetComponent<NonPlayableCharacters>();
-			if (enemy != null) {
-				gameObject.GetComponentInChildren<Renderer>().enabled = true;
-
-				Character.Damage firePillarDamage = new Character.Damage(200.0F , AttackType.Inferno);
-				Debug.Log("NPC hitted");
+				Character.Damage firePillarDamage = new Character.Damage(200.0F, EnumUtility.AttackType.Inferno);
+				Debug.Log(enemy + " hitted");
 				enemy.SendMessage("TakeDamage", firePillarDamage, SendMessageOptions.DontRequireReceiver);
+				StartCoroutine(WaitAndDestroy(30.0F));
+			}
+		}
 
+		private IEnumerator WaitAndDestroy(float waitTime) {
+			while (true) {
+				yield return new WaitForSecondsRealtime(waitTime);
 				Destroy(gameObject);
 			}
-			*/
 		}
 
 		// Update is called once per frame

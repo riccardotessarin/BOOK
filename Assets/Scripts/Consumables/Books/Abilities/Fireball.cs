@@ -36,9 +36,10 @@ namespace Consumables.Books.Abilities {
 			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
 			player = players.FirstOrDefault();
 			var playerTransform = player.transform;
-			//var playerPosition = new Vector3(player.transform.localPosition.x + 4, player.transform.position.y, player.transform.position.z);
 			// Define the behavior of the ability
-			bookVFX = Object.Instantiate(fireballPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
+			//bookVFX = Object.Instantiate(fireballPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
+			Camera camera = Camera.main;
+			bookVFX = Object.Instantiate(fireballPrefab, camera.transform.position + camera.transform.forward * 2, camera.transform.rotation);
 			bookVFX.transform.parent = container;
 			GameManager.Instance.StartCoroutine(MoveFireball());
 			RemoveCharge();     // Remove charge after the ability is used
@@ -47,7 +48,9 @@ namespace Consumables.Books.Abilities {
 		private IEnumerator MoveFireball() {
 			while(true) {
 				yield return new WaitForEndOfFrame();
-				bookVFX.transform.Translate(Vector3.forward * Time.unscaledDeltaTime * fireballSpeed, Space.Self);
+				if(bookVFX != null) {
+					bookVFX.transform.Translate(Vector3.forward * Time.unscaledDeltaTime * fireballSpeed, Space.Self);
+				}
 			}
 		}
 	}

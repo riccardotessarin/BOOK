@@ -17,14 +17,18 @@ public class FireballBehavior : MonoBehaviour {
 
 	}
 
+	private void OnTriggerEnter(Collider other) {
+		
+	}
+
 	private void OnCollisionEnter(Collision collision) {
 		Character enemy = collision.gameObject.GetComponent<Character>();
 		Character.Damage fireballDamage = new Character.Damage(600.0F /*damage dealt*/, EnumUtility.AttackType.Inferno);
 		if (enemy != null) {
-			Debug.Log("NPC hitted");
+			Debug.Log(enemy + " hitted");
 			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
 		}
-		Instantiate(explosionVFX, transform.parent);
+		//Instantiate(explosionVFX, transform.parent);
 		Destroy(gameObject);
 	}
 

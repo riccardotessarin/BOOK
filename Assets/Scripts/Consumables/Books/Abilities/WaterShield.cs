@@ -11,6 +11,7 @@ namespace Consumables.Books.Abilities {
 		public override EnumUtility.PageType PageType => EnumUtility.PageType.WaterShield;
 		public override int Charges => 5;
 
+		[SerializeField] private GameObject waterShieldPrefab;
 
 		private GameObject player;
 

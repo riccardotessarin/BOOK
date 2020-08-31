@@ -24,6 +24,7 @@ namespace Consumables.Books.Abilities {
 			firePillarPrefab = Resources.Load("Prefabs/Attacks/FirePillar") as GameObject;
 		}
 
+		/*
 		public override void UseConsumable() {
 			// TODO: Instatiate on the ground, where player is aiming
 			var players = GameObject.FindGameObjectsWithTag("Player");
@@ -35,6 +36,18 @@ namespace Consumables.Books.Abilities {
 			bookVFX = Object.Instantiate(firePillarPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
 			bookVFX.transform.parent = container;
 			//GameManager.Instance.StartCoroutine(PlacePillar());
+			RemoveCharge();     // Remove charge after the ability is used
+		}
+		*/
+
+		public override void UseConsumable() {
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			player = players.FirstOrDefault();
+			var playerTransform = player.transform;
+			RaycastHit hit;
+			Physics.Raycast(playerTransform.position, Camera.main.transform.forward, out hit, 6);
+			bookVFX = Object.Instantiate(firePillarPrefab, hit.point, playerTransform.rotation);
+			bookVFX.transform.parent = container;
 			RemoveCharge();     // Remove charge after the ability is used
 		}
 	}

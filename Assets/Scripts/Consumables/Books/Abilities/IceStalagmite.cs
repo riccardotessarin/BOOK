@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace Consumables.Books.Abilities{
 	public class IceStalagmite : Book
@@ -12,18 +13,25 @@ namespace Consumables.Books.Abilities{
 		public override int Charges => 3;
 
 		[SerializeField] private GameObject iceStalagmitePrefab;
+		private GameObject player;
+
 
 		public IceStalagmite(Transform container) : base(container) {	}
 
 		protected override void Awaker(){
 			base.Awaker();
 			bookIcon=Resources.Load<Sprite>("Images/NifhleimCommonBook");
-			//iceStalagmitePrefab = Resources.Load("Prefabs/Attacks/IceStalagmite") as GameObject;
+			iceStalagmitePrefab = Resources.Load("Prefabs/Attacks/IceStalagmite") as GameObject;
 		}
 
 		public override void UseConsumable() {
-			// TODO: Instatiate on the ground, where player is aiming
-
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			player = players.FirstOrDefault();
+			var playerTransform = player.transform;
+			RaycastHit hit;
+			Physics.Raycast(playerTransform.position, Camera.main.transform.forward, out hit, 6);
+			bookVFX = Object.Instantiate(iceStalagmitePrefab, hit.point, playerTransform.rotation);
+			bookVFX.transform.parent = container;
 			RemoveCharge();     // Remove charge after the ability is used
 		}
 	}
