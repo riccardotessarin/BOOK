@@ -7,9 +7,13 @@ using Consumables.Books;
 using Consumables.Healables.Plants.Drops;
 using Consumables.Books.Drops;
 using System.Linq;
+using Photon.Pun;
+
 namespace Managers.UI{
     public class UIManager : MonoBehaviour
     {
+        public static UIManager Instance { get; private set; }
+
         [SerializeField] private Image healthBar;
         [SerializeField] private Image staminaBar;
         [SerializeField] private PlayableCharacter player;
@@ -62,8 +66,14 @@ namespace Managers.UI{
        
 
         void Awake(){
+            if (Instance == null || ReferenceEquals(this, Instance)) {
+                Instance = this;
+            } else {
+                Destroy(this);
+            }
+
             gameObject.tag="UIManager";
-            player=GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
+            //player =GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
             centerObject=inGameObjectMenu.transform.GetChild(0).GetComponent<Image>();
             leftObject=inGameObjectMenu.transform.GetChild(1).GetComponent<Image>();
             rightObject=inGameObjectMenu.transform.GetChild(2).GetComponent<Image>();
@@ -91,6 +101,8 @@ namespace Managers.UI{
         // Start is called before the first frame update
         void Start()
         {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine).GetComponent<PlayableCharacter>();
             equippedPrimaryObjImage.sprite=player.BaseAttackSprite;
             chargeString="X"+PlayableCharacter.INFINITY;
             chargeTextGame.text=chargeString;

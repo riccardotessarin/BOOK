@@ -218,6 +218,8 @@ namespace Characters.Interfaces {
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
 
+            uIManager = UIManager.Instance;
+
             uIManager.FillBar(1, "health");
             currentStamina = stamina;
 
