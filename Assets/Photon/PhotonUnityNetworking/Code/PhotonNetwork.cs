@@ -9,8 +9,7 @@
 // ----------------------------------------------------------------------------
 
 
-namespace Photon.Pun
-{
+namespace Photon.Pun {
     using System.Diagnostics;
     using UnityEngine;
     using System;
@@ -18,19 +17,17 @@ namespace Photon.Pun
     using System.Collections.Generic;
     using ExitGames.Client.Photon;
     using UnityEngine.SceneManagement;
-
     using Photon.Realtime;
     using Debug = UnityEngine.Debug;
     using Hashtable = ExitGames.Client.Photon.Hashtable;
-
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
     using System.IO;
-    #endif
+
+#endif
 
 
-    public struct InstantiateParameters
-    {
+    public struct InstantiateParameters {
         public int[] viewIDs;
         public byte objLevelPrefix;
         public object[] data;
@@ -41,8 +38,7 @@ namespace Photon.Pun
         public Player creator;
         public int timestamp;
 
-        public InstantiateParameters(string prefabName, Vector3 position, Quaternion rotation, byte @group, object[] data, byte objLevelPrefix, int[] viewIDs, Player creator, int timestamp)
-        {
+        public InstantiateParameters(string prefabName, Vector3 position, Quaternion rotation, byte @group, object[] data, byte objLevelPrefix, int[] viewIDs, Player creator, int timestamp) {
             this.prefabName = prefabName;
             this.position = position;
             this.rotation = rotation;
@@ -61,8 +57,7 @@ namespace Photon.Pun
     /// This class is static.
     /// </summary>
     /// \ingroup publicApi
-    public static partial class PhotonNetwork
-    {
+    public static partial class PhotonNetwork {
         /// <summary>Version number of PUN. Used in the AppVersion, which separates your playerbase in matchmaking.</summary>
         public const string PunVersion = "2.20.1";
 
@@ -78,11 +73,9 @@ namespace Photon.Pun
         /// This means you can set the GameVersion right after calling ConnectUsingSettings (e.g.) and the new value will be used on the server.
         /// Once the client is connected, authentication is done and the value won't be sent to the server anymore.
         /// </remarks>
-        public static string GameVersion
-        {
+        public static string GameVersion {
             get { return gameVersion; }
-            set
-            {
+            set {
                 gameVersion = value;
                 NetworkingClient.AppVersion = string.Format("{0}_{1}", value, PhotonNetwork.PunVersion);
             }
@@ -92,8 +85,7 @@ namespace Photon.Pun
 
         /// <summary>Sent to Photon Server to specify the "Virtual AppId".</summary>
         /// <remarks>Sent with the operation Authenticate. When using PUN, you should set the GameVersion or use ConnectUsingSettings().</remarks>
-        public static string AppVersion
-        {
+        public static string AppVersion {
             get { return NetworkingClient.AppVersion; }
         }
 
@@ -112,13 +104,10 @@ namespace Photon.Pun
         private static ServerSettings photonServerSettings;
 
         /// <summary>Serialized server settings, written by the Setup Wizard for use in ConnectUsingSettings.</summary>
-        public static ServerSettings PhotonServerSettings
-        {
-            get
-            {
-                if (photonServerSettings == null)
-                {
-                    photonServerSettings = (ServerSettings)Resources.Load(PhotonNetwork.ServerSettingsFileName, typeof(ServerSettings));
+        public static ServerSettings PhotonServerSettings {
+            get {
+                if (photonServerSettings == null) {
+                    photonServerSettings = (ServerSettings) Resources.Load(PhotonNetwork.ServerSettingsFileName, typeof(ServerSettings));
                 }
 
                 return photonServerSettings;
@@ -127,10 +116,14 @@ namespace Photon.Pun
         }
 
         /// <summary>Currently used server address (no matter if master or game server).</summary>
-        public static string ServerAddress { get { return (NetworkingClient != null) ? NetworkingClient.CurrentServerAddress : "<not connected>"; } }
+        public static string ServerAddress {
+            get { return (NetworkingClient != null) ? NetworkingClient.CurrentServerAddress : "<not connected>"; }
+        }
 
         /// <summary>Currently used Cloud Region (if any). As long as the client is not on a Master Server or Game Server, the region is not yet defined.</summary>
-        public static string CloudRegion { get { return (NetworkingClient != null && IsConnected && Server!=ServerConnection.NameServer) ? NetworkingClient.CloudRegion : null; } }
+        public static string CloudRegion {
+            get { return (NetworkingClient != null && IsConnected && Server != ServerConnection.NameServer) ? NetworkingClient.CloudRegion : null; }
+        }
 
         /// <summary>The cluster name provided by the Name Server.</summary>
         /// <remarks>
@@ -140,7 +133,9 @@ namespace Photon.Pun
         ///
         /// Note that the Name Server may assign another cluster, if the requested one is not configured or available.
         /// </remarks>
-        public static string CurrentCluster { get { return (NetworkingClient != null ) ? NetworkingClient.CurrentCluster : null; } }
+        public static string CurrentCluster {
+            get { return (NetworkingClient != null) ? NetworkingClient.CurrentCluster : null; }
+        }
 
         /// <summary>Key to save the "Best Region Summary" in the Player Preferences.</summary>
         private const string PlayerPrefsKey = "PUNCloudBestRegion";
@@ -149,20 +144,12 @@ namespace Photon.Pun
         /// <remarks>
         /// Set this value to null before you connect, to discard the previously selected Best Region for the client.
         /// </remarks>
-        public static string BestRegionSummaryInPreferences
-        {
-            get
-            {
-                return PlayerPrefs.GetString(PlayerPrefsKey, null);
-            }
-            internal set
-            {
-                if (String.IsNullOrEmpty(value))
-                {
+        public static string BestRegionSummaryInPreferences {
+            get { return PlayerPrefs.GetString(PlayerPrefsKey, null); }
+            internal set {
+                if (String.IsNullOrEmpty(value)) {
                     PlayerPrefs.DeleteKey(PlayerPrefsKey);
-                }
-                else
-                {
+                } else {
                     PlayerPrefs.SetString(PlayerPrefsKey, value.ToString());
                 }
             }
@@ -171,17 +158,13 @@ namespace Photon.Pun
         /// <summary>
         /// False until you connected to Photon initially. True in offline mode, while connected to any server and even while switching servers.
         /// </summary>
-        public static bool IsConnected
-        {
-            get
-            {
-                if (OfflineMode)
-                {
+        public static bool IsConnected {
+            get {
+                if (OfflineMode) {
                     return true;
                 }
 
-                if (NetworkingClient == null)
-                {
+                if (NetworkingClient == null) {
                     return false;
                 }
 
@@ -192,16 +175,13 @@ namespace Photon.Pun
         /// <summary>
         /// A refined version of connected which is true only if your connection to the server is ready to accept operations like join, leave, etc.
         /// </summary>
-        public static bool IsConnectedAndReady
-        {
-            get
-            {
-                if (OfflineMode)
-                {
+        public static bool IsConnectedAndReady {
+            get {
+                if (OfflineMode) {
                     return true;
                 }
-                if (NetworkingClient == null)
-                {
+
+                if (NetworkingClient == null) {
                     return false;
                 }
 
@@ -220,17 +200,13 @@ namespace Photon.Pun
         ///
         /// While OfflineMode is true, this is ClientState.Joined (after create/join) or ConnectedToMasterServer in all other cases.
         /// </remarks>
-        public static ClientState NetworkClientState
-        {
-            get
-            {
-                if (OfflineMode)
-                {
+        public static ClientState NetworkClientState {
+            get {
+                if (OfflineMode) {
                     return (offlineModeRoom != null) ? ClientState.Joined : ClientState.ConnectedToMasterServer;
                 }
 
-                if (NetworkingClient == null)
-                {
+                if (NetworkingClient == null) {
                     return ClientState.Disconnected;
                 }
 
@@ -250,7 +226,9 @@ namespace Photon.Pun
 
         /// <summary>The server (type) this client is currently connected or connecting to.</summary>
         /// <remarks>Photon uses 3 different roles of servers: Name Server, Master Server and Game Server.</remarks>
-        public static ServerConnection Server { get { return (PhotonNetwork.NetworkingClient != null) ? PhotonNetwork.NetworkingClient.Server : ServerConnection.NameServer; } }
+        public static ServerConnection Server {
+            get { return (PhotonNetwork.NetworkingClient != null) ? PhotonNetwork.NetworkingClient.Server : ServerConnection.NameServer; }
+        }
 
         /// <summary>
         /// A user's authentication values used during connect.
@@ -262,10 +240,11 @@ namespace Photon.Pun
         /// If authentication fails for any values, PUN will call your implementation of OnCustomAuthenticationFailed(string debugMessage).
         /// See <see cref="Photon.Realtime.IConnectionCallbacks.OnCustomAuthenticationFailed"/>.
         /// </remarks>
-        public static AuthenticationValues AuthValues
-        {
+        public static AuthenticationValues AuthValues {
             get { return (NetworkingClient != null) ? NetworkingClient.AuthValues : null; }
-            set { if (NetworkingClient != null) NetworkingClient.AuthValues = value; }
+            set {
+                if (NetworkingClient != null) NetworkingClient.AuthValues = value;
+            }
         }
 
         /// <summary>
@@ -279,8 +258,7 @@ namespace Photon.Pun
         /// Check PhotonNetwork.InLobby if the client is in a lobby.
         /// (@ref masterServerAndLobby)
         /// </remarks>
-        public static TypedLobby CurrentLobby
-        {
+        public static TypedLobby CurrentLobby {
             get { return NetworkingClient.CurrentLobby; }
         }
 
@@ -290,12 +268,9 @@ namespace Photon.Pun
         /// <remarks>
         /// LoadBalancing Client is not aware of the Photon Offline Mode, so never use PhotonNetwork.NetworkingClient.CurrentRoom will be null if you are using OffLine Mode, while PhotonNetwork.CurrentRoom will be set when offlineMode is true
         /// </remarks>
-        public static Room CurrentRoom
-        {
-            get
-            {
-                if (offlineMode)
-                {
+        public static Room CurrentRoom {
+            get {
+                if (offlineMode) {
                     return offlineModeRoom;
                 }
 
@@ -315,12 +290,9 @@ namespace Photon.Pun
         /// Useful (e.g.) to set the Custom Player Properties or the NickName for this client anytime.
         /// When the client joins a room, the Custom Properties and other values are synced.
         /// </remarks>
-        public static Player LocalPlayer
-        {
-            get
-            {
-                if (NetworkingClient == null)
-                {
+        public static Player LocalPlayer {
+            get {
+                if (NetworkingClient == null) {
                     return null; // Surpress ExitApplication errors
                 }
 
@@ -337,32 +309,23 @@ namespace Photon.Pun
         /// Access the names of players by: Player.NickName. <br/>
         /// PhotonNetwork.PlayerListOthers is a list of other players - each contains the NickName the remote player set.
         /// </remarks>
-        public static string NickName
-        {
-            get
-            {
-                return NetworkingClient.NickName;
-            }
+        public static string NickName {
+            get { return NetworkingClient.NickName; }
 
-            set
-            {
-                NetworkingClient.NickName = value;
-            }
+            set { NetworkingClient.NickName = value; }
         }
 
         /// <summary>
         /// A sorted copy of the players-list of the current room. This is using Linq, so better cache this value. Update when players join / leave.
         /// </summary>
-        public static Player[] PlayerList
-        {
-            get
-            {
+        public static Player[] PlayerList {
+            get {
                 Room room = CurrentRoom;
-                if (room != null)
-                {
+                if (room != null) {
                     // TODO: implement more effectively. maybe cache?!
                     return room.Players.Values.OrderBy((x) => x.ActorNumber).ToArray();
                 }
+
                 return new Player[0];
             }
         }
@@ -370,16 +333,14 @@ namespace Photon.Pun
         /// <summary>
         /// A sorted copy of the players-list of the current room, excluding this client. This is using Linq, so better cache this value. Update when players join / leave.
         /// </summary>
-        public static Player[] PlayerListOthers
-        {
-            get
-            {
+        public static Player[] PlayerListOthers {
+            get {
                 Room room = CurrentRoom;
-                if (room != null)
-                {
+                if (room != null) {
                     // TODO: implement more effectively. maybe cache?!
                     return room.Players.Values.OrderBy((x) => x.ActorNumber).Where(x => !x.IsLocal).ToArray();
                 }
+
                 return new Player[0];
             }
         }
@@ -409,52 +370,40 @@ namespace Photon.Pun
         /// When this is on PhotonNetwork will not create any connections and there is near to
         /// no overhead. Mostly usefull for reusing RPC's and PhotonNetwork.Instantiate
         /// </summary>
-        public static bool OfflineMode
-        {
-            get
-            {
-                return offlineMode;
-            }
+        public static bool OfflineMode {
+            get { return offlineMode; }
 
-            set
-            {
-                if (value == offlineMode)
-                {
+            set {
+                if (value == offlineMode) {
                     return;
                 }
 
-                if (value && IsConnected)
-                {
+                if (value && IsConnected) {
                     Debug.LogError("Can't start OFFLINE mode while connected!");
                     return;
                 }
 
-                if (NetworkingClient.IsConnected)
-                {
+                if (NetworkingClient.IsConnected) {
                     NetworkingClient.Disconnect(); // Cleanup (also calls OnLeftRoom to reset stuff)
                 }
 
                 offlineMode = value;
 
-                if (offlineMode)
-                {
+                if (offlineMode) {
                     NetworkingClient.ChangeLocalID(-1);
                     //SendMonoMessage(PhotonNetworkingMessage.OnConnectedToMaster);
                     NetworkingClient.ConnectionCallbackTargets.OnConnectedToMaster();
-                }
-                else
-                {
+                } else {
                     bool wasInOfflineRoom = offlineModeRoom != null;
 
-                    if (wasInOfflineRoom)
-                    {
+                    if (wasInOfflineRoom) {
                         LeftRoomCleanup();
                     }
+
                     offlineModeRoom = null;
                     PhotonNetwork.NetworkingClient.CurrentRoom = null;
                     NetworkingClient.ChangeLocalID(-1);
-                    if (wasInOfflineRoom)
-                    {
+                    if (wasInOfflineRoom) {
                         NetworkingClient.MatchMakingCallbackTargets.OnLeftRoom();
                     }
                 }
@@ -482,17 +431,11 @@ namespace Photon.Pun
         /// The Master Client will actually reload a scene but other clients won't.
         /// To get everyone to reload, the game can send an RPC or event to trigger the loading.
         /// </remarks>
-        public static bool AutomaticallySyncScene
-        {
-            get
-            {
-                return automaticallySyncScene;
-            }
-            set
-            {
+        public static bool AutomaticallySyncScene {
+            get { return automaticallySyncScene; }
+            set {
                 automaticallySyncScene = value;
-                if (automaticallySyncScene && CurrentRoom != null)
-                {
+                if (automaticallySyncScene && CurrentRoom != null) {
                     LoadLevelIfSynced();
                 }
             }
@@ -516,12 +459,8 @@ namespace Photon.Pun
         ///
         /// ConnectUsingSettings sets this to the PhotonServerSettings value.
         /// </remarks>
-        public static bool EnableLobbyStatistics
-        {
-            get
-            {
-                return NetworkingClient.EnableLobbyStatistics;
-            }
+        public static bool EnableLobbyStatistics {
+            get { return NetworkingClient.EnableLobbyStatistics; }
         }
 
 
@@ -533,12 +472,8 @@ namespace Photon.Pun
         /// You are automatically leaving any lobby when you join a room!
         /// Lobbies only exist on the Master Server (whereas rooms are handled by Game Servers).
         /// </remarks>
-        public static bool InLobby
-        {
-            get
-            {
-                return NetworkingClient.InLobby;
-            }
+        public static bool InLobby {
+            get { return NetworkingClient.InLobby; }
         }
 
         /// <summary>
@@ -550,23 +485,16 @@ namespace Photon.Pun
         /// Setting the SendRate to 50 will create up to 50 packages per second (which is a lot!).
         /// Keep your target platform in mind: mobile networks are slower and less reliable.
         /// </remarks>
-        public static int SendRate
-        {
-            get
-            {
-                return 1000 / sendFrequency;
-            }
+        public static int SendRate {
+            get { return 1000 / sendFrequency; }
 
-            set
-            {
+            set {
                 sendFrequency = 1000 / value;
-                if (PhotonHandler.Instance != null)
-                {
+                if (PhotonHandler.Instance != null) {
                     PhotonHandler.Instance.UpdateInterval = sendFrequency;
                 }
 
-                if (value < SerializationRate)
-                {
+                if (value < SerializationRate) {
                     // SerializationRate needs to be <= SendRate
                     SerializationRate = value;
                 }
@@ -582,24 +510,17 @@ namespace Photon.Pun
         /// Choose this value in relation to PhotonNetwork.SendRate. OnPhotonSerialize will create updates and messages to be sent.<br/>
         /// A lower rate takes up less performance but will cause more lag.
         /// </remarks>
-        public static int SerializationRate
-        {
-            get
-            {
-                return 1000 / serializationFrequency;
-            }
+        public static int SerializationRate {
+            get { return 1000 / serializationFrequency; }
 
-            set
-            {
-                if (value > SendRate)
-                {
+            set {
+                if (value > SendRate) {
                     Debug.LogError("Error: Can not set the OnSerialize rate higher than the overall SendRate.");
                     value = SendRate;
                 }
 
                 serializationFrequency = 1000 / value;
-                if (PhotonHandler.Instance != null)
-                {
+                if (PhotonHandler.Instance != null) {
                     PhotonHandler.Instance.UpdateIntervalOnSerialize = serializationFrequency;
                 }
             }
@@ -618,15 +539,10 @@ namespace Photon.Pun
         /// The client will go on receiving and sending acknowledgements for incoming packages and your RPCs/Events.
         /// This adds "lag" and can cause issues when the pause is longer, as all incoming messages are just queued.
         /// </remarks>
-        public static bool IsMessageQueueRunning
-        {
-            get
-            {
-                return isMessageQueueRunning;
-            }
+        public static bool IsMessageQueueRunning {
+            get { return isMessageQueueRunning; }
 
-            set
-            {
+            set {
                 NetworkingClient.LoadBalancingPeer.IsSendingOnlyAcks = !value;
                 isMessageQueueRunning = value;
             }
@@ -649,18 +565,15 @@ namespace Photon.Pun
         /// It can start with any positive value.<br/>
         /// It will "wrap around" from 4294967.295 to 0!
         /// </remarks>
-        public static double Time
-        {
-            get
-            {
-                if (UnityEngine.Time.frameCount == frame)
-                {
+        public static double Time {
+            get {
+                if (UnityEngine.Time.frameCount == frame) {
                     return frametime;
                 }
 
-                uint u = (uint)ServerTimestamp;
+                uint u = (uint) ServerTimestamp;
                 double t = u;
-                frametime =  t / 1000.0d;
+                frametime = t / 1000.0d;
                 frame = UnityEngine.Time.frameCount;
                 return frametime;
             }
@@ -682,20 +595,17 @@ namespace Photon.Pun
         ///
         /// This is the basis for PhotonNetwork.Time.
         /// </remarks>
-        public static int ServerTimestamp
-        {
-            get
-            {
-                if (OfflineMode)
-                {
-                    if (StartupStopwatch != null && StartupStopwatch.IsRunning)
-                    {
-                        return (int)StartupStopwatch.ElapsedMilliseconds;
+        public static int ServerTimestamp {
+            get {
+                if (OfflineMode) {
+                    if (StartupStopwatch != null && StartupStopwatch.IsRunning) {
+                        return (int) StartupStopwatch.ElapsedMilliseconds;
                     }
+
                     return Environment.TickCount;
                 }
 
-                return NetworkingClient.LoadBalancingPeer.ServerTimeInMilliSeconds;   // TODO: implement ServerTimeInMilliSeconds in LBC
+                return NetworkingClient.LoadBalancingPeer.ServerTimeInMilliSeconds; // TODO: implement ServerTimeInMilliSeconds in LBC
             }
         }
 
@@ -729,13 +639,10 @@ namespace Photon.Pun
         /// Make sure OnApplicationPause() gets the callbacks you expect on the platform you target!
         /// Check PhotonHandler.OnApplicationPause(bool pause) to see the implementation.
         /// </remarks>
-        public static float KeepAliveInBackground
-        {
-            set
-            {
-                if (PhotonHandler.Instance != null)
-                {
-                    PhotonHandler.Instance.KeepAliveInBackground = (int)Mathf.Round(value * 1000.0f);
+        public static float KeepAliveInBackground {
+            set {
+                if (PhotonHandler.Instance != null) {
+                    PhotonHandler.Instance.KeepAliveInBackground = (int) Mathf.Round(value * 1000.0f);
                 }
             }
 
@@ -756,16 +663,13 @@ namespace Photon.Pun
         /// <summary>
         /// Are we the master client?
         /// </summary>
-        public static bool IsMasterClient
-        {
-            get
-            {
-                if (OfflineMode)
-                {
+        public static bool IsMasterClient {
+            get {
+                if (OfflineMode) {
                     return true;
                 }
 
-                return NetworkingClient.CurrentRoom != null && NetworkingClient.CurrentRoom.MasterClientId == LocalPlayer.ActorNumber;  // TODO: implement MasterClient shortcut in LBC?
+                return NetworkingClient.CurrentRoom != null && NetworkingClient.CurrentRoom.MasterClientId == LocalPlayer.ActorNumber; // TODO: implement MasterClient shortcut in LBC?
             }
         }
 
@@ -785,17 +689,13 @@ namespace Photon.Pun
         ///
         /// With OfflineMode == true, this always returns the PhotonNetwork.player.
         /// </remarks>
-        public static Player MasterClient
-        {
-            get
-            {
-                if (OfflineMode)
-                {
+        public static Player MasterClient {
+            get {
+                if (OfflineMode) {
                     return PhotonNetwork.LocalPlayer;
                 }
 
-                if (NetworkingClient == null || NetworkingClient.CurrentRoom == null)
-                {
+                if (NetworkingClient == null || NetworkingClient.CurrentRoom == null) {
                     return null;
                 }
 
@@ -812,10 +712,8 @@ namespace Photon.Pun
         /// A client can join a room in offline mode. In that case, don't use LoadBalancingClient.InRoom, which
         /// does not cover offline mode.
         /// </remarks>
-        public static bool InRoom
-        {
-            get
-            {
+        public static bool InRoom {
+            get {
                 // in offline mode, you can be in a room too and NetworkClientState then returns Joined like on online mode!
                 return NetworkClientState == ClientState.Joined;
             }
@@ -825,46 +723,30 @@ namespace Photon.Pun
         /// <summary>
         /// The count of players currently looking for a room (available on MasterServer in 5sec intervals).
         /// </summary>
-        public static int CountOfPlayersOnMaster
-        {
-            get
-            {
-                return NetworkingClient.PlayersOnMasterCount;
-            }
+        public static int CountOfPlayersOnMaster {
+            get { return NetworkingClient.PlayersOnMasterCount; }
         }
 
         /// <summary>
         /// Count of users currently playing your app in some room (sent every 5sec by Master Server).
         /// Use PhotonNetwork.PlayerList.Length or PhotonNetwork.CurrentRoom.PlayerCount to get the count of players in the room you're in!
         /// </summary>
-        public static int CountOfPlayersInRooms
-        {
-            get
-            {
-                return NetworkingClient.PlayersInRoomsCount;
-            }
+        public static int CountOfPlayersInRooms {
+            get { return NetworkingClient.PlayersInRoomsCount; }
         }
 
         /// <summary>
         /// The count of players currently using this application (available on MasterServer in 5sec intervals).
         /// </summary>
-        public static int CountOfPlayers
-        {
-            get
-            {
-                return NetworkingClient.PlayersInRoomsCount + NetworkingClient.PlayersOnMasterCount;
-            }
+        public static int CountOfPlayers {
+            get { return NetworkingClient.PlayersInRoomsCount + NetworkingClient.PlayersOnMasterCount; }
         }
 
         /// <summary>
         /// The count of rooms currently in use (available on MasterServer in 5sec intervals).
         /// </summary>
-        public static int CountOfRooms
-        {
-            get
-            {
-                return NetworkingClient.RoomsCount;
-            }
+        public static int CountOfRooms {
+            get { return NetworkingClient.RoomsCount; }
         }
 
         /// <summary>
@@ -874,17 +756,10 @@ namespace Photon.Pun
         /// If you encounter issues with clients, the traffic stats are a good starting point to find solutions.
         /// Only with enabled stats, you can use GetVitalStats
         /// </remarks>
-        public static bool NetworkStatisticsEnabled
-        {
-            get
-            {
-                return NetworkingClient.LoadBalancingPeer.TrafficStatsEnabled;
-            }
+        public static bool NetworkStatisticsEnabled {
+            get { return NetworkingClient.LoadBalancingPeer.TrafficStatsEnabled; }
 
-            set
-            {
-                NetworkingClient.LoadBalancingPeer.TrafficStatsEnabled = value;
-            }
+            set { NetworkingClient.LoadBalancingPeer.TrafficStatsEnabled = value; }
         }
 
         /// <summary>
@@ -893,41 +768,32 @@ namespace Photon.Pun
         /// <remarks>
         /// If this value increases a lot, there is a good chance that a timeout disconnect will happen due to bad conditions.
         /// </remarks>
-        public static int ResentReliableCommands
-        {
+        public static int ResentReliableCommands {
             get { return NetworkingClient.LoadBalancingPeer.ResentReliableCommands; }
         }
 
         /// <summary>Crc checks can be useful to detect and avoid issues with broken datagrams. Can be enabled while not connected.</summary>
-        public static bool CrcCheckEnabled
-        {
+        public static bool CrcCheckEnabled {
             get { return NetworkingClient.LoadBalancingPeer.CrcEnabled; }
-            set
-            {
-                if (!IsConnected)
-                {
+            set {
+                if (!IsConnected) {
                     NetworkingClient.LoadBalancingPeer.CrcEnabled = value;
-                }
-                else
-                {
+                } else {
                     Debug.Log("Can't change CrcCheckEnabled while being connected. CrcCheckEnabled stays " + NetworkingClient.LoadBalancingPeer.CrcEnabled);
                 }
             }
         }
 
         /// <summary>If CrcCheckEnabled, this counts the incoming packages that don't have a valid CRC checksum and got rejected.</summary>
-        public static int PacketLossByCrcCheck
-        {
+        public static int PacketLossByCrcCheck {
             get { return NetworkingClient.LoadBalancingPeer.PacketLossByCrc; }
         }
 
         /// <summary>Defines the number of times a reliable message can be resent before not getting an ACK for it will trigger a disconnect. Default: 5.</summary>
         /// <remarks>Less resends mean quicker disconnects, while more can lead to much more lag without helping. Min: 3. Max: 10.</remarks>
-        public static int MaxResendsBeforeDisconnect
-        {
+        public static int MaxResendsBeforeDisconnect {
             get { return NetworkingClient.LoadBalancingPeer.SentCountAllowance; }
-            set
-            {
+            set {
                 if (value < 3) value = 3;
                 if (value > 10) value = 10;
                 NetworkingClient.LoadBalancingPeer.SentCountAllowance = value;
@@ -942,14 +808,12 @@ namespace Photon.Pun
         /// also it increases the speed in which gaps are closed.<br/>
         /// When you set this, increase PhotonNetwork.MaxResendsBeforeDisconnect to 6 or 7.
         /// </remarks>
-        public static int QuickResends
-        {
+        public static int QuickResends {
             get { return NetworkingClient.LoadBalancingPeer.QuickResendAttempts; }
-            set
-            {
+            set {
                 if (value < 0) value = 0;
                 if (value > 3) value = 3;
-                NetworkingClient.LoadBalancingPeer.QuickResendAttempts = (byte)value;
+                NetworkingClient.LoadBalancingPeer.QuickResendAttempts = (byte) value;
             }
         }
 
@@ -967,34 +831,32 @@ namespace Photon.Pun
         ///
         /// This value does not affect TCP or WebSocket connections.
         /// </remarks>
-        public static bool UseAlternativeUdpPorts
-        {
-            get { return (NetworkingClient == null) ? false :  NetworkingClient.UseAlternativeUdpPorts; }
-            set { if (NetworkingClient != null) NetworkingClient.UseAlternativeUdpPorts = value; }
+        public static bool UseAlternativeUdpPorts {
+            get { return (NetworkingClient == null) ? false : NetworkingClient.UseAlternativeUdpPorts; }
+            set {
+                if (NetworkingClient != null) NetworkingClient.UseAlternativeUdpPorts = value;
+            }
         }
 
 
-        private static int lastUsedViewSubId = 0;  // each player only needs to remember it's own (!) last used subId to speed up assignment
-        private static int lastUsedViewSubIdStatic = 0;  // per room, the master is able to instantiate GOs. the subId for this must be unique too
+        private static int lastUsedViewSubId = 0; // each player only needs to remember it's own (!) last used subId to speed up assignment
+        private static int lastUsedViewSubIdStatic = 0; // per room, the master is able to instantiate GOs. the subId for this must be unique too
 
 
         /// <summary>
         /// Static constructor used for basic setup.
         /// </summary>
-        static PhotonNetwork()
-        {
+        static PhotonNetwork() {
             StaticReset();
         }
-        
-        #if UNITY_2019_4_OR_NEWER && UNITY_EDITOR
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        #endif
-        private static void StaticReset()
-        {
 
-            #if UNITY_EDITOR
+#if UNITY_2019_4_OR_NEWER && UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+#endif
+        private static void StaticReset() {
+#if UNITY_EDITOR
             if (!EditorApplication.isPlayingOrWillChangePlaymode) return;
-            #endif
+#endif
             // This clear is for when Domain Reloading is disabled. Typicall will already be empty.
             monoRPCMethodsCache.Clear();
 
@@ -1013,7 +875,7 @@ namespace Photon.Pun
 
             StartupStopwatch = new Stopwatch();
             StartupStopwatch.Start();
-            NetworkingClient.LoadBalancingPeer.LocalMsTimestampDelegate = () => (int)StartupStopwatch.ElapsedMilliseconds;
+            NetworkingClient.LoadBalancingPeer.LocalMsTimestampDelegate = () => (int) StartupStopwatch.ElapsedMilliseconds;
 
             // using a singleton PhotonHandler to control the new client (which is also a singleton for PUN)
             PhotonHandler.Instance.Client = NetworkingClient;
@@ -1024,8 +886,7 @@ namespace Photon.Pun
 
             // RPC shortcut lookup creation (from list of RPCs, which is updated by Editor scripts)
             rpcShortcuts = new Dictionary<string, int>(PhotonNetwork.PhotonServerSettings.RpcList.Count);
-            for (int index = 0; index < PhotonNetwork.PhotonServerSettings.RpcList.Count; index++)
-            {
+            for (int index = 0; index < PhotonNetwork.PhotonServerSettings.RpcList.Count; index++) {
                 var name = PhotonNetwork.PhotonServerSettings.RpcList[index];
                 rpcShortcuts[name] = index;
             }
@@ -1061,10 +922,8 @@ namespace Photon.Pun
         ///
         /// In general check out the <see cref="DisconnectCause"/> from the <see cref="IConnectionCallbacks.OnDisconnected"/> callback.
         ///  </remarks>
-        public static bool ConnectUsingSettings()
-        {
-            if (PhotonServerSettings == null)
-            {
+        public static bool ConnectUsingSettings() {
+            if (PhotonServerSettings == null) {
                 Debug.LogError("Can't connect: Loading settings failed. ServerSettings asset must be in any 'Resources' folder as: " + ServerSettingsFileName);
                 return false;
             }
@@ -1074,18 +933,17 @@ namespace Photon.Pun
 
         public static bool ConnectUsingSettings(AppSettings appSettings, bool startInOfflineMode = false) // parameter name hides static class member
         {
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
-            {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected) {
                 Debug.LogWarning("ConnectUsingSettings() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
-            if (PhotonHandler.AppQuits)
-            {
+
+            if (PhotonHandler.AppQuits) {
                 Debug.LogWarning("Can't connect: Application is closing. Unity called OnApplicationQuit().");
                 return false;
             }
-            if (PhotonServerSettings == null)
-            {
+
+            if (PhotonServerSettings == null) {
                 Debug.LogError("Can't connect: Loading settings failed. ServerSettings asset must be in any 'Resources' folder as: " + ServerSettingsFileName);
                 return false;
             }
@@ -1102,15 +960,12 @@ namespace Photon.Pun
             GameVersion = appSettings.AppVersion;
 
 
-
-            if (startInOfflineMode)
-            {
+            if (startInOfflineMode) {
                 OfflineMode = true;
                 return true;
             }
 
-            if (OfflineMode)
-            {
+            if (OfflineMode) {
                 OfflineMode = false; // Cleanup offline mode
                 // someone can set OfflineMode in code and then call ConnectUsingSettings() with non-offline settings. Warning for that case:
                 Debug.LogWarning("ConnectUsingSettings() disabled the offline mode. No longer offline.");
@@ -1119,32 +974,27 @@ namespace Photon.Pun
 
             NetworkingClient.EnableLobbyStatistics = appSettings.EnableLobbyStatistics;
             NetworkingClient.ProxyServerAddress = appSettings.ProxyServer;
-            
 
-            if (appSettings.IsMasterServerAddress)
-            {
-                NetworkingClient.SerializationProtocol = SerializationProtocol.GpBinaryV16;   // this is a workaround to use On Premises Servers, which don't support GpBinaryV18 yet.
-                if (AuthValues == null)
-                {
+
+            if (appSettings.IsMasterServerAddress) {
+                NetworkingClient.SerializationProtocol = SerializationProtocol.GpBinaryV16; // this is a workaround to use On Premises Servers, which don't support GpBinaryV18 yet.
+                if (AuthValues == null) {
                     AuthValues = new AuthenticationValues(Guid.NewGuid().ToString());
-                }
-                else if (string.IsNullOrEmpty(AuthValues.UserId))
-                {
+                } else if (string.IsNullOrEmpty(AuthValues.UserId)) {
                     AuthValues.UserId = Guid.NewGuid().ToString();
                 }
+
                 return ConnectToMaster(appSettings.Server, appSettings.Port, appSettings.AppIdRealtime);
             }
 
-            
+
             NetworkingClient.NameServerPortOverride = appSettings.Port;
-			if (!appSettings.IsDefaultNameServer)
-            {
+            if (!appSettings.IsDefaultNameServer) {
                 NetworkingClient.NameServerHost = appSettings.Server;
             }
 
 
-            if (appSettings.IsBestRegion)
-            {
+            if (appSettings.IsBestRegion) {
                 return ConnectToBestCloudServer();
             }
 
@@ -1169,28 +1019,24 @@ namespace Photon.Pun
         /// <param name="masterServerAddress">The server's address (either your own or Photon Cloud address).</param>
         /// <param name="port">The server's port to connect to.</param>
         /// <param name="appID">Your application ID (Photon Cloud provides you with a GUID for your game).</param>
-        public static bool ConnectToMaster(string masterServerAddress, int port, string appID)
-        {
+        public static bool ConnectToMaster(string masterServerAddress, int port, string appID) {
             // TODO: refactor NetworkingClient.LoadBalancingPeer.PeerState to not use the peer but LBC.connected or so
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
-            {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected) {
                 Debug.LogWarning("ConnectToMaster() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
-            if (PhotonHandler.AppQuits)
-            {
+
+            if (PhotonHandler.AppQuits) {
                 Debug.LogWarning("Can't connect: Application is closing. Unity called OnApplicationQuit().");
                 return false;
             }
 
-            if (OfflineMode)
-            {
+            if (OfflineMode) {
                 OfflineMode = false; // Cleanup offline mode
                 Debug.LogWarning("ConnectToMaster() disabled the offline mode. No longer offline.");
             }
 
-            if (!IsMessageQueueRunning)
-            {
+            if (!IsMessageQueueRunning) {
                 IsMessageQueueRunning = true;
                 Debug.LogWarning("ConnectToMaster() enabled IsMessageQueueRunning. Needs to be able to dispatch incoming messages.");
             }
@@ -1228,15 +1074,13 @@ namespace Photon.Pun
         /// In general check out the <see cref="DisconnectCause"/> from the <see cref="IConnectionCallbacks.OnDisconnected"/> callback.
         /// </remarks>
         /// <returns>If this client is going to connect to cloud server based on ping. Even if true, this does not guarantee a connection but the attempt is being made.</returns>
-        public static bool ConnectToBestCloudServer()
-        {
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
-            {
+        public static bool ConnectToBestCloudServer() {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected) {
                 Debug.LogWarning("ConnectToBestCloudServer() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
-            if (PhotonHandler.AppQuits)
-            {
+
+            if (PhotonHandler.AppQuits) {
                 Debug.LogWarning("Can't connect: Application is closing. Unity called OnApplicationQuit().");
                 return false;
             }
@@ -1265,15 +1109,13 @@ namespace Photon.Pun
         ///
         /// Once connected, check the value of CurrentCluster.
         /// </remarks>
-        public static bool ConnectToRegion(string region)
-        {
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected && NetworkingClient.Server != ServerConnection.NameServer)
-            {
+        public static bool ConnectToRegion(string region) {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected && NetworkingClient.Server != ServerConnection.NameServer) {
                 Debug.LogWarning("ConnectToRegion() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
-            if (PhotonHandler.AppQuits)
-            {
+
+            if (PhotonHandler.AppQuits) {
                 Debug.LogWarning("Can't connect: Application is closing. Unity called OnApplicationQuit().");
                 return false;
             }
@@ -1281,8 +1123,7 @@ namespace Photon.Pun
             SetupLogging();
             ConnectMethod = ConnectMethod.ConnectToRegion;
 
-            if (!string.IsNullOrEmpty(region))
-            {
+            if (!string.IsNullOrEmpty(region)) {
                 return NetworkingClient.ConnectToRegionMaster(region);
             }
 
@@ -1300,10 +1141,8 @@ namespace Photon.Pun
         /// Offline mode is set to false as well.
         /// Once disconnected, the client can connect again. Use ConnectUsingSettings.
         /// </remarks>
-        public static void Disconnect()
-        {
-            if (OfflineMode)
-            {
+        public static void Disconnect() {
+            if (OfflineMode) {
                 OfflineMode = false;
                 offlineModeRoom = null;
                 NetworkingClient.State = ClientState.Disconnecting;
@@ -1311,8 +1150,7 @@ namespace Photon.Pun
                 return;
             }
 
-            if (NetworkingClient == null)
-            {
+            if (NetworkingClient == null) {
                 return; // Surpress error when quitting playmode in the editor
             }
 
@@ -1325,28 +1163,23 @@ namespace Photon.Pun
         /// Cache the room name you're in and use RejoinRoom(roomname) to return to a game.
         /// Common use case: Press the Lock Button on a iOS device and you get disconnected immediately.
         /// </remarks>
-        public static bool Reconnect()
-        {
-            if (string.IsNullOrEmpty(NetworkingClient.MasterServerAddress))
-            {
+        public static bool Reconnect() {
+            if (string.IsNullOrEmpty(NetworkingClient.MasterServerAddress)) {
                 Debug.LogWarning("Reconnect() failed. It seems the client wasn't connected before?! Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
 
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
-            {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected) {
                 Debug.LogWarning("Reconnect() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
 
-            if (OfflineMode)
-            {
+            if (OfflineMode) {
                 OfflineMode = false; // Cleanup offline mode
                 Debug.LogWarning("Reconnect() disabled the offline mode. No longer offline.");
             }
 
-            if (!IsMessageQueueRunning)
-            {
+            if (!IsMessageQueueRunning) {
                 IsMessageQueueRunning = true;
                 Debug.LogWarning("Reconnect() enabled IsMessageQueueRunning. Needs to be able to dispatch incoming messages.");
             }
@@ -1359,8 +1192,7 @@ namespace Photon.Pun
         /// <summary>
         /// Resets the traffic stats and re-enables them.
         /// </summary>
-        public static void NetworkStatisticsReset()
-        {
+        public static void NetworkStatisticsReset() {
             NetworkingClient.LoadBalancingPeer.TrafficStatsReset();
         }
 
@@ -1369,10 +1201,8 @@ namespace Photon.Pun
         /// Only available when NetworkStatisticsEnabled was used to gather some stats.
         /// </summary>
         /// <returns>A string with vital networking statistics.</returns>
-        public static string NetworkStatisticsToString()
-        {
-            if (NetworkingClient == null || OfflineMode)
-            {
+        public static string NetworkStatisticsToString() {
+            if (NetworkingClient == null || OfflineMode) {
                 return "Offline or in OfflineMode. No VitalStats available.";
             }
 
@@ -1384,10 +1214,8 @@ namespace Photon.Pun
         /// Helper function which is called inside this class to erify if certain functions can be used (e.g. RPC when not connected)
         /// </summary>
         /// <returns></returns>
-        private static bool VerifyCanUseNetwork()
-        {
-            if (IsConnected)
-            {
+        private static bool VerifyCanUseNetwork() {
+            if (IsConnected) {
                 return true;
             }
 
@@ -1400,17 +1228,14 @@ namespace Photon.Pun
         /// The current roundtrip time to the photon server.
         /// </summary>
         /// <returns>Roundtrip time (to server and back).</returns>
-        public static int GetPing()
-        {
+        public static int GetPing() {
             return NetworkingClient.LoadBalancingPeer.RoundTripTime;
         }
 
         /// <summary>Refreshes the server timestamp (async operation, takes a roundtrip).</summary>
         /// <remarks>Can be useful if a bad connection made the timestamp unusable or imprecise.</remarks>
-        public static void FetchServerTimestamp()
-        {
-            if (NetworkingClient != null)
-            {
+        public static void FetchServerTimestamp() {
+            if (NetworkingClient != null) {
                 NetworkingClient.LoadBalancingPeer.FetchServerTimestamp();
             }
         }
@@ -1424,41 +1249,33 @@ namespace Photon.Pun
         /// You can send the RPC to "others", use this method, disable the message queue
         /// (by IsMessageQueueRunning) and then load.
         /// </remarks>
-        public static void SendAllOutgoingCommands()
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static void SendAllOutgoingCommands() {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
-            while (NetworkingClient.LoadBalancingPeer.SendOutgoingCommands())
-            {
-            }
+            while (NetworkingClient.LoadBalancingPeer.SendOutgoingCommands()) { }
         }
 
         /// <summary>Request a client to disconnect (KICK). Only the master client can do this</summary>
         /// <remarks>Only the target player gets this event. That player will disconnect automatically, which is what the others will notice, too.</remarks>
         /// <param name="kickPlayer">The Player to kick.</param>
-        public static bool CloseConnection(Player kickPlayer)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static bool CloseConnection(Player kickPlayer) {
+            if (!VerifyCanUseNetwork()) {
                 return false;
             }
 
-            if (!LocalPlayer.IsMasterClient)
-            {
+            if (!LocalPlayer.IsMasterClient) {
                 Debug.LogError("CloseConnection: Only the masterclient can kick another player.");
                 return false;
             }
 
-            if (kickPlayer == null)
-            {
+            if (kickPlayer == null) {
                 Debug.LogError("CloseConnection: No such player connected!");
                 return false;
             }
 
-            RaiseEventOptions options = new RaiseEventOptions() { TargetActors = new int[] { kickPlayer.ActorNumber } };
+            RaiseEventOptions options = new RaiseEventOptions() {TargetActors = new int[] {kickPlayer.ActorNumber}};
             return NetworkingClient.OpRaiseEvent(PunEvent.CloseConnection, null, options, SendOptions.SendReliable);
         }
 
@@ -1498,10 +1315,8 @@ namespace Photon.Pun
         /// </remarks>
         /// <param name="masterClientPlayer">The player to become the next Master Client.</param>
         /// <returns>False when this operation couldn't be done. Must be in a room (not in OfflineMode).</returns>
-        public static bool SetMasterClient(Player masterClientPlayer)
-        {
-            if (!InRoom || !VerifyCanUseNetwork() || OfflineMode)
-            {
+        public static bool SetMasterClient(Player masterClientPlayer) {
+            if (!InRoom || !VerifyCanUseNetwork() || OfflineMode) {
                 if (LogLevel == PunLogLevel.Informational) Debug.Log("Can not SetMasterClient(). Not in room or in OfflineMode.");
                 return false;
             }
@@ -1527,8 +1342,7 @@ namespace Photon.Pun
         /// More about PUN matchmaking:
         /// https://doc.photonengine.com/en-us/pun/v2/lobby-and-matchmaking/matchmaking-and-lobby
         /// </remarks>
-        public static bool JoinRandomRoom()
-        {
+        public static bool JoinRandomRoom() {
             return JoinRandomRoom(null, 0, MatchmakingMode.FillRoom, null, null);
         }
 
@@ -1552,8 +1366,7 @@ namespace Photon.Pun
         /// <param name="expectedCustomRoomProperties">Filters for rooms that match these custom properties (string keys and values). To ignore, pass null.</param>
         /// <param name="expectedMaxPlayers">Filters for a particular maxplayer setting. Use 0 to accept any maxPlayer value.</param>
         /// <returns>If the operation got queued and will be sent.</returns>
-        public static bool JoinRandomRoom(Hashtable expectedCustomRoomProperties, byte expectedMaxPlayers)
-        {
+        public static bool JoinRandomRoom(Hashtable expectedCustomRoomProperties, byte expectedMaxPlayers) {
             return JoinRandomRoom(expectedCustomRoomProperties, expectedMaxPlayers, MatchmakingMode.FillRoom, null, null);
         }
 
@@ -1581,25 +1394,24 @@ namespace Photon.Pun
         /// <param name="sqlLobbyFilter">A filter-string for SQL-typed lobbies.</param>
         /// <param name="expectedUsers">Optional list of users (by UserId) who are expected to join this game and who you want to block a slot for.</param>
         /// <returns>If the operation got queued and will be sent.</returns>
-        public static bool JoinRandomRoom(Hashtable expectedCustomRoomProperties, byte expectedMaxPlayers, MatchmakingMode matchingType, TypedLobby typedLobby, string sqlLobbyFilter, string[] expectedUsers = null)
-        {
-            if (OfflineMode)
-            {
-                if (offlineModeRoom != null)
-                {
+        public static bool JoinRandomRoom(Hashtable expectedCustomRoomProperties, byte expectedMaxPlayers, MatchmakingMode matchingType, TypedLobby typedLobby, string sqlLobbyFilter, string[] expectedUsers = null) {
+            if (OfflineMode) {
+                if (offlineModeRoom != null) {
                     Debug.LogError("JoinRandomRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
                 }
+
                 EnterOfflineRoom("offline room", null, true);
                 return true;
             }
-            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady)
-            {
-                Debug.LogError("JoinRandomRoom failed. Client is on "+ NetworkingClient.Server+ " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : " but not ready for operations (State: "+ NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
+
+            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady) {
+                Debug.LogError("JoinRandomRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" +
+                               (IsConnectedAndReady ? " and ready" : " but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
 
-            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null);  // use given lobby, or active lobby (if any active) or none
+            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null); // use given lobby, or active lobby (if any active) or none
 
             OpJoinRandomRoomParams opParams = new OpJoinRandomRoomParams();
             opParams.ExpectedCustomRoomProperties = expectedCustomRoomProperties;
@@ -1638,25 +1450,24 @@ namespace Photon.Pun
         /// <param name="typedLobby">If null, the room is automatically created in the currently used lobby (which is "default" when you didn't join one explicitly).</param>
         /// <param name="expectedUsers">Optional list of users (by UserId) who are expected to join this game and who you want to block a slot for.</param>
         /// <returns>If the operation got queued and will be sent.</returns>
-        public static bool CreateRoom(string roomName, RoomOptions roomOptions = null, TypedLobby typedLobby = null, string[] expectedUsers = null)
-        {
-            if (OfflineMode)
-            {
-                if (offlineModeRoom != null)
-                {
+        public static bool CreateRoom(string roomName, RoomOptions roomOptions = null, TypedLobby typedLobby = null, string[] expectedUsers = null) {
+            if (OfflineMode) {
+                if (offlineModeRoom != null) {
                     Debug.LogError("CreateRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
                 }
+
                 EnterOfflineRoom(roomName, roomOptions, true);
                 return true;
             }
-            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady)
-            {
-                Debug.LogError("CreateRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
+
+            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady) {
+                Debug.LogError("CreateRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") +
+                               ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
 
-            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null);  // use given lobby, or active lobby (if any active) or none
+            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null); // use given lobby, or active lobby (if any active) or none
 
             EnterRoomParams opParams = new EnterRoomParams();
             opParams.RoomName = roomName;
@@ -1706,30 +1517,29 @@ namespace Photon.Pun
         /// <param name="typedLobby">Lobby you want a new room to be listed in. Ignored if the room was existing and got joined.</param>
         /// <param name="expectedUsers">Optional list of users (by UserId) who are expected to join this game and who you want to block a slot for.</param>
         /// <returns>If the operation got queued and will be sent.</returns>
-        public static bool JoinOrCreateRoom(string roomName, RoomOptions roomOptions, TypedLobby typedLobby, string[] expectedUsers = null)
-        {
-            if (OfflineMode)
-            {
-                if (offlineModeRoom != null)
-                {
+        public static bool JoinOrCreateRoom(string roomName, RoomOptions roomOptions, TypedLobby typedLobby, string[] expectedUsers = null) {
+            if (OfflineMode) {
+                if (offlineModeRoom != null) {
                     Debug.LogError("JoinOrCreateRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
                 }
-                EnterOfflineRoom(roomName, roomOptions, true);  // in offline mode, JoinOrCreateRoom assumes you create the room
+
+                EnterOfflineRoom(roomName, roomOptions, true); // in offline mode, JoinOrCreateRoom assumes you create the room
                 return true;
             }
-            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady)
-            {
-                Debug.LogError("JoinOrCreateRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
+
+            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady) {
+                Debug.LogError("JoinOrCreateRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" +
+                               (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
-            if (string.IsNullOrEmpty(roomName))
-            {
+
+            if (string.IsNullOrEmpty(roomName)) {
                 Debug.LogError("JoinOrCreateRoom failed. A roomname is required. If you don't know one, how will you join?");
                 return false;
             }
 
-            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null);  // use given lobby, or active lobby (if any active) or none
+            typedLobby = typedLobby ?? ((NetworkingClient.InLobby) ? NetworkingClient.CurrentLobby : null); // use given lobby, or active lobby (if any active) or none
 
             EnterRoomParams opParams = new EnterRoomParams();
             opParams.RoomName = roomName;
@@ -1772,25 +1582,24 @@ namespace Photon.Pun
         /// <param name="roomName">Unique name of the room to join.</param>
         /// <param name="expectedUsers">Optional list of users (by UserId) who are expected to join this game and who you want to block a slot for.</param>
         /// <returns>If the operation got queued and will be sent.</returns>
-        public static bool JoinRoom(string roomName, string[] expectedUsers = null)
-        {
-            if (OfflineMode)
-            {
-                if (offlineModeRoom != null)
-                {
+        public static bool JoinRoom(string roomName, string[] expectedUsers = null) {
+            if (OfflineMode) {
+                if (offlineModeRoom != null) {
                     Debug.LogError("JoinRoom failed. In offline mode you still have to leave a room to enter another.");
                     return false;
                 }
+
                 EnterOfflineRoom(roomName, null, true);
                 return true;
             }
-            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady)
-            {
-                Debug.LogError("JoinRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
+
+            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady) {
+                Debug.LogError("JoinRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") +
+                               ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
-            if (string.IsNullOrEmpty(roomName))
-            {
+
+            if (string.IsNullOrEmpty(roomName)) {
                 Debug.LogError("JoinRoom failed. A roomname is required. If you don't know one, how will you join?");
                 return false;
             }
@@ -1824,20 +1633,19 @@ namespace Photon.Pun
         /// Rejoining room will not send any player properties. Instead client will receive up-to-date ones from server.
         /// If you want to set new player properties, do it once rejoined.
         /// </remarks>
-        public static bool RejoinRoom(string roomName)
-        {
-            if (OfflineMode)
-            {
+        public static bool RejoinRoom(string roomName) {
+            if (OfflineMode) {
                 Debug.LogError("RejoinRoom failed due to offline mode.");
                 return false;
             }
-            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady)
-            {
-                Debug.LogError("RejoinRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") + ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
+
+            if (NetworkingClient.Server != ServerConnection.MasterServer || !IsConnectedAndReady) {
+                Debug.LogError("RejoinRoom failed. Client is on " + NetworkingClient.Server + " (must be Master Server for matchmaking)" + (IsConnectedAndReady ? " and ready" : "but not ready for operations (State: " + NetworkingClient.State + ")") +
+                               ". Wait for callback: OnJoinedLobby or OnConnectedToMaster.");
                 return false;
             }
-            if (string.IsNullOrEmpty(roomName))
-            {
+
+            if (string.IsNullOrEmpty(roomName)) {
                 Debug.LogError("RejoinRoom failed. A roomname is required. If you don't know one, how will you join?");
                 return false;
             }
@@ -1865,21 +1673,18 @@ namespace Photon.Pun
         /// If you want to set new player properties, do it once rejoined.
         /// </remarks>
         /// <returns>False, if there is no known room or game server to return to. Then, this client does not attempt the ReconnectAndRejoin.</returns>
-        public static bool ReconnectAndRejoin()
-        {
-            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
-            {
+        public static bool ReconnectAndRejoin() {
+            if (NetworkingClient.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected) {
                 Debug.LogWarning("ReconnectAndRejoin() failed. Can only connect while in state 'Disconnected'. Current state: " + NetworkingClient.LoadBalancingPeer.PeerState);
                 return false;
             }
-            if (OfflineMode)
-            {
+
+            if (OfflineMode) {
                 OfflineMode = false; // Cleanup offline mode
                 Debug.LogWarning("ReconnectAndRejoin() disabled the offline mode. No longer offline.");
             }
 
-            if (!IsMessageQueueRunning)
-            {
+            if (!IsMessageQueueRunning) {
                 IsMessageQueueRunning = true;
                 Debug.LogWarning("ReconnectAndRejoin() enabled IsMessageQueueRunning. Needs to be able to dispatch incoming messages.");
             }
@@ -1903,24 +1708,18 @@ namespace Photon.Pun
         /// In a room with playerTTL == 0, become inactive has no effect (clients are removed from the room right away).
         /// </remarks>
         /// <param name="becomeInactive">If this client becomes inactive in a room with playerTTL &lt; 0. Defaults to true.</param>
-        public static bool LeaveRoom(bool becomeInactive = true)
-        {
-            if (OfflineMode)
-            {
+        public static bool LeaveRoom(bool becomeInactive = true) {
+            if (OfflineMode) {
                 offlineModeRoom = null;
                 //SendMonoMessage(PhotonNetworkingMessage.OnLeftRoom);
                 NetworkingClient.MatchMakingCallbackTargets.OnLeftRoom();
-            }
-            else
-            {
-                if (CurrentRoom == null)
-                {
+            } else {
+                if (CurrentRoom == null) {
                     Debug.LogWarning("PhotonNetwork.CurrentRoom is null. You don't have to call LeaveRoom() when you're not in one. State: " + PhotonNetwork.NetworkClientState);
-                }
-                else
-                {
+                } else {
                     becomeInactive = becomeInactive && CurrentRoom.PlayerTtl != 0; // in a room with playerTTL == 0, the operation "leave" will never turn a client inactive
                 }
+
                 return NetworkingClient.OpLeaveRoom(becomeInactive);
             }
 
@@ -1928,12 +1727,10 @@ namespace Photon.Pun
         }
 
 
-
         /// <summary>
         /// Internally used helper-method to setup an offline room, the numbers for actor and master-client and to do the callbacks.
         /// </summary>
-        private static void EnterOfflineRoom(string roomName, RoomOptions roomOptions, bool createdRoom)
-        {
+        private static void EnterOfflineRoom(string roomName, RoomOptions roomOptions, bool createdRoom) {
             offlineModeRoom = new Room(roomName, roomOptions, true);
             NetworkingClient.ChangeLocalID(1);
             offlineModeRoom.masterClientId = 1;
@@ -1941,8 +1738,7 @@ namespace Photon.Pun
             offlineModeRoom.LoadBalancingClient = PhotonNetwork.NetworkingClient;
             PhotonNetwork.NetworkingClient.CurrentRoom = offlineModeRoom;
 
-            if (createdRoom)
-            {
+            if (createdRoom) {
                 NetworkingClient.MatchMakingCallbackTargets.OnCreatedRoom();
             }
 
@@ -1969,8 +1765,7 @@ namespace Photon.Pun
         ///
         /// You can use JoinRandomRoom without being in a lobby!
         /// </remarks>
-        public static bool JoinLobby()
-        {
+        public static bool JoinLobby() {
             return JoinLobby(null);
         }
 
@@ -2006,10 +1801,8 @@ namespace Photon.Pun
         /// You can use JoinRandomRoom without being in a lobby!
         /// </remarks>
         /// <param name="typedLobby">A typed lobby to join (must have name and type).</param>
-        public static bool JoinLobby(TypedLobby typedLobby)
-        {
-            if (PhotonNetwork.IsConnected && PhotonNetwork.Server == ServerConnection.MasterServer)
-            {
+        public static bool JoinLobby(TypedLobby typedLobby) {
+            if (PhotonNetwork.IsConnected && PhotonNetwork.Server == ServerConnection.MasterServer) {
                 return NetworkingClient.OpJoinLobby(typedLobby);
             }
 
@@ -2026,10 +1819,8 @@ namespace Photon.Pun
         ///
         /// You can use JoinRandomRoom without being in a lobby.
         /// </remarks>
-        public static bool LeaveLobby()
-        {
-            if (PhotonNetwork.IsConnected && PhotonNetwork.Server == ServerConnection.MasterServer)
-            {
+        public static bool LeaveLobby() {
+            if (PhotonNetwork.IsConnected && PhotonNetwork.Server == ServerConnection.MasterServer) {
                 return NetworkingClient.OpLeaveLobby();
             }
 
@@ -2059,10 +1850,8 @@ namespace Photon.Pun
         /// </remarks>
         /// <param name="friendsToFind">Array of friend (make sure to use unique NickName or AuthValues).</param>
         /// <returns>If the operation could be sent (requires connection, only one request is allowed at any time). Always false in offline mode.</returns>
-        public static bool FindFriends(string[] friendsToFind)
-        {
-            if (NetworkingClient == null || offlineMode)
-            {
+        public static bool FindFriends(string[] friendsToFind) {
+            if (NetworkingClient == null || offlineMode) {
                 return false;
             }
 
@@ -2083,8 +1872,7 @@ namespace Photon.Pun
         /// <param name="typedLobby">The lobby to query. Has to be of type SqlLobby.</param>
         /// <param name="sqlLobbyFilter">The sql query statement.</param>
         /// <returns>If the operation could be sent (has to be connected).</returns>
-        public static bool GetCustomRoomList(TypedLobby typedLobby, string sqlLobbyFilter)
-        {
+        public static bool GetCustomRoomList(TypedLobby typedLobby, string sqlLobbyFilter) {
             return NetworkingClient.OpGetGameList(typedLobby, sqlLobbyFilter);
         }
 
@@ -2109,14 +1897,11 @@ namespace Photon.Pun
         /// (use this to cache properties to be sent when joining a room).
         /// Otherwise, returns if this operation could be sent to the server.
         /// </returns>
-        public static bool SetPlayerCustomProperties(Hashtable customProperties)
-        {
-            if (customProperties == null)
-            {
+        public static bool SetPlayerCustomProperties(Hashtable customProperties) {
+            if (customProperties == null) {
                 customProperties = new Hashtable();
-                foreach (object k in LocalPlayer.CustomProperties.Keys)
-                {
-                    customProperties[(string)k] = null;
+                foreach (object k in LocalPlayer.CustomProperties.Keys) {
+                    customProperties[(string) k] = null;
                 }
             }
 
@@ -2138,22 +1923,18 @@ namespace Photon.Pun
         /// If you specify keys to remove, those will be removed from the Hashtable but other keys are unaffected.
         /// </remarks>
         /// <param name="customPropertiesToDelete">List of Custom Property keys to remove. See remarks.</param>
-        public static void RemovePlayerCustomProperties(string[] customPropertiesToDelete)
-        {
+        public static void RemovePlayerCustomProperties(string[] customPropertiesToDelete) {
             // TODO: decide if this option makes sense
 
-            if (customPropertiesToDelete == null || customPropertiesToDelete.Length == 0 || LocalPlayer.CustomProperties == null)
-            {
+            if (customPropertiesToDelete == null || customPropertiesToDelete.Length == 0 || LocalPlayer.CustomProperties == null) {
                 LocalPlayer.CustomProperties = new Hashtable();
                 return;
             }
 
             // if a specific list of props should be deleted, we do that here
-            for (int i = 0; i < customPropertiesToDelete.Length; i++)
-            {
+            for (int i = 0; i < customPropertiesToDelete.Length; i++) {
                 string key = customPropertiesToDelete[i];
-                if (LocalPlayer.CustomProperties.ContainsKey(key))
-                {
+                if (LocalPlayer.CustomProperties.ContainsKey(key)) {
                     LocalPlayer.CustomProperties.Remove(key);
                 }
             }
@@ -2182,22 +1963,18 @@ namespace Photon.Pun
         /// <param name="raiseEventOptions">Allows more complex usage of events. If null, RaiseEventOptions.Default will be used (which is fine).</param>
         /// <param name="sendOptions">Send options for reliable, encryption etc..</param>
         /// <returns>False if event could not be sent.</returns>
-        public static bool RaiseEvent(byte eventCode, object eventContent, RaiseEventOptions raiseEventOptions, SendOptions sendOptions)
-        {
-            if (offlineMode)
-            {
-                if (raiseEventOptions.Receivers == ReceiverGroup.Others)
-                {
+        public static bool RaiseEvent(byte eventCode, object eventContent, RaiseEventOptions raiseEventOptions, SendOptions sendOptions) {
+            if (offlineMode) {
+                if (raiseEventOptions.Receivers == ReceiverGroup.Others) {
                     return true;
                 }
 
-                EventData evData = new EventData { Code = eventCode, Parameters = new Dictionary<byte, object> { { ParameterCode.Data, eventContent }, { ParameterCode.ActorNr, 1 } } };
+                EventData evData = new EventData {Code = eventCode, Parameters = new Dictionary<byte, object> {{ParameterCode.Data, eventContent}, {ParameterCode.ActorNr, 1}}};
                 NetworkingClient.OnEvent(evData);
                 return true;
             }
 
-            if (!InRoom || eventCode >= 200)
-            {
+            if (!InRoom || eventCode >= 200) {
                 Debug.LogWarning("RaiseEvent(" + eventCode + ") failed. Your event is not being sent! Check if your are in a Room and the eventCode must be less than 200 (0..199).");
                 return false;
             }
@@ -2211,15 +1988,12 @@ namespace Photon.Pun
         /// <param name="raiseEventOptions">Allows more complex usage of events. If null, RaiseEventOptions.</param>
         /// <param name="sendOptions">Send options for reliable, encryption etc..</param>
         /// <returns>False if event could not be sent</returns>
-        private static bool RaiseEventInternal(byte eventCode, object eventContent, RaiseEventOptions raiseEventOptions, SendOptions sendOptions)
-        {
-            if (offlineMode)
-            {
+        private static bool RaiseEventInternal(byte eventCode, object eventContent, RaiseEventOptions raiseEventOptions, SendOptions sendOptions) {
+            if (offlineMode) {
                 return false;
             }
 
-            if (!InRoom)
-            {
+            if (!InRoom) {
                 Debug.LogWarning("RaiseEvent(" + eventCode + ") failed. Your event is not being sent! Check if your are in a Room");
                 return false;
             }
@@ -2232,10 +2006,8 @@ namespace Photon.Pun
         /// Allocates a viewID for the current/local player.
         /// </summary>
         /// <returns>True if a viewId was assigned. False if the PhotonView already had a non-zero viewID.</returns>
-        public static bool AllocateViewID(PhotonView view)
-        {
-            if (view.ViewID != 0)
-            {
+        public static bool AllocateViewID(PhotonView view) {
+            if (view.ViewID != 0) {
                 Debug.LogError("AllocateViewID() can't be used for PhotonViews that already have a viewID. This view is: " + view.ToString());
                 return false;
             }
@@ -2249,16 +2021,13 @@ namespace Photon.Pun
         /// Enables the Master Client to allocate a viewID for scene objects.
         /// </summary>
         /// <returns>True if a viewId was assigned. False if the PhotonView already had a non-zero viewID or if this client is not the Master Client.</returns>
-        public static bool AllocateSceneViewID(PhotonView view)
-        {
-            if (!PhotonNetwork.IsMasterClient)
-            {
+        public static bool AllocateSceneViewID(PhotonView view) {
+            if (!PhotonNetwork.IsMasterClient) {
                 Debug.LogError("Only the Master Client can AllocateSceneViewID(). Check PhotonNetwork.IsMasterClient!");
                 return false;
             }
 
-            if (view.ViewID != 0)
-            {
+            if (view.ViewID != 0) {
                 Debug.LogError("AllocateSceneViewID() can't be used for PhotonViews that already have a viewID. This view is: " + view.ToString());
                 return false;
             }
@@ -2271,10 +2040,8 @@ namespace Photon.Pun
         /// <summary>Allocates a viewID for the current/local player or the scene.</summary>
         /// <param name="sceneObject">Use true, to allocate a scene viewID and false to allocate a viewID for the local player.</param>
         /// <returns>Returns a viewID (combined owner and sequential number) that can be assigend as PhotonView.ViewID.</returns>
-        public static int AllocateViewID(bool sceneObject)
-        {
-            if (sceneObject && !LocalPlayer.IsMasterClient)
-            {
+        public static int AllocateViewID(bool sceneObject) {
+            if (sceneObject && !LocalPlayer.IsMasterClient) {
                 Debug.LogError("Only a Master Client can AllocateViewID() for scene objects. This client/player is not a Master Client. Returning an invalid viewID: -1.");
                 return 0;
             }
@@ -2286,25 +2053,20 @@ namespace Photon.Pun
         /// <summary>Allocates a viewID for the current/local player or the scene.</summary>
         /// <param name="ownerId">ActorNumber to allocate a viewID for.</param>
         /// <returns>Returns a viewID (combined owner and sequential number) that can be assigend as PhotonView.ViewID.</returns>
-        public static int AllocateViewID(int ownerId)
-        {
-            if (ownerId == 0)
-            {
+        public static int AllocateViewID(int ownerId) {
+            if (ownerId == 0) {
                 // we look up a fresh subId for the owner "room" (mind the "sub" in subId)
                 int newSubId = lastUsedViewSubIdStatic;
                 int newViewId;
                 int ownerIdOffset = ownerId * MAX_VIEW_IDS;
-                for (int i = 1; i < MAX_VIEW_IDS; i++)
-                {
+                for (int i = 1; i < MAX_VIEW_IDS; i++) {
                     newSubId = (newSubId + 1) % MAX_VIEW_IDS;
-                    if (newSubId == 0)
-                    {
-                        continue;   // avoid using subID 0
+                    if (newSubId == 0) {
+                        continue; // avoid using subID 0
                     }
 
                     newViewId = newSubId + ownerIdOffset;
-                    if (!photonViewList.ContainsKey(newViewId))
-                    {
+                    if (!photonViewList.ContainsKey(newViewId)) {
                         lastUsedViewSubIdStatic = newSubId;
                         return newViewId;
                     }
@@ -2312,24 +2074,19 @@ namespace Photon.Pun
 
                 // this is the error case: we didn't find any (!) free subId for this user
                 throw new Exception(string.Format("AllocateViewID() failed. The room (user {0}) is out of 'scene' viewIDs. It seems all available are in use.", ownerId));
-            }
-            else
-            {
+            } else {
                 // we look up a fresh SUBid for the owner
                 int newSubId = lastUsedViewSubId;
                 int newViewId;
                 int ownerIdOffset = ownerId * MAX_VIEW_IDS;
-                for (int i = 1; i <= MAX_VIEW_IDS; i++)
-                {
+                for (int i = 1; i <= MAX_VIEW_IDS; i++) {
                     newSubId = (newSubId + 1) % MAX_VIEW_IDS;
-                    if (newSubId == 0)
-                    {
-                        continue;   // avoid using subID 0
+                    if (newSubId == 0) {
+                        continue; // avoid using subID 0
                     }
 
                     newViewId = newSubId + ownerIdOffset;
-                    if (!photonViewList.ContainsKey(newViewId))
-                    {
+                    if (!photonViewList.ContainsKey(newViewId)) {
                         lastUsedViewSubId = newSubId;
                         return newViewId;
                     }
@@ -2340,11 +2097,9 @@ namespace Photon.Pun
         }
 
 
-        public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
-        {
-            if (CurrentRoom == null)
-            {
-                Debug.LogError("Can not Instantiate before the client joined/created a room. State: "+PhotonNetwork.NetworkClientState);
+        public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null) {
+            if (CurrentRoom == null) {
+                Debug.LogError("Can not Instantiate before the client joined/created a room. State: " + PhotonNetwork.NetworkClientState);
                 return null;
             }
 
@@ -2353,21 +2108,17 @@ namespace Photon.Pun
         }
 
         [Obsolete("Renamed. Use InstantiateRoomObject instead")]
-        public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
-        {
+        public static GameObject InstantiateSceneObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null) {
             return InstantiateRoomObject(prefabName, position, rotation, group, data);
         }
 
-        public static GameObject InstantiateRoomObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null)
-        {
-            if (CurrentRoom == null)
-            {
+        public static GameObject InstantiateRoomObject(string prefabName, Vector3 position, Quaternion rotation, byte group = 0, object[] data = null) {
+            if (CurrentRoom == null) {
                 Debug.LogError("Can not Instantiate before the client joined/created a room.");
                 return null;
             }
 
-            if (LocalPlayer.IsMasterClient)
-            {
+            if (LocalPlayer.IsMasterClient) {
                 Pun.InstantiateParameters netParams = new InstantiateParameters(prefabName, position, rotation, group, data, currentLevelPrefix, null, LocalPlayer, ServerTimestamp);
                 return NetworkInstantiate(netParams, true);
             }
@@ -2375,65 +2126,50 @@ namespace Photon.Pun
             return null;
         }
 
-        private static GameObject NetworkInstantiate(Hashtable networkEvent, Player creator)
-        {
-
+        private static GameObject NetworkInstantiate(Hashtable networkEvent, Player creator) {
             // some values always present:
-            string prefabName = (string)networkEvent[(byte)0];
-            int serverTime = (int)networkEvent[(byte)6];
-            int instantiationId = (int)networkEvent[(byte)7];
+            string prefabName = (string) networkEvent[(byte) 0];
+            int serverTime = (int) networkEvent[(byte) 6];
+            int instantiationId = (int) networkEvent[(byte) 7];
 
             Vector3 position;
-            if (networkEvent.ContainsKey((byte)1))
-            {
-                position = (Vector3)networkEvent[(byte)1];
-            }
-            else
-            {
+            if (networkEvent.ContainsKey((byte) 1)) {
+                position = (Vector3) networkEvent[(byte) 1];
+            } else {
                 position = Vector3.zero;
             }
 
             Quaternion rotation = Quaternion.identity;
-            if (networkEvent.ContainsKey((byte)2))
-            {
-                rotation = (Quaternion)networkEvent[(byte)2];
+            if (networkEvent.ContainsKey((byte) 2)) {
+                rotation = (Quaternion) networkEvent[(byte) 2];
             }
 
             byte group = 0;
-            if (networkEvent.ContainsKey((byte)3))
-            {
-                group = (byte)networkEvent[(byte)3];
+            if (networkEvent.ContainsKey((byte) 3)) {
+                group = (byte) networkEvent[(byte) 3];
             }
 
             byte objLevelPrefix = 0;
-            if (networkEvent.ContainsKey((byte)8))
-            {
-                objLevelPrefix = (byte)networkEvent[(byte)8];
+            if (networkEvent.ContainsKey((byte) 8)) {
+                objLevelPrefix = (byte) networkEvent[(byte) 8];
             }
 
             int[] viewsIDs;
-            if (networkEvent.ContainsKey((byte)4))
-            {
-                viewsIDs = (int[])networkEvent[(byte)4];
-            }
-            else
-            {
-                viewsIDs = new int[1] { instantiationId };
+            if (networkEvent.ContainsKey((byte) 4)) {
+                viewsIDs = (int[]) networkEvent[(byte) 4];
+            } else {
+                viewsIDs = new int[1] {instantiationId};
             }
 
             object[] incomingInstantiationData;
-            if (networkEvent.ContainsKey((byte)5))
-            {
-                incomingInstantiationData = (object[])networkEvent[(byte)5];
-            }
-            else
-            {
+            if (networkEvent.ContainsKey((byte) 5)) {
+                incomingInstantiationData = (object[]) networkEvent[(byte) 5];
+            } else {
                 incomingInstantiationData = null;
             }
 
             // SetReceiving filtering
-            if (group != 0 && !allowedReceivingGroups.Contains(group))
-            {
+            if (group != 0 && !allowedReceivingGroups.Contains(group)) {
                 return null; // Ignore group
             }
 
@@ -2445,8 +2181,7 @@ namespace Photon.Pun
 
         private static readonly HashSet<string> PrefabsWithoutMagicCallback = new HashSet<string>();
 
-        private static GameObject NetworkInstantiate(Pun.InstantiateParameters parameters, bool sceneObject = false, bool instantiateEvent = false)
-        {
+        private static GameObject NetworkInstantiate(Pun.InstantiateParameters parameters, bool sceneObject = false, bool instantiateEvent = false) {
             //Instantiate(name, pos, rot)
             //pv[] GetPhotonViewsInChildren()
             //if (event==null) init send-params
@@ -2459,14 +2194,12 @@ namespace Photon.Pun
             go = prefabPool.Instantiate(parameters.prefabName, parameters.position, parameters.rotation);
 
 
-            if (go == null)
-            {
+            if (go == null) {
                 Debug.LogError("Failed to network-Instantiate: " + parameters.prefabName);
                 return null;
             }
 
-            if (go.activeSelf)
-            {
+            if (go.activeSelf) {
                 Debug.LogWarning("PrefabPool.Instantiate() should return an inactive GameObject. " + prefabPool.GetType().Name + " returned an active object. PrefabId: " + parameters.prefabName);
             }
 
@@ -2474,23 +2207,19 @@ namespace Photon.Pun
             photonViews = go.GetPhotonViewsInChildren();
 
 
-            if (photonViews.Length == 0)
-            {
+            if (photonViews.Length == 0) {
                 Debug.LogError("PhotonNetwork.Instantiate() can only instantiate objects with a PhotonView component. This prefab does not have one: " + parameters.prefabName);
                 return null;
             }
 
             bool localInstantiate = !instantiateEvent && LocalPlayer.Equals(parameters.creator);
-            if (localInstantiate)
-            {
+            if (localInstantiate) {
                 // init viewIDs array, so it can be filled (below), before it gets sent
                 parameters.viewIDs = new int[photonViews.Length];
             }
 
-            for (int i = 0; i < photonViews.Length; i++)
-            {
-                if (localInstantiate)
-                {
+            for (int i = 0; i < photonViews.Length; i++) {
+                if (localInstantiate) {
                     // when this client instantiates a GO, it has to allocate viewIDs accordingly.
                     // SCENE objects are created as actorNumber 0 (no matter which number this player has).
                     parameters.viewIDs[i] = (sceneObject) ? AllocateViewID(0) : AllocateViewID(parameters.creator.ActorNumber);
@@ -2506,13 +2235,12 @@ namespace Photon.Pun
                 view.InstantiationData = parameters.data;
                 view.ownershipCacheIsValid = PhotonView.OwnershipCacheState.Invalid;
                 view.didAwake = true;
-                view.ViewID = parameters.viewIDs[i];    // with didAwake true and viewID == 0, this will also register the view
+                view.ViewID = parameters.viewIDs[i]; // with didAwake true and viewID == 0, this will also register the view
 
                 view.Group = parameters.group;
             }
 
-            if (localInstantiate)
-            {
+            if (localInstantiate) {
                 // send instantiate network event
                 SendInstantiate(parameters, sceneObject);
             }
@@ -2520,19 +2248,14 @@ namespace Photon.Pun
             go.SetActive(true);
 
             // if IPunInstantiateMagicCallback is implemented on any script of the instantiated GO, let's call it directly:
-            if (!PrefabsWithoutMagicCallback.Contains(parameters.prefabName))
-            {
+            if (!PrefabsWithoutMagicCallback.Contains(parameters.prefabName)) {
                 var list = go.GetComponents<IPunInstantiateMagicCallback>();
-                if (list.Length > 0)
-                {
+                if (list.Length > 0) {
                     PhotonMessageInfo pmi = new PhotonMessageInfo(parameters.creator, parameters.timestamp, photonViews[0]);
-                    foreach (IPunInstantiateMagicCallback callbackComponent in list)
-                    {
+                    foreach (IPunInstantiateMagicCallback callbackComponent in list) {
                         callbackComponent.OnPhotonInstantiate(pmi);
                     }
-                }
-                else
-                {
+                } else {
                     PrefabsWithoutMagicCallback.Add(parameters.prefabName);
                 }
             }
@@ -2541,47 +2264,40 @@ namespace Photon.Pun
         }
 
 
-        private static readonly Hashtable SendInstantiateEvHashtable = new Hashtable();                             // SendInstantiate reuses this to reduce GC
-        private static readonly RaiseEventOptions SendInstantiateRaiseEventOptions = new RaiseEventOptions();       // SendInstantiate reuses this to reduce GC
+        private static readonly Hashtable SendInstantiateEvHashtable = new Hashtable(); // SendInstantiate reuses this to reduce GC
+        private static readonly RaiseEventOptions SendInstantiateRaiseEventOptions = new RaiseEventOptions(); // SendInstantiate reuses this to reduce GC
 
-        internal static bool SendInstantiate(Pun.InstantiateParameters parameters, bool sceneObject = false)
-        {
+        internal static bool SendInstantiate(Pun.InstantiateParameters parameters, bool sceneObject = false) {
             // first viewID is now also the gameobject's instantiateId
-            int instantiateId = parameters.viewIDs[0];   // LIMITS PHOTONVIEWS&PLAYERS
+            int instantiateId = parameters.viewIDs[0]; // LIMITS PHOTONVIEWS&PLAYERS
 
-            SendInstantiateEvHashtable.Clear();     // SendInstantiate reuses this Hashtable to reduce GC
+            SendInstantiateEvHashtable.Clear(); // SendInstantiate reuses this Hashtable to reduce GC
 
             SendInstantiateEvHashtable[keyByteZero] = parameters.prefabName;
 
-            if (parameters.position != Vector3.zero)
-            {
+            if (parameters.position != Vector3.zero) {
                 SendInstantiateEvHashtable[keyByteOne] = parameters.position;
             }
 
-            if (parameters.rotation != Quaternion.identity)
-            {
+            if (parameters.rotation != Quaternion.identity) {
                 SendInstantiateEvHashtable[keyByteTwo] = parameters.rotation;
             }
 
-            if (parameters.group != 0)
-            {
+            if (parameters.group != 0) {
                 SendInstantiateEvHashtable[keyByteThree] = parameters.group;
             }
 
             // send the list of viewIDs only if there are more than one. else the instantiateId is the viewID
-            if (parameters.viewIDs.Length > 1)
-            {
+            if (parameters.viewIDs.Length > 1) {
                 SendInstantiateEvHashtable[keyByteFour] = parameters.viewIDs; // LIMITS PHOTONVIEWS&PLAYERS
             }
 
-            if (parameters.data != null)
-            {
+            if (parameters.data != null) {
                 SendInstantiateEvHashtable[keyByteFive] = parameters.data;
             }
 
-            if (currentLevelPrefix > 0)
-            {
-                SendInstantiateEvHashtable[keyByteEight] = currentLevelPrefix;    // photonview's / object's level prefix
+            if (currentLevelPrefix > 0) {
+                SendInstantiateEvHashtable[keyByteEight] = currentLevelPrefix; // photonview's / object's level prefix
             }
 
             SendInstantiateEvHashtable[keyByteSix] = PhotonNetwork.ServerTimestamp;
@@ -2616,14 +2332,10 @@ namespace Photon.Pun
         /// - GameObject can be destroyed while client is not in a room.
         /// </remarks>
         /// <returns>Nothing. Check error debug log for any issues.</returns>
-        public static void Destroy(PhotonView targetView)
-        {
-            if (targetView != null)
-            {
+        public static void Destroy(PhotonView targetView) {
+            if (targetView != null) {
                 RemoveInstantiatedGO(targetView.gameObject, !InRoom);
-            }
-            else
-            {
+            } else {
                 Debug.LogError("Destroy(targetPhotonView) failed, cause targetPhotonView is null.");
             }
         }
@@ -2650,8 +2362,7 @@ namespace Photon.Pun
         /// - GameObject can be destroyed while client is not in a room.
         /// </remarks>
         /// <returns>Nothing. Check error debug log for any issues.</returns>
-        public static void Destroy(GameObject targetGo)
-        {
+        public static void Destroy(GameObject targetGo) {
             RemoveInstantiatedGO(targetGo, !InRoom);
         }
 
@@ -2668,10 +2379,8 @@ namespace Photon.Pun
         /// Objects loaded with a scene are ignored, no matter if they have PhotonView components.
         /// </remarks>
         /// <returns>Nothing. Check error debug log for any issues.</returns>
-        public static void DestroyPlayerObjects(Player targetPlayer)
-        {
-            if (targetPlayer == null)
-            {
+        public static void DestroyPlayerObjects(Player targetPlayer) {
+            if (targetPlayer == null) {
                 Debug.LogError("DestroyPlayerObjects() failed, cause parameter 'targetPlayer' was null.");
             }
 
@@ -2691,18 +2400,14 @@ namespace Photon.Pun
         /// Objects loaded with a scene are ignored, no matter if they have PhotonView components.
         /// </remarks>
         /// <returns>Nothing. Check error debug log for any issues.</returns>
-        public static void DestroyPlayerObjects(int targetPlayerId)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static void DestroyPlayerObjects(int targetPlayerId) {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
-            if (LocalPlayer.IsMasterClient || targetPlayerId == LocalPlayer.ActorNumber)
-            {
+
+            if (LocalPlayer.IsMasterClient || targetPlayerId == LocalPlayer.ActorNumber) {
                 DestroyPlayerObjects(targetPlayerId, false);
-            }
-            else
-            {
+            } else {
                 Debug.LogError("DestroyPlayerObjects() failed, cause players can only destroy their own GameObjects. A Master Client can destroy anyone's. This is master: " + PhotonNetwork.IsMasterClient);
             }
         }
@@ -2723,14 +2428,10 @@ namespace Photon.Pun
         /// Objects loaded with a scene are ignored, no matter if they have PhotonView components.
         /// </remarks>
         /// <returns>Nothing. Check error debug log for any issues.</returns>
-        public static void DestroyAll()
-        {
-            if (IsMasterClient)
-            {
+        public static void DestroyAll() {
+            if (IsMasterClient) {
                 DestroyAll(false);
-            }
-            else
-            {
+            } else {
                 Debug.LogError("Couldn't call DestroyAll() as only the master client is allowed to call this.");
             }
         }
@@ -2747,15 +2448,12 @@ namespace Photon.Pun
         /// network lag will determine if those get buffered or cleared like the rest.
         /// </remarks>
         /// <param name="targetPlayer">This player's buffered RPCs get removed from server buffer.</param>
-        public static void RemoveRPCs(Player targetPlayer)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static void RemoveRPCs(Player targetPlayer) {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
-            if (!targetPlayer.IsLocal && !IsMasterClient)
-            {
+            if (!targetPlayer.IsLocal && !IsMasterClient) {
                 Debug.LogError("Error; Only the MasterClient can call RemoveRPCs for other players.");
                 return;
             }
@@ -2772,10 +2470,8 @@ namespace Photon.Pun
         /// - This client is the Master Client (can remove any PhotonView's RPCs).
         /// </remarks>
         /// <param name="targetPhotonView">RPCs buffered for this PhotonView get removed from server buffer.</param>
-        public static void RemoveRPCs(PhotonView targetPhotonView)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static void RemoveRPCs(PhotonView targetPhotonView) {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
@@ -2786,31 +2482,24 @@ namespace Photon.Pun
         /// <summary>
         /// Internal to send an RPC on given PhotonView. Do not call this directly but use: PhotonView.RPC!
         /// </summary>
-        internal static void RPC(PhotonView view, string methodName, RpcTarget target, bool encrypt, params object[] parameters)
-        {
-            if (string.IsNullOrEmpty(methodName))
-            {
+        internal static void RPC(PhotonView view, string methodName, RpcTarget target, bool encrypt, params object[] parameters) {
+            if (string.IsNullOrEmpty(methodName)) {
                 Debug.LogError("RPC method name cannot be null or empty.");
                 return;
             }
 
-            if (!VerifyCanUseNetwork())
-            {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
-            if (CurrentRoom == null)
-            {
+            if (CurrentRoom == null) {
                 Debug.LogWarning("RPCs can only be sent in rooms. Call of \"" + methodName + "\" gets executed locally only, if at all.");
                 return;
             }
 
-            if (NetworkingClient != null)
-            {
+            if (NetworkingClient != null) {
                 RPC(view, methodName, target, null, encrypt, parameters);
-            }
-            else
-            {
+            } else {
                 Debug.LogWarning("Could not execute RPC " + methodName + ". Possible scene loading in progress?");
             }
         }
@@ -2818,30 +2507,23 @@ namespace Photon.Pun
         /// <summary>
         /// Internal to send an RPC on given PhotonView. Do not call this directly but use: PhotonView.RPC!
         /// </summary>
-        internal static void RPC(PhotonView view, string methodName, Player targetPlayer, bool encrpyt, params object[] parameters)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        internal static void RPC(PhotonView view, string methodName, Player targetPlayer, bool encrpyt, params object[] parameters) {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
-            if (CurrentRoom == null)
-            {
+            if (CurrentRoom == null) {
                 Debug.LogWarning("RPCs can only be sent in rooms. Call of \"" + methodName + "\" gets executed locally only, if at all.");
                 return;
             }
 
-            if (LocalPlayer == null)
-            {
+            if (LocalPlayer == null) {
                 Debug.LogError("RPC can't be sent to target Player being null! Did not send \"" + methodName + "\" call.");
             }
 
-            if (NetworkingClient != null)
-            {
+            if (NetworkingClient != null) {
                 RPC(view, methodName, RpcTarget.Others, targetPlayer, encrpyt, parameters);
-            }
-            else
-            {
+            } else {
                 Debug.LogWarning("Could not execute RPC " + methodName + ". Possible scene loading in progress?");
             }
         }
@@ -2850,15 +2532,12 @@ namespace Photon.Pun
         /// <summary>Finds the GameObjects with Components of a specific type (using FindObjectsOfType).</summary>
         /// <param name="type">Type must be a Component</param>
         /// <returns>HashSet with GameObjects that have a specific type of Component.</returns>
-        public static HashSet<GameObject> FindGameObjectsWithComponent(Type type)
-        {
+        public static HashSet<GameObject> FindGameObjectsWithComponent(Type type) {
             HashSet<GameObject> objectsWithComponent = new HashSet<GameObject>();
 
             Component[] targetComponents = (Component[]) GameObject.FindObjectsOfType(type);
-            for (int index = 0; index < targetComponents.Length; index++)
-            {
-                if (targetComponents[index] != null)
-                {
+            for (int index = 0; index < targetComponents.Length; index++) {
+                if (targetComponents[index] != null) {
                     objectsWithComponent.Add(targetComponents[index].gameObject);
                 }
             }
@@ -2878,21 +2557,16 @@ namespace Photon.Pun
         /// </remarks>
         /// <param name="group">The interest group to affect.</param>
         /// <param name="enabled">Sets if receiving from group to enabled (or not).</param>
-        public static void SetInterestGroups(byte group, bool enabled)
-        {
-            if (!VerifyCanUseNetwork())
-            {
+        public static void SetInterestGroups(byte group, bool enabled) {
+            if (!VerifyCanUseNetwork()) {
                 return;
             }
 
-            if (enabled)
-            {
-                byte[] groups = new byte[1] { (byte)group };
+            if (enabled) {
+                byte[] groups = new byte[1] {(byte) group};
                 SetInterestGroups(null, groups);
-            }
-            else
-            {
-                byte[] groups = new byte[1] { (byte)group };
+            } else {
+                byte[] groups = new byte[1] {(byte) group};
                 SetInterestGroups(groups, null);
             }
         }
@@ -2923,16 +2597,14 @@ namespace Photon.Pun
         /// <param name='levelNumber'>
         /// Build-index number of the level to load. When using level numbers, make sure they are identical on all clients.
         /// </param>
-        public static void LoadLevel(int levelNumber)
-        {
-            if (PhotonNetwork.AutomaticallySyncScene)
-            {
+        public static void LoadLevel(int levelNumber) {
+            if (PhotonNetwork.AutomaticallySyncScene) {
                 SetLevelInPropsIfSynced(levelNumber);
             }
 
             PhotonNetwork.IsMessageQueueRunning = false;
             loadingLevelAndPausedNetwork = true;
-            _AsyncLevelLoadingOperation = SceneManager.LoadSceneAsync(levelNumber,LoadSceneMode.Single);
+            _AsyncLevelLoadingOperation = SceneManager.LoadSceneAsync(levelNumber, LoadSceneMode.Single);
         }
 
         /// <summary>This method wraps loading a level asynchronously and pausing network messages during the process.</summary>
@@ -2960,10 +2632,8 @@ namespace Photon.Pun
         /// <param name='levelName'>
         /// Name of the level to load. Make sure it's available to all clients in the same room.
         /// </param>
-        public static void LoadLevel(string levelName)
-        {
-            if (PhotonNetwork.AutomaticallySyncScene)
-            {
+        public static void LoadLevel(string levelName) {
+            if (PhotonNetwork.AutomaticallySyncScene) {
                 SetLevelInPropsIfSynced(levelName);
             }
 
@@ -3004,25 +2674,21 @@ namespace Photon.Pun
         ///     // and so on
         /// }</pre>
         /// </example>
-        public static bool WebRpc(string name, object parameters, bool sendAuthCookie = false)
-        {
+        public static bool WebRpc(string name, object parameters, bool sendAuthCookie = false) {
             return NetworkingClient.OpWebRpc(name, parameters, sendAuthCookie);
         }
 
         /// <summary>
         /// Applies default log settings if they are not set up programmatically.
         /// </summary>
-        private static void SetupLogging()
-        {
+        private static void SetupLogging() {
             // only apply Settings if LogLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
-            if (PhotonNetwork.LogLevel == PunLogLevel.ErrorsOnly)
-            {
+            if (PhotonNetwork.LogLevel == PunLogLevel.ErrorsOnly) {
                 PhotonNetwork.LogLevel = PhotonServerSettings.PunLogging;
             }
 
             // only apply Settings if LogLevel is default ( see ServerSettings.cs), else it means it's been set programmatically
-            if (PhotonNetwork.NetworkingClient.LoadBalancingPeer.DebugOut == DebugLevel.ERROR)
-            {
+            if (PhotonNetwork.NetworkingClient.LoadBalancingPeer.DebugOut == DebugLevel.ERROR) {
                 PhotonNetwork.NetworkingClient.LoadBalancingPeer.DebugOut = PhotonServerSettings.AppSettings.NetworkLogging;
             }
         }
@@ -3035,15 +2701,12 @@ namespace Photon.Pun
         /// </summary>
         /// <returns>The asset path.</returns>
         /// <param name="asset">Asset.</param>
-        public static string FindAssetPath(string asset)
-        {
-            string[] guids = AssetDatabase.FindAssets (asset, null);
-            if (guids.Length != 1)
-            {
+        public static string FindAssetPath(string asset) {
+            string[] guids = AssetDatabase.FindAssets(asset, null);
+            if (guids.Length != 1) {
                 return string.Empty;
-            } else
-            {
-                return AssetDatabase.GUIDToAssetPath (guids [0]);
+            } else {
+                return AssetDatabase.GUIDToAssetPath(guids[0]);
             }
         }
 
@@ -3052,21 +2715,17 @@ namespace Photon.Pun
         /// Finds the pun asset folder. Something like Assets/Photon Unity Networking/Resources/
         /// </summary>
         /// <returns>The pun asset folder.</returns>
-        public static string FindPunAssetFolder()
-        {
-            string _thisPath =	FindAssetPath("PunClasses");
+        public static string FindPunAssetFolder() {
+            string _thisPath = FindAssetPath("PunClasses");
             string _PunFolderPath = string.Empty;
 
             //Debug.Log("FindPunAssetFolder "+_thisPath);
-            string[] subdirectoryEntries = _thisPath.Split ('/');
-            foreach (string dir in subdirectoryEntries)
-            {
-                if (!string.IsNullOrEmpty (dir))
-                {
-                    _PunFolderPath += dir +"/";
+            string[] subdirectoryEntries = _thisPath.Split('/');
+            foreach (string dir in subdirectoryEntries) {
+                if (!string.IsNullOrEmpty(dir)) {
+                    _PunFolderPath += dir + "/";
 
-                    if (string.Equals (dir, "PhotonUnityNetworking"))
-                    {
+                    if (string.Equals(dir, "PhotonUnityNetworking")) {
                         //	Debug.Log("_PunFolderPath "+_PunFolderPath);
                         return _PunFolderPath;
                     }
@@ -3080,12 +2739,10 @@ namespace Photon.Pun
 
 
         [Conditional("UNITY_EDITOR")]
-        public static void CreateSettings()
-        {
+        public static void CreateSettings() {
             AssetDatabase.Refresh();
-            PhotonNetwork.PhotonServerSettings = (ServerSettings)Resources.Load(PhotonNetwork.ServerSettingsFileName, typeof(ServerSettings));
-            if (PhotonNetwork.PhotonServerSettings != null)
-            {
+            PhotonNetwork.PhotonServerSettings = (ServerSettings) Resources.Load(PhotonNetwork.ServerSettingsFileName, typeof(ServerSettings));
+            if (PhotonNetwork.PhotonServerSettings != null) {
                 return;
             }
 
@@ -3093,38 +2750,33 @@ namespace Photon.Pun
             EditorUserBuildSettings.development = true;
 
             // find out if ServerSettings can be instantiated (existing script check)
-            ScriptableObject serverSettingTest = ScriptableObject.CreateInstance("ServerSettings");
-            if (serverSettingTest == null)
-            {
+            ScriptableObject serverSettingTest = ScriptableObject.CreateInstance<ServerSettings>();
+            if (serverSettingTest == null) {
                 Debug.LogError("missing settings script");
                 return;
             }
+
             UnityEngine.Object.DestroyImmediate(serverSettingTest);
 
 
             // if still not loaded, create one
-            if (PhotonNetwork.PhotonServerSettings == null)
-            {
+            if (PhotonNetwork.PhotonServerSettings == null) {
                 string _PunResourcesPath = PhotonNetwork.FindPunAssetFolder();
 
                 _PunResourcesPath += "Resources/";
 
 
-                string serverSettingsAssetPath = _PunResourcesPath+ PhotonNetwork.ServerSettingsFileName + ".asset";
+                string serverSettingsAssetPath = _PunResourcesPath + PhotonNetwork.ServerSettingsFileName + ".asset";
                 string settingsPath = Path.GetDirectoryName(serverSettingsAssetPath);
-                if (!Directory.Exists(settingsPath))
-                {
+                if (!Directory.Exists(settingsPath)) {
                     Directory.CreateDirectory(settingsPath);
                     AssetDatabase.ImportAsset(settingsPath);
                 }
 
-                PhotonNetwork.PhotonServerSettings = (ServerSettings)ScriptableObject.CreateInstance("ServerSettings");
-                if (PhotonNetwork.PhotonServerSettings != null)
-                {
+                PhotonNetwork.PhotonServerSettings = (ServerSettings) ScriptableObject.CreateInstance<ServerSettings>();
+                if (PhotonNetwork.PhotonServerSettings != null) {
                     AssetDatabase.CreateAsset(PhotonNetwork.PhotonServerSettings, serverSettingsAssetPath);
-                }
-                else
-                {
+                } else {
                     Debug.LogError("PUN failed creating a settings file. ScriptableObject.CreateInstance(\"ServerSettings\") returned null. Will try again later.");
                 }
             }
@@ -3135,17 +2787,13 @@ namespace Photon.Pun
         /// Internally used by Editor scripts, called on Hierarchy change (includes scene save) to remove surplus hidden PhotonHandlers.
         /// </summary>
         /// <remarks>This is done in this class, because the Editor assembly can't access PhotonHandler.</remarks>
-        public static void InternalCleanPhotonMonoFromSceneIfStuck()
-        {
+        public static void InternalCleanPhotonMonoFromSceneIfStuck() {
             PhotonHandler[] photonHandlers = GameObject.FindObjectsOfType(typeof(PhotonHandler)) as PhotonHandler[];
-            if (photonHandlers != null && photonHandlers.Length > 0)
-            {
+            if (photonHandlers != null && photonHandlers.Length > 0) {
                 Debug.Log("Cleaning up hidden PhotonHandler instances in scene. Please save the scene to fix the problem.");
-                foreach (PhotonHandler photonHandler in photonHandlers)
-                {
+                foreach (PhotonHandler photonHandler in photonHandlers) {
                     // Debug.Log("Removing Handler: " + photonHandler + " photonHandler.gameObject: " + photonHandler.gameObject);
-                    if (photonHandler.gameObject != null && photonHandler.gameObject.name == "PhotonMono")
-                    {
+                    if (photonHandler.gameObject != null && photonHandler.gameObject.name == "PhotonMono") {
                         photonHandler.gameObject.hideFlags = 0;
                         GameObject.DestroyImmediate(photonHandler.gameObject);
                     }

@@ -31,7 +31,6 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         private float m_YRotation;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
-        private CharacterController m_CharacterController;
         private CollisionFlags m_CollisionFlags;
         private bool m_PreviouslyGrounded;
         private Vector3 m_OriginalCameraPosition;
@@ -39,9 +38,11 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        
+        protected CharacterController m_CharacterController;
 
         // Use this for initialization
-        private void Start() {
+        protected virtual void Start() {
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
@@ -56,7 +57,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
 
         // Update is called once per frame
-        private void Update() {
+        protected virtual void Update() {
             RotateView();
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump){
@@ -85,7 +86,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
 
-        private void FixedUpdate() {
+        protected virtual void FixedUpdate() {
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at
@@ -219,7 +220,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         }
 
 
-        private void OnControllerColliderHit(ControllerColliderHit hit) {
+        protected virtual void OnControllerColliderHit(ControllerColliderHit hit) {
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
             if (m_CollisionFlags == CollisionFlags.Below){

@@ -1,46 +1,76 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using User;
-using System;
 using System.Linq;
-using UnityEngine.UI;
 using Consumables.Books;
-using Consumables.Books.Abilities;
 using Consumables.Healables.Plants;
 using MalusEBonus;
 using Managers.UI;
-using Consumables;
 using Characters.NPC;
 using Consumables.Pages;
 using Consumables.Healables.Plants.Drops;
 using Consumables.Books.Drops;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine;
+using User;
 
 //using Books;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
-        public bool IsAttacking{get=>isAttacking;}
+        public bool IsAttacking {
+            get => isAttacking;
+        }
+
         [SerializeField] protected EnumUtility.CharacterType raceType;
-        public EnumUtility.CharacterType RaceType{get=>raceType;}
+
+        public EnumUtility.CharacterType RaceType {
+            get => raceType;
+        }
+
         [SerializeField] protected float stamina;
         [SerializeField] protected float currentStamina;
         Inventory inventory;
         [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
-        public bool PowerMode{get=>powerMode; set=>powerMode=value;}
-        [SerializeField] protected Attack equippedAttack;
-        public Attack EquippedAttack{get=>equippedAttack;set=>equippedAttack=value;}
-        [SerializeField] protected Book equippedBook;
-        public Book EquippedBook{get=>equippedBook;set=>equippedBook=value;}
-        IList<Book> listBooks;
-        public IList<Book> ListBooks{get=>listBooks;}
 
-        
-        
+        public bool PowerMode {
+            get => powerMode;
+            set => powerMode = value;
+        }
+
+        [SerializeField] protected Attack equippedAttack;
+
+        public Attack EquippedAttack {
+            get => equippedAttack;
+            set => equippedAttack = value;
+        }
+
+        [SerializeField] protected Book equippedBook;
+
+        public Book EquippedBook {
+            get => equippedBook;
+            set => equippedBook = value;
+        }
+
+        IList<Book> listBooks;
+
+        public IList<Book> ListBooks {
+            get => listBooks;
+        }
+
+
         [SerializeField] protected Plant equippedPlant;
-        public Plant EquippedPlant{get=>equippedPlant;set=>equippedPlant=value;}
+
+        public Plant EquippedPlant {
+            get => equippedPlant;
+            set => equippedPlant = value;
+        }
+
         IList<Plant> listPlants;
-        public IList<Plant> ListPlants{get=>listPlants;}
+
+        public IList<Plant> ListPlants {
+            get => listPlants;
+        }
+
         [SerializeField] float buffRadius;
         [SerializeField] bool traitor;
         [SerializeField] protected float baseAttackRange;
@@ -59,39 +89,61 @@ namespace Characters.Interfaces {
 
         public MalusManager malusManager;
         [SerializeField] protected UIManager uIManager;
-        public UIManager UIManager{get=>uIManager;}
+
+        public UIManager UIManager {
+            get => uIManager;
+        }
+
         [SerializeField] protected Sprite baseAttackSprite;
         [SerializeField] protected Sprite specialAttackSprite;
 
-        public Sprite BaseAttackSprite{get=>baseAttackSprite;}
-        public Sprite SpecialAttackSprite{get=>specialAttackSprite;}
+        public Sprite BaseAttackSprite {
+            get => baseAttackSprite;
+        }
 
-        public const string INFINITY="\u221E";
-        
+        public Sprite SpecialAttackSprite {
+            get => specialAttackSprite;
+        }
+
+        public const string INFINITY = "\u221E";
+
         protected string baseAttackDescription; //max  circa 132 caratteri
         protected string specialAttackDescription;
-        public string BaseAttackDescription{get=>baseAttackDescription;}
-        public string SpecialAttackDescription{get=>specialAttackDescription;}
-        private UIController uIController;
-        public UIController UIController{get=>uIController;}
 
-        [SerializeField]private float interactionDistance;
-        [SerializeField]protected EnumUtility.AttackType weakness;
-        public const float weaknessMultiplicator=1.2f;
+        public string BaseAttackDescription {
+            get => baseAttackDescription;
+        }
+
+        public string SpecialAttackDescription {
+            get => specialAttackDescription;
+        }
+
+        private UIController uIController;
+
+        public UIController UIController {
+            get => uIController;
+        }
+
+        [SerializeField] private float interactionDistance;
+        [SerializeField] protected EnumUtility.AttackType weakness;
+        public const float weaknessMultiplicator = 1.2f;
         [SerializeField] protected Sprite weaknessSprite;
-        public Sprite WeaknessSprite{get=>weaknessSprite;}
+
+        public Sprite WeaknessSprite {
+            get => weaknessSprite;
+        }
 
         [SerializeField] protected Sprite elementSprite;
-        public Sprite ElementSprite{get=>elementSprite;}
+
+        public Sprite ElementSprite {
+            get => elementSprite;
+        }
 
         [SerializeField] protected EnumUtility.AttackType elementType;
-        [SerializeField]protected bool activateElementBonus; 
-        [SerializeField]protected float staminaConsumed;
-        [SerializeField]protected bool staminaRecharging=false;
-        [SerializeField]protected float staminaRecharged;
-
-        
-        
+        [SerializeField] protected bool activateElementBonus;
+        [SerializeField] protected float staminaConsumed;
+        [SerializeField] protected bool staminaRecharging = false;
+        [SerializeField] protected float staminaRecharged;
 
 
         // enum with the type of Attack equipped
@@ -134,60 +186,60 @@ namespace Characters.Interfaces {
             traitor = false;
             powerMode = true;
             equippedAttack = Attack.BaseAttack;
-            
+
             isAttacking = false;
             basePower = 5;
-            if(!malusManager){
-                malusManager=new GameObject().AddComponent<MalusManager>();
-                malusManager.name="Malus Manager";
-                malusManager.player=this;
+            if (!malusManager) {
+                malusManager = new GameObject().AddComponent<MalusManager>();
+                malusManager.name = "Malus Manager";
+                malusManager.player = this;
             }
-            inventory= new GameObject().AddComponent<Inventory>();
-            inventory.name="Inventory";
+
+            inventory = new GameObject().AddComponent<Inventory>();
+            inventory.name = "Inventory";
             UpdateObjectsLists();
-            if(gameObject.GetComponent<FirstPersonController>()){
-                uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-                uIController= new UIController();
-                uIController.player=this;
-                uIController.uIManager=this.uIManager;
+            if (gameObject.GetComponent<FirstPersonController>()) {
+                uIManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+                uIController = new UIController();
+                uIController.player = this;
+                uIController.uIManager = this.uIManager;
             }
-            interactionDistance=3;    
-            looted=false;
-            weakness=EnumUtility.AttackType.Nothing;
-            activateElementBonus=false;
+
+            interactionDistance = 3;
+            looted = false;
+            weakness = EnumUtility.AttackType.Nothing;
+            activateElementBonus = false;
         }
 
         //method used in the Start
         protected virtual void Starter() {
             //Debug.Log("Starter");
-            baseAttackSprite=Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
-            specialAttackSprite=Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
+            baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
+            specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
-            
+
             uIManager.FillBar(1, "health");
             currentStamina = stamina;
-            
+
             uIManager.FillBar(1, "stamina");
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
-            staminaConsumed=stamina* 10/100;
-            staminaRecharged=stamina*5/100;
-            currentBasePower=basePower;
+            staminaConsumed = stamina * 10 / 100;
+            staminaRecharged = stamina * 5 / 100;
+            currentBasePower = basePower;
             currentSpeed = speed;
-            if(listPlants.Count()!=0){
-                equippedPlant=listPlants[0];
+            if (listPlants.Count() != 0) {
+                equippedPlant = listPlants[0];
             }
-            
         }
 
         //method used in Update
         protected virtual void Updater() {
             MalusCheck();
             UpdateObjectsLists();
-            if(gameObject.GetComponent<FirstPersonController>())
+            if (gameObject.GetComponent<FirstPersonController>())
                 InteractionTextRayCast();
             ResetStamina();
-            
         }
 
         void Update() {
@@ -197,17 +249,13 @@ namespace Characters.Interfaces {
         void FixedUpdate() {
             if (Poisoned)
                 StartCoroutine(PoisonDamage());
-            
-            
         }
-        protected void InteractionTextRayCast(){
+
+        protected void InteractionTextRayCast() {
             RaycastHit hit;
-            if(Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
-                
-                uIController.InteractionTextControl(hit,traitor);
-            }
-            else{
-                
+            if (Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+                uIController.InteractionTextControl(hit, traitor);
+            } else {
                 uIController.ResetInteractionText();
             }
         }
@@ -221,42 +269,39 @@ namespace Characters.Interfaces {
             if (!isAttacking) {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
-                } else{
+                } else {
                     StartCoroutine(BaseAttackDamage());
                     UseStamina(staminaConsumed);
                 }
             }
         }
+
         ///<summary>
         ///Method used to start specialAttackCoroutine
         ///</summary>
         protected abstract void SpecialAttack();
 
         protected void BookAttack() {
-            if(!isAttacking){
-                if(equippedBook.Element!=weakness){
+            if (!isAttacking) {
+                if (equippedBook.Element != weakness) {
                     UseStamina(staminaConsumed);
-                    int count=listBooks.Count();
-                    int index=listBooks.IndexOf(equippedBook);
+                    int count = listBooks.Count();
+                    int index = listBooks.IndexOf(equippedBook);
                     StartCoroutine(UseBook());
                     UseStamina(staminaConsumed);
-                    uIController.CheckChargeBook(index,count);
-                }
-                else{
+                    uIController.CheckChargeBook(index, count);
+                } else {
                     Debug.Log("Cannot use book because of weakness");
                 }
             }
         }
 
-        protected IEnumerator UseBook(){
-            isAttacking=true;
+        protected IEnumerator UseBook() {
+            isAttacking = true;
             equippedBook.UseConsumable();
-            yield return new WaitForSeconds(speed/120f);
-            isAttacking=false;
+            yield return new WaitForSeconds(speed / 120f);
+            isAttacking = false;
         }
-
-
-
 
 
         //Method used to activate malus and bonus with the other races
@@ -278,8 +323,8 @@ namespace Characters.Interfaces {
             foreach (var colliders in hitColliders) {
                 if (colliders.gameObject != this.gameObject) {
                     var pc = colliders.GetComponent<PlayableCharacter>();
-                    if(!pc.IsDeath){
-                    //malusDic[pc.ToString()].DynamicInvoke();
+                    if (!pc.IsDeath) {
+                        //malusDic[pc.ToString()].DynamicInvoke();
                         testDict[pc.ToString()] = true;
                     }
                 }
@@ -296,6 +341,7 @@ namespace Characters.Interfaces {
                 }
             }
         }
+
         ///<summary>
         ///static method that reset value of a given dictionary
         ///</summary>
@@ -310,14 +356,15 @@ namespace Characters.Interfaces {
             Gizmos.DrawWireSphere(transform.position, buffRadius);
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, camera.transform.forward * baseAttackRange);
-            Gizmos.color=Color.gray;
-            Gizmos.DrawRay(transform.position,camera.transform.forward*interactionDistance);
+            Gizmos.color = Color.gray;
+            Gizmos.DrawRay(transform.position, camera.transform.forward * interactionDistance);
         }
+
         ///<summary>
         ///method that invoke the right fuction in base of the equippedAttack
         ///</summary>
         public void Attacker() {
-            if(currentStamina>=staminaConsumed)
+            if (currentStamina >= staminaConsumed)
                 attackDic[equippedAttack].DynamicInvoke();
         }
 
@@ -327,223 +374,199 @@ namespace Characters.Interfaces {
         //Coroutine to activate special ability
         protected abstract IEnumerator SpecialEffect();
 
-       
-        
 
-        protected virtual void ModifyStaminaMax(float modifier){
-            stamina*=modifier;
-            if(currentStamina>stamina)
-                currentStamina=stamina;
-            Debug.Log(ToString()+" maxStamina modified: "+stamina);
+        protected virtual void ModifyStaminaMax(float modifier) {
+            stamina *= modifier;
+            if (currentStamina > stamina)
+                currentStamina = stamina;
+            Debug.Log(ToString() + " maxStamina modified: " + stamina);
         }
 
-        public void UseEquippedConsumable(){
-            if(equippedPlant!=null){
-                int index=listPlants.IndexOf(equippedPlant);
-                int count=listPlants.Count();
+        public void UseEquippedConsumable() {
+            if (equippedPlant != null) {
+                int index = listPlants.IndexOf(equippedPlant);
+                int count = listPlants.Count();
                 equippedPlant.UseConsumable();
-                uIController.CheckPlantInventory(index,count);
+                uIController.CheckPlantInventory(index, count);
             }
         }
-        
 
-        protected void UpdateObjectsLists(){
-            listBooks= inventory.Books;
-            listPlants=inventory.Plants;
+
+        protected void UpdateObjectsLists() {
+            listBooks = inventory.Books;
+            listPlants = inventory.Plants;
         }
-        public Book GetDropBook(){
-            int count=listBooks.Count();
-            if(count!=0){
-                return listBooks[UnityEngine.Random.Range(0,count)];
-            }
-            else
+
+        public Book GetDropBook() {
+            int count = listBooks.Count();
+            if (count != 0) {
+                return listBooks[UnityEngine.Random.Range(0, count)];
+            } else
                 return null;
         }
-        public Plant GetDropPlant(){
-            int count=listPlants.Count();
-            if(count!=0){
-                return listPlants[UnityEngine.Random.Range(0,count)];
-            }
-            else
+
+        public Plant GetDropPlant() {
+            int count = listPlants.Count();
+            if (count != 0) {
+                return listPlants[UnityEngine.Random.Range(0, count)];
+            } else
                 return null;
         }
 
         ///<summary>
         /// method that makes player loot
         ///</summary>
-        public void LootAction(){
+        public void LootAction() {
             RaycastHit hit;
-            if( !isAttacking  && Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance) ){
-                Character hitted=hit.collider.GetComponent<Character>();
-                if(hitted && hitted.IsDeath && !hitted.Looted){
-                    if(hitted is PlayableCharacter && traitor){
-                        StartCoroutine(Loot(hitted,typeof(PlayableCharacter)));
-                    }
-                    else if(hitted is MeltingKinean && hitted.GetComponent<MeltingKinean>().Drop){
-                        StartCoroutine(Loot(hitted,typeof(MeltingKinean)));
-                    }
-                    else if(hitted is CyborgKinean){
-                        StartCoroutine(Loot(hitted,typeof(CyborgKinean)));
+            if (!isAttacking && Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+                Character hitted = hit.collider.GetComponent<Character>();
+                if (hitted && hitted.IsDeath && !hitted.Looted) {
+                    if (hitted is PlayableCharacter && traitor) {
+                        StartCoroutine(Loot(hitted, typeof(PlayableCharacter)));
+                    } else if (hitted is MeltingKinean && hitted.GetComponent<MeltingKinean>().Drop) {
+                        StartCoroutine(Loot(hitted, typeof(MeltingKinean)));
+                    } else if (hitted is CyborgKinean) {
+                        StartCoroutine(Loot(hitted, typeof(CyborgKinean)));
                     }
                 }
             }
         }
-        private IEnumerator Loot(Character dead, Type deadType){
-            isAttacking=true;
-            dead.Looted=true;
-            if(deadType==typeof(PlayableCharacter)){
-                PlayableCharacter deadPC=dead.GetComponent<PlayableCharacter>();
-                Book dropBook=deadPC.GetDropBook();
-                Plant dropPlant=deadPC.GetDropPlant();
-                bool plantAdded=inventory.TryAddConsumableToInventory(dropPlant);
-                bool bookAdded=inventory.TryAddConsumableToInventory(dropBook);
-                if(!plantAdded && !bookAdded){
-                    deadPC.Looted=false;
-                }
-                else{
+
+        private IEnumerator Loot(Character dead, Type deadType) {
+            isAttacking = true;
+            dead.Looted = true;
+            if (deadType == typeof(PlayableCharacter)) {
+                PlayableCharacter deadPC = dead.GetComponent<PlayableCharacter>();
+                Book dropBook = deadPC.GetDropBook();
+                Plant dropPlant = deadPC.GetDropPlant();
+                bool plantAdded = inventory.TryAddConsumableToInventory(dropPlant);
+                bool bookAdded = inventory.TryAddConsumableToInventory(dropBook);
+                if (!plantAdded && !bookAdded) {
+                    deadPC.Looted = false;
+                } else {
                     Debug.Log("Looting Traitor");
-                    if(bookAdded){
+                    if (bookAdded) {
                         uIManager.AddBook(dropBook.BookIcon);
                     }
-                    if(plantAdded){
-                        UIManager.AddPlant(dropPlant.PlantIcon,dropPlant.Description);
-                        if(listPlants.Count()==1){
-                            equippedPlant=dropPlant;
+
+                    if (plantAdded) {
+                        UIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
+                        if (listPlants.Count() == 1) {
+                            equippedPlant = dropPlant;
                         }
                     }
                 }
-            }
-            else if(deadType==typeof(MeltingKinean)){
-                MeltingKinean deadNPC=dead.GetComponent<MeltingKinean>();
-                if(deadNPC.DropPage){
-                    Page page=deadNPC.GetDropPage();
-                    bool affectEquippedBook= (equippedBook.CurrentCharges<equippedBook.Charges && equippedBook.PageType==page.Type);
-                    if(!inventory.TryAddConsumableToInventory(page)){
-                        deadNPC.Looted=false;
-                    }
-                    else{
-                        if(affectEquippedBook){
+            } else if (deadType == typeof(MeltingKinean)) {
+                MeltingKinean deadNPC = dead.GetComponent<MeltingKinean>();
+                if (deadNPC.DropPage) {
+                    Page page = deadNPC.GetDropPage();
+                    bool affectEquippedBook = (equippedBook.CurrentCharges < equippedBook.Charges && equippedBook.PageType == page.Type);
+                    if (!inventory.TryAddConsumableToInventory(page)) {
+                        deadNPC.Looted = false;
+                    } else {
+                        if (affectEquippedBook) {
                             uIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
                         }
                     }
                 }
-            }
-            else if(deadType==typeof(CyborgKinean)){
-                CyborgKinean deadNPC=dead.GetComponent<CyborgKinean>();
-                BookDrop dropBook=deadNPC.GetDrop();
-                Sprite booksprite=dropBook.BookIcon;
-                if(!dropBook.PickDrop(inventory)){
-                    deadNPC.Looted=false;
-                }
-                else{
+            } else if (deadType == typeof(CyborgKinean)) {
+                CyborgKinean deadNPC = dead.GetComponent<CyborgKinean>();
+                BookDrop dropBook = deadNPC.GetDrop();
+                Sprite booksprite = dropBook.BookIcon;
+                if (!dropBook.PickDrop(inventory)) {
+                    deadNPC.Looted = false;
+                } else {
                     uIManager.AddBook(booksprite);
                 }
             }
-            yield return new WaitForSeconds(0.5f);
-            isAttacking=false;
-            
 
+            yield return new WaitForSeconds(0.5f);
+            isAttacking = false;
         }
+
         ///<summary>
         ///method that makes player interact with interagible object or revive team member
         ///</summary>
-        public void InteractAction(){
+        public void InteractAction() {
             RaycastHit hit;
-            if(!isAttacking  &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
-                if(hit.collider.GetComponent<PlantDrop>()){
+            if (!isAttacking && Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+                if (hit.collider.GetComponent<PlantDrop>()) {
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
-                }
-                else if(hit.collider.GetComponent<PlayableCharacter>()){
+                } else if (hit.collider.GetComponent<PlayableCharacter>()) {
                     StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
                 }
             }
         }
 
-        private IEnumerator InteractPlant(PlantDrop interacted){
-            isAttacking=true;
-            Sprite plantSprite=interacted.PlantIcon;
-            string description=interacted.Description;
-            if(!interacted.PickDrop(inventory)){
+        private IEnumerator InteractPlant(PlantDrop interacted) {
+            isAttacking = true;
+            Sprite plantSprite = interacted.PlantIcon;
+            string description = interacted.Description;
+            if (!interacted.PickDrop(inventory)) {
                 //failed interaction
+            } else {
+                uIManager.AddPlant(plantSprite, description);
             }
-            else{
-                uIManager.AddPlant(plantSprite,description);
-            }
+
             yield return new WaitForSeconds(0.5f);
-            isAttacking=false;
-   
+            isAttacking = false;
         }
 
-        private IEnumerator ReviveTeamMember(PlayableCharacter revived){
-            isAttacking=true;
-  
+        private IEnumerator ReviveTeamMember(PlayableCharacter revived) {
+            isAttacking = true;
+
             yield return new WaitForSecondsRealtime(3f);
-            revived.SendMessage("Revive",SendMessageOptions.DontRequireReceiver);
+            revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
 
-            isAttacking=false;
-
+            isAttacking = false;
         }
 
-        private void Revive(){
+        private void Revive() {
             Debug.Log($"{gameObject.ToString()} revived");
-            currentHp=hp/6;
-            isDeath=false;
+            currentHp = hp / 6;
+            isDeath = false;
         }
 
-        protected void ModifyRecoil(float modifier){
-            baseAttackRecoil*=modifier;
-            specialAttackRecoil*=modifier;
-            Debug.Log(ToString()+" recoil Modified: "+baseAttackRecoil.ToString()+" "+specialAttackRecoil.ToString());
+        protected void ModifyRecoil(float modifier) {
+            baseAttackRecoil *= modifier;
+            specialAttackRecoil *= modifier;
+            Debug.Log(ToString() + " recoil Modified: " + baseAttackRecoil.ToString() + " " + specialAttackRecoil.ToString());
         }
 
         protected abstract void ModifyWeakness(float modifier);
 
-        protected virtual void ModifyElementalPower(float modifier){
-            if(modifier>1){
-                activateElementBonus=true;
-            }
-            else{
-                activateElementBonus=false;
+        protected virtual void ModifyElementalPower(float modifier) {
+            if (modifier > 1) {
+                activateElementBonus = true;
+            } else {
+                activateElementBonus = false;
             }
 
-            Debug.Log(ToString()+"activate element bonus");
+            Debug.Log(ToString() + "activate element bonus");
         }
 
-        protected virtual void UseStamina(float staminaUsed){
-            currentStamina-=staminaUsed;
-            uIManager.FillBar(currentStamina/stamina,"stamina");
+        protected virtual void UseStamina(float staminaUsed) {
+            currentStamina -= staminaUsed;
+            uIManager.FillBar(currentStamina / stamina, "stamina");
         }
 
-        protected virtual void ResetStamina(){
-            if(!staminaRecharging && currentStamina<stamina){
+        protected virtual void ResetStamina() {
+            if (!staminaRecharging && currentStamina < stamina) {
                 StartCoroutine(StaminaRecharge());
             }
         }
 
-        protected IEnumerator StaminaRecharge(){
-            staminaRecharging=true;
-            currentStamina=currentStamina+staminaRecharged>stamina ? stamina : currentStamina+staminaRecharged;
-            uIManager.FillBar(currentStamina/stamina,"stamina");
-            yield return new WaitForSeconds(120f/speed);
-            staminaRecharging=false;
+        protected IEnumerator StaminaRecharge() {
+            staminaRecharging = true;
+            currentStamina = currentStamina + staminaRecharged > stamina ? stamina : currentStamina + staminaRecharged;
+            uIManager.FillBar(currentStamina / stamina, "stamina");
+            yield return new WaitForSeconds(120f / speed);
+            staminaRecharging = false;
         }
 
-        protected override void RecoverHP(float hpRecovered){
+        protected override void RecoverHP(float hpRecovered) {
             base.RecoverHP(hpRecovered);
-            uIManager.FillBar(currentHp/hp,"health");
+            uIManager.FillBar(currentHp / hp, "health");
         }
-
-
-
-
-
-
-        
-
-        
-
-
-
-
     }
 }
