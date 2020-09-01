@@ -37,33 +37,38 @@ namespace Characters.Interfaces {
             public float DamageRec { get; }
             public EnumUtility.AttackType AttackType { get; }
         }
-
-        /*Method used to deal damage to the character instance,
-        it is used by both PC and NPC, it is protected so use with
-        SendMessage method like this:
-        hitted.SendMessage("TakeDamage",baseDamage,SendMessageOptions.DontRequireReceiver);*/
+        ///<summary>
+        ///Method used to deal damage to the character instance,
+        ///it is used by both PC and NPC, it is protected so use with
+        ///SendMessage method like this:
+        ///hitted.SendMessage("TakeDamage",baseDamage,SendMessageOptions.DontRequireReceiver);
+        ///</summary>
         protected abstract void TakeDamage(Damage damage);
         /*Method used when the character hp reach 0,
         (not implemented yet), activate the event linked to the death of the character instance*/
 
         protected abstract void Death();
-
-        /*Method that activate baseAttack Coroutine, 
-        PCs use this woth a particular input,
-        NPCs use this when an enemy enter in their damagezone*/
+        ///<summary>
+        ///Method that activate baseAttack Coroutine, 
+        ///PCs use this woth a particular input,
+        ///NPCs use this when an enemy enter in their damagezone
+        ///</summary>
         protected abstract void BaseAttack();
 
         public override string ToString() {
             return type;
         }
-
-        /*Method used for modify speed of character instance,
-        protected so same as TakeDamage*/
+        ///<summary>
+        ///Method used for modify speed of character instance,
+        ///protected so same as TakeDamage
+        ///</summary>
         protected virtual void ModifySpeed(float modifier) {
             currentSpeed *= modifier;
             Debug.Log(ToString() + " speed modified: "+currentSpeed);
         }
-        //modify hp max 
+        ///<summary>
+        ///modify hp max
+        ///</summary> 
         protected virtual void ModifyHpMax(float modifier){
             hp*=modifier;
             if(currentHp>hp)

@@ -61,10 +61,11 @@ namespace Characters.PC{
                     Debug.Log("cannot do special attack, life too low");
                 }
                 else{
-                    isAttacking=true;
+                    
                     StartCoroutine(SpecialEffect());
+                    UseStamina(staminaConsumed);
                     lastTarget=null;
-                    isAttacking=false;
+                    
                 }
             }
         }
@@ -82,7 +83,7 @@ namespace Characters.PC{
         }
         protected override void RayazBond(){
             
-            Bonus bonus = new Bonus(true,MalusManager.Stats.BasePower,1.5f,"rayazBonus");
+            Bonus bonus = new Bonus(true,MalusManager.Stats.BasePower,1.3f,"rayazBonus");
             Bonus malus = new Bonus(false,MalusManager.Stats.Hp,0.7f,"rayazMalus");
             malusManager.Add(bonus);
             malusManager.Add(malus);
@@ -141,6 +142,7 @@ namespace Characters.PC{
         }
 
         protected override IEnumerator SpecialEffect(){
+            isAttacking=true;
             currentHp-=specialAttackRecoil;
             uIManager.FillBar(currentHp/hp,"health");
             Collider[] hitcolliders= Physics.OverlapSphere(lastTarget.transform.position,specialAttackRadius);
@@ -150,17 +152,21 @@ namespace Characters.PC{
                     character.SendMessage("ModifySpeed",speedModifier,SendMessageOptions.DontRequireReceiver);                    
                 }
             }
-            
+            yield return new WaitForSeconds(speed/120f);
+            isAttacking=false;
             yield return new WaitForSeconds(10);
             foreach(var collider in hitcolliders){
                 Character character=collider.GetComponent<Character>();
                 if(character && character.gameObject!=this.gameObject)
                     character.SendMessage("ModifySpeed",1/speedModifier,SendMessageOptions.DontRequireReceiver);
             }
+            
 
         }
-        //check if lastTarget(the last target hitted, used for activating special effect )
-        // is in range, otherwise lastTarget becomes null
+        ///<summary>
+        ///check if lastTarget(the last target hitted, used for activating special effect )
+        ///is in range, otherwise lastTarget becomes null
+        ///</summary>
         protected void DistanceCheckLastTarget(){
             float distance= Vector3.Distance(transform.position,lastTarget.transform.position);
             if (distance > maxlastTargetDistance)   

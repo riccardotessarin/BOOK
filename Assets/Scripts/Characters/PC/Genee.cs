@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
+using MalusEBonus;
 namespace Characters.PC{
     public class Genee : PlayableCharacter
     {
@@ -40,28 +41,45 @@ namespace Characters.PC{
                     Debug.Log("cannot do special attack, life too low");
                 }
                 else{
-                isAttacking=true;
+                
                 StartCoroutine(SpecialEffect());
-                isAttacking=false;
+
+                
                 }
             }
         }
         protected override void RyuyukiBond(){
+            Bonus bonus=new Bonus(true,MalusManager.Stats.DamageReduction,0.7f,"ryuyukiBonus");
+            Bonus malus= new Bonus(false,MalusManager.Stats.Speed,0.7f,"ryuyukiMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"ryuyuki bond");
         }
         protected override void GeneeBond(){
+            Bonus malus= new Bonus(false,MalusManager.Stats.Weakness,0.7f,"geneeMalus");
+            
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"genee bond");
         }
         protected override void RayazBond(){
+            Bonus bonus=new Bonus(true,MalusManager.Stats.Speed,1.3f,"rayazBonus");
+            Bonus malus= new Bonus(false,MalusManager.Stats.Hp,0.7f,"rayazMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"rayazbond");
         }
         protected override void ReverseRyuyukiBond(){
+            malusManager.Remove(MalusManager.Stats.DamageReduction,"ryuyukiBonus");
+            malusManager.Remove(MalusManager.Stats.Speed,"ryuyukiMalus");
             Debug.Log(this.ToString()+": reverse ryuyuki bond");
         }
         protected override void ReverseGeneeBond(){
+            malusManager.Remove(MalusManager.Stats.Weakness,"geneeMalus");
             Debug.Log(this.ToString()+": reverse genee bond");
         }
         protected override void ReverseRayazBond(){
+            malusManager.Remove(MalusManager.Stats.Speed,"rayazBonus");
+            malusManager.Remove(MalusManager.Stats.Hp,"rayazMalus");
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
         protected override void TakeDamage(Damage damage){
@@ -97,12 +115,17 @@ namespace Characters.PC{
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;
         }
-        //Coroutine that activate the state of invicible and
-        // after a certain time remove this state
+        ///<summary>
+        ///Coroutine that activate the state of invicible and
+        ///after a certain time remove this state
+        ///</summary>
         protected override IEnumerator SpecialEffect(){
+            isAttacking=true;
             currentHp-=specialAttackRecoil;
             uIManager.FillBar(currentHp/hp,"health");
             invicible=true;
+            yield return new WaitForSeconds(speed/120f);
+            isAttacking=false;
             yield return new WaitForSeconds(15);
             invicible=false;
 

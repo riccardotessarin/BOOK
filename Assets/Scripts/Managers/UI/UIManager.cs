@@ -41,8 +41,9 @@ namespace Managers.UI{
         
         
         
-
-
+        ///<summary>
+        ///set health and stamina UI bar
+        ///</summary>
         public void FillBar(float value, string type) {
             if(healthBar && staminaBar){
                 switch (type) {
@@ -143,10 +144,14 @@ namespace Managers.UI{
 
 
         }
+
+        ///<summary>
+        ///if bool true activate inventory menu
+        ///else deactivate it
+        ///</summary>
         public void ActivateMenu(bool on){
             inGameObjectMenu.gameObject.SetActive(on);
         }
-
         public void ScrollDownMenu(Sprite rightSprite){
             leftObject.sprite=centerObject.sprite;
             centerObject.sprite=rightObject.sprite;
@@ -160,7 +165,10 @@ namespace Managers.UI{
             leftObject.sprite=leftSprite;
             //equippedAttackImage.texture=centerObject.texture;
         }
-
+        ///<summary>
+        ///if power is true change from plant menu to attack menu
+        ///otherwise change from attack menu to plant menu
+        ///</summary>
         public void SwitchMode(bool power){
             if (power){ //entra in power mode
                 plantArray[1]=centerObject.sprite;
@@ -205,7 +213,9 @@ namespace Managers.UI{
         public void ChangeInteractionText(string text){
             interactionString=text;
         }
-
+        ///<summary>
+        ///add a book in UI inventory
+        ///</summary>
         public void AddBook(Sprite book){
             if(player.EquippedAttack==PlayableCharacter.Attack.BaseAttack){
                 if(player.PowerMode){
@@ -240,7 +250,9 @@ namespace Managers.UI{
                 }
             }
         }
-
+        ///<summary>
+        ///add a plant in UI inventory
+        ///</summary>
        public void AddPlant(Sprite plant, string description){
            int count=player.ListPlants.Count;
            if(count==1){
@@ -274,7 +286,13 @@ namespace Managers.UI{
                 }
             }
         } 
-        
+        ///<summary>
+        ///add an image in status zone
+        ///sprite is the sprite of the image,
+        ///bonus sets the background of the image,
+        ///name identificates the image
+        ///block sets the block bar over the image
+        ///</summary>
         public void AddBonusImage(Sprite sprite, bool bonus,string name, bool block){
             Image image;
             if(bonus){
@@ -291,6 +309,11 @@ namespace Managers.UI{
             }
             statusImageDict[name]=image;
         }
+
+        ///<summary>
+        ///remove an image from status area
+        ///name is the name of object to remove
+        ///</summary>
         public void RemoveBonusImage(string name){
             Image image=statusImageDict[name];
             if(!statusImageDict.Remove(name)){

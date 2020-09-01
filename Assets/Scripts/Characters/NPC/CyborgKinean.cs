@@ -64,11 +64,12 @@ namespace Characters.NPC {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * maxAttackDistance);
         }
-
-        //return true if target is in range for a special attack
-        //and make this instance look at it,
-        // return false if this instance doesnt have a target or
-        // the target isn't in the area 
+        ///<summary>
+        ///return true if target is in range for a special attack
+        ///and make this instance look at it,
+        /// return false if this instance doesnt have a target or
+        /// the target isn't in the area 
+        ///</summary>
         bool SpecialAttackZone() {
             if (target) {
                 Collider[] hitcolliders = Physics.OverlapSphere(transform.position, specialAttackRadius, PCLAYERMASK);
@@ -90,8 +91,9 @@ namespace Characters.NPC {
                 StartCoroutine(SpecialAttackDamage());
             }
         }
-
-        //Coroutine that activate the special attack
+        ///<summary>
+        ///Coroutine that activate the special attack
+        ///</summary>
         IEnumerator SpecialAttackDamage() {
             isAttacking = true;
             gameObject.GetComponent<Renderer>().material.color = Color.red;
@@ -115,7 +117,9 @@ namespace Characters.NPC {
             rarityDrop=Random.Range(0.1f,1.0f)<=0.7f;
 
         }
-
+        ///<summary>
+        ///method that return the drop
+        ///</summary>
         public BookDrop GetDrop(){
             int i=rarityDrop ? 1:0;
             //TODO

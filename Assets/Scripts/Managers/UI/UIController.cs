@@ -11,6 +11,10 @@ namespace Managers.UI{
     {
         public UIManager uIManager;
         public PlayableCharacter player;
+
+        ///<summary>
+        ///scroll from left to right the inventory UI
+        ///</summary>
         public void ScrollUpInventory(){
             if(player.PowerMode){
                 int count= player.ListBooks.Count();
@@ -103,7 +107,9 @@ namespace Managers.UI{
 
             }
         }
-
+        ///<summary>
+        ///scroll from right to left the inventory UI
+        ///</summary>
         public void ScrollDownInventory(){
             if(player.PowerMode){
                 int count= player.ListBooks.Count();
@@ -190,7 +196,12 @@ namespace Managers.UI{
         }
 
 
-
+        ///<summary>
+        ///control if the charge fo the current book is zero 
+        ///and in case set UI inventory and player attack
+        ///index is index of the book in the inventory before it was used,
+        ///count is number of books in the inventory before the equipped book was used
+        ///</summary>
         public void CheckChargeBook(int index,int count){
             uIManager.ChangeChargeText(player.EquippedBook.CurrentCharges.ToString());
             if(player.EquippedBook.CurrentCharges==0){
@@ -247,7 +258,12 @@ namespace Managers.UI{
         }
 
 
-
+        ///<summary>
+        ///set inventory UI after and player equipped object
+        /// after the equipped plant is used;
+        /// index is index of equipped plant before it was used
+        /// count is number of plants in inventory before equipped plant was used
+        ///</summary>
         public void CheckPlantInventory(int index,int count){
             if(count==1){
                 player.EquippedPlant=null;
@@ -297,7 +313,11 @@ namespace Managers.UI{
             }
         }
 
-
+        ///<summary>
+        ///change interaction text
+        ///hit is the object hitted by raycast 
+        ///traitor is a bool that represent if player is traitor
+        ///</summary>
         public  void InteractionTextControl(RaycastHit hit,bool traitor){
             if(hit.collider.GetComponent<Character>()){
                 Character hitted=hit.collider.GetComponent<Character>();

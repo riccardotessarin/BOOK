@@ -47,7 +47,9 @@ namespace MalusEBonus{
             imageDict[Stats.Weakness]=player.WeaknessSprite;
             imageDict[Stats.ElementalPower]=player.ElementSprite;
         }
-
+        ///<summary>
+        ///add a bonus to player
+        ///</summary>
         public bool Add(Bonus bonus){
             if(bonusList.Contains(new Bonus(bonus.Stat,bonus.Name))){
                 Debug.Log("bonus with the same name is already in the list");
@@ -60,7 +62,9 @@ namespace MalusEBonus{
                 return true;
             }
         }
-
+        ///<summary>
+        ///remove a bonus from the player
+        ///</summary>
         public bool Remove( Stats stat,string name){
             int index= bonusList.IndexOf(new Bonus(stat,name));
             if(index!=-1){

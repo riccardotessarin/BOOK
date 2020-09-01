@@ -15,6 +15,7 @@ using Characters.NPC;
 using Consumables.Pages;
 using Consumables.Healables.Plants.Drops;
 using Consumables.Books.Drops;
+using UnityStandardAssets.Characters.FirstPerson;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -85,6 +86,9 @@ namespace Characters.Interfaces {
 
         [SerializeField] protected EnumUtility.AttackType elementType;
         [SerializeField]protected bool activateElementBonus; 
+        [SerializeField]protected float staminaConsumed;
+        [SerializeField]protected bool staminaRecharging=false;
+        [SerializeField]protected float staminaRecharged;
 
         
         
@@ -141,11 +145,12 @@ namespace Characters.Interfaces {
             inventory= new GameObject().AddComponent<Inventory>();
             inventory.name="Inventory";
             UpdateObjectsLists();
-            
-            uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-            uIController= new UIController();
-            uIController.player=this;
-            uIController.uIManager=this.uIManager;
+            if(gameObject.GetComponent<FirstPersonController>()){
+                uIManager=GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+                uIController= new UIController();
+                uIController.player=this;
+                uIController.uIManager=this.uIManager;
+            }
             interactionDistance=3;    
             looted=false;
             weakness=EnumUtility.AttackType.Nothing;
@@ -165,6 +170,8 @@ namespace Characters.Interfaces {
             uIManager.FillBar(1, "stamina");
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
+            staminaConsumed=stamina* 10/100;
+            staminaRecharged=stamina*5/100;
             currentBasePower=basePower;
             currentSpeed = speed;
             if(listPlants.Count()!=0){
@@ -177,8 +184,9 @@ namespace Characters.Interfaces {
         protected virtual void Updater() {
             MalusCheck();
             UpdateObjectsLists();
-            InteractionTextRayCast();
-
+            if(gameObject.GetComponent<FirstPersonController>())
+                InteractionTextRayCast();
+            ResetStamina();
             
         }
 
@@ -213,24 +221,38 @@ namespace Characters.Interfaces {
             if (!isAttacking) {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
-                } else
+                } else{
                     StartCoroutine(BaseAttackDamage());
+                    UseStamina(staminaConsumed);
+                }
             }
         }
-
-        /*Method used to start specialAttackCoroutine*/
+        ///<summary>
+        ///Method used to start specialAttackCoroutine
+        ///</summary>
         protected abstract void SpecialAttack();
 
         protected void BookAttack() {
-            if(equippedBook.Element!=weakness){
-                int count=listBooks.Count();
-                int index=listBooks.IndexOf(equippedBook);
-                equippedBook.UseConsumable();
-                uIController.CheckChargeBook(index,count);
+            if(!isAttacking){
+                if(equippedBook.Element!=weakness){
+                    UseStamina(staminaConsumed);
+                    int count=listBooks.Count();
+                    int index=listBooks.IndexOf(equippedBook);
+                    StartCoroutine(UseBook());
+                    UseStamina(staminaConsumed);
+                    uIController.CheckChargeBook(index,count);
+                }
+                else{
+                    Debug.Log("Cannot use book because of weakness");
+                }
             }
-            else{
-                Debug.Log("Cannot use book because of weakness");
-            }
+        }
+
+        protected IEnumerator UseBook(){
+            isAttacking=true;
+            equippedBook.UseConsumable();
+            yield return new WaitForSeconds(speed/120f);
+            isAttacking=false;
         }
 
 
@@ -274,8 +296,9 @@ namespace Characters.Interfaces {
                 }
             }
         }
-
-        //static method that reset value of a given dictionary
+        ///<summary>
+        ///static method that reset value of a given dictionary
+        ///</summary>
         public static void ResetDictionary<K, V>(Dictionary<K, V> dict) {
             foreach (var item in dict.Keys.ToList()) {
                 dict[item] = default;
@@ -290,10 +313,12 @@ namespace Characters.Interfaces {
             Gizmos.color=Color.gray;
             Gizmos.DrawRay(transform.position,camera.transform.forward*interactionDistance);
         }
-
-        //method that invoke the right fuction in base of the equippedAttack
+        ///<summary>
+        ///method that invoke the right fuction in base of the equippedAttack
+        ///</summary>
         public void Attacker() {
-            attackDic[equippedAttack].DynamicInvoke();
+            if(currentStamina>=staminaConsumed)
+                attackDic[equippedAttack].DynamicInvoke();
         }
 
         //Coroutine to make base attack and check if hitted
@@ -302,7 +327,7 @@ namespace Characters.Interfaces {
         //Coroutine to activate special ability
         protected abstract IEnumerator SpecialEffect();
 
-        //method used to set UI health and stamina bars
+       
         
 
         protected virtual void ModifyStaminaMax(float modifier){
@@ -320,54 +345,7 @@ namespace Characters.Interfaces {
                 uIController.CheckPlantInventory(index,count);
             }
         }
-        /*private void CheckPlantInventory(int index,int count){
-            if(count==1){
-                equippedPlant=null;
-                UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
-                UIManager.ChangeDescriptionText("");
-                powerMode=!powerMode;
-                UIManager.SwitchMode(powerMode);
-            }
-            else if(count==2){
-                equippedPlant=listPlants[0];
-                if(index==0){
-                    UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
-                }
-                else if(index==1){
-                    UIManager.DestroyCurrentObject(equippedPlant.PlantIcon);
-                    UIManager.ScrollDownMenu(UIManager.VoidSPrite);
-                }
-                UIManager.ChangeDescriptionText(equippedPlant.Description);
-            }
-            else if(count==3){
-                if (index==0 ||index==count-1){
-                    equippedPlant=listPlants[0];
-                    UIManager.ScrollUpMenu(equippedPlant.PlantIcon);
-                    UIManager.ScrollUpMenu(UIManager.VoidSPrite);
-                }
-                else{
-                    equippedPlant=listPlants[index];
-                    UIManager.DestroyCurrentObject(UIManager.VoidSPrite);
-                }
-                UIManager.ChangeDescriptionText(equippedPlant.Description);
-            }
-            else if(count>3){
-                if(index==0 || index==count-1){
-                    equippedPlant=ListPlants[0];
-                    UIManager.DestroyCurrentObject(ListPlants[1].PlantIcon);
-                }
-                else{
-                    equippedPlant=ListPlants[index];
-                    if(index==count-2){
-                        UIManager.DestroyCurrentObject(ListPlants[0].PlantIcon);
-                    }
-                    else{
-                        UIManager.DestroyCurrentObject(ListPlants[index+1].PlantIcon);
-                    }
-                }
-                UIManager.ChangeDescriptionText(equippedPlant.Description);
-            }
-        }*/
+        
 
         protected void UpdateObjectsLists(){
             listBooks= inventory.Books;
@@ -390,7 +368,9 @@ namespace Characters.Interfaces {
                 return null;
         }
 
-
+        ///<summary>
+        /// method that makes player loot
+        ///</summary>
         public void LootAction(){
             RaycastHit hit;
             if( !isAttacking  && Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance) ){
@@ -464,7 +444,9 @@ namespace Characters.Interfaces {
             
 
         }
-
+        ///<summary>
+        ///method that makes player interact with interagible object or revive team member
+        ///</summary>
         public void InteractAction(){
             RaycastHit hit;
             if(!isAttacking  &&  Physics.Raycast(transform.position,camera.transform.forward,out hit,interactionDistance)){
@@ -525,6 +507,30 @@ namespace Characters.Interfaces {
             }
 
             Debug.Log(ToString()+"activate element bonus");
+        }
+
+        protected virtual void UseStamina(float staminaUsed){
+            currentStamina-=staminaUsed;
+            uIManager.FillBar(currentStamina/stamina,"stamina");
+        }
+
+        protected virtual void ResetStamina(){
+            if(!staminaRecharging && currentStamina<stamina){
+                StartCoroutine(StaminaRecharge());
+            }
+        }
+
+        protected IEnumerator StaminaRecharge(){
+            staminaRecharging=true;
+            currentStamina=currentStamina+staminaRecharged>stamina ? stamina : currentStamina+staminaRecharged;
+            uIManager.FillBar(currentStamina/stamina,"stamina");
+            yield return new WaitForSeconds(120f/speed);
+            staminaRecharging=false;
+        }
+
+        protected override void RecoverHP(float hpRecovered){
+            base.RecoverHP(hpRecovered);
+            uIManager.FillBar(currentHp/hp,"health");
         }
 
 

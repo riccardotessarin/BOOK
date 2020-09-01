@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
+using MalusEBonus;
 namespace Characters.PC{
     public class Rayaz : PlayableCharacter
     {
@@ -53,27 +54,45 @@ namespace Characters.PC{
                 if(currentHp<=specialAttackRecoil){
                     Debug.Log("cannot do special attack, life too low");
                 }
-                else
+                else{
                     StartCoroutine(SpecialEffect());
+                    UseStamina(staminaConsumed);
+                }
                 
             }
         }
         protected override void RyuyukiBond(){
+            Bonus bonus=new Bonus(true,MalusManager.Stats.ElementalPower,1.2f,"ryuyukiBonus");
+            Bonus malus= new Bonus(false,MalusManager.Stats.Speed,0.7f,"ryuyukiMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"ryuyuki bond");
         }
         protected override void GeneeBond(){
+            Bonus bonus=new Bonus(true,MalusManager.Stats.Stamina,1.3f,"geneeBonus");
+            Bonus malus= new Bonus(false,MalusManager.Stats.ElementalPower,0.7f,"geneeMalus");
+            malusManager.Add(bonus);
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"genee bond");
         }
         protected override void RayazBond(){
+            Bonus malus= new Bonus(false,MalusManager.Stats.Weakness,0.7f,"rayazMalus");
+            malusManager.Add(malus);
             Debug.Log(this.ToString()+"rayazbond");
         }
         protected override void ReverseRyuyukiBond(){
+            malusManager.Remove(MalusManager.Stats.ElementalPower,"ryuyukiBonus");
+            malusManager.Remove(MalusManager.Stats.Speed,"ryuyukiMalus");
             Debug.Log(this.ToString()+": reverse ryuyuki bond");
         }
         protected override void ReverseGeneeBond(){
+            malusManager.Remove(MalusManager.Stats.Stamina,"geneeBonus");
+            malusManager.Remove(MalusManager.Stats.ElementalPower,"geneeMalus");
             Debug.Log(this.ToString()+": reverse genee bond");
         }
         protected override void ReverseRayazBond(){
+            
+            malusManager.Remove(MalusManager.Stats.Weakness,"rayazMalus");
             Debug.Log(this.ToString()+": reverse rayaz bond");
         }
         protected override void TakeDamage(Damage damage){
@@ -122,9 +141,10 @@ namespace Characters.PC{
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;
         }
-
-        //coroutine that is activated when the enemy hitted by specialAttack die
-        //creates an object PoisonFog and after a certain time destroys it 
+        ///<summary>
+        ///coroutine that is activated when the enemy hitted by specialAttack die
+        ///creates an object PoisonFog and after a certain time destroys it 
+        ///</summary>
         protected IEnumerator PFog(){
            //instanziare prefab poisonfog e poi distruggerlo
            PoisonFog fog= Instantiate<PoisonFog>(prefabFog,targetEnemy.transform);

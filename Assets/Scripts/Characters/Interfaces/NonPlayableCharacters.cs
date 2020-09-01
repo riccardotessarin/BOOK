@@ -75,9 +75,10 @@ namespace Characters.Interfaces {
             if (!isAttacking)
                 StartCoroutine(BaseAttackDamage());
         }
-
-        //method that return true if in range for receiving a base Attack,
-        //false otherwise
+        ///<summary>
+        ///method that return true if in range for receiving a base Attack,
+        ///false otherwise
+        ///</summary>
         protected virtual bool BaseAttackZone() {
             if (target) {
                 Collider[] hitcolliders = Physics.OverlapSphere(transform.position, baseAttackRadius, PCLAYERMASK);
@@ -93,10 +94,11 @@ namespace Characters.Interfaces {
 
             return false;
         }
-
-        //method that return true if at least a PC is in the zone,
-        //and set that as a target and makes this NPC instance look at it,
-        // Otherwise return false, if there aren't PCs or if it has already a target
+        ///<summary>
+        ///method that return true if at least a PC is in the zone,
+        ///and set that as a target and makes this NPC instance look at it,
+        ///Otherwise return false, if there aren't PCs or if it has already a target
+        ///</summary>
         protected virtual bool DetectionZone() {
             Collider[] hitcolliders = Physics.OverlapSphere(transform.position, detectionRadius, PCLAYERMASK);
             if (hitcolliders.Length != 0) {
