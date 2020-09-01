@@ -252,9 +252,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 155718319}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37a89b0d63c2e1748b07a83dc70453b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 82fe6d48c10b17692af0cb8682691617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  findGameButton: {fileID: 197714724}
+  cancelButton: {fileID: 986310108}
 --- !u!114 &155718322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1037,7 +1039,8 @@ MonoBehaviour:
   observableSearch: 0
   Synchronization: 0
   OwnershipTransfer: 0
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 0}
   viewIdField: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1053,7 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1176a61e61c643268de059a6cd337dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiplayerScene: 0
+  multiplayerScene: 1
 --- !u!4 &2053198494
 Transform:
   m_ObjectHideFlags: 0

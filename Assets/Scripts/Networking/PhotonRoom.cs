@@ -1,28 +1,26 @@
-using System;
 using System.IO;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Networking {
-    public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
+    public class PhotonRoom : MonoBehaviourPunCallbacks {
         [SerializeField] private int multiplayerScene;
-        
+
         private PhotonView _photonView;
         private int _currentScene;
-    
+
         public static PhotonRoom Instance { get; private set; }
 
 #region Unity methods
 
         private void Awake() {
-            if (Instance != null && !Equals(Instance)) {
-                Destroy(Instance.gameObject);
+            if (Instance == null || ReferenceEquals(this, Instance)) {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            } else {
+                Destroy(this);
             }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void Start() {
@@ -52,7 +50,7 @@ namespace Networking {
                 CreatePlayer();
             }
         }
-        
+
 #endregion
 
 #region Photon callbacks
@@ -62,18 +60,18 @@ namespace Networking {
 
             StartGame();
         }
-        
+
 #endregion
-        
+
         private void StartGame() {
-            if (!PhotonNetwork.IsMasterClient) 
+            if (!PhotonNetwork.IsMasterClient)
                 return;
 
             PhotonNetwork.LoadLevel(multiplayerScene);
         }
-        
+
         private void CreatePlayer() {
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", "RyuyukiPlayer"), transform.position, Quaternion.identity, 0);
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", "Player"), transform.position, Quaternion.identity, 0);
         }
     }
 }
