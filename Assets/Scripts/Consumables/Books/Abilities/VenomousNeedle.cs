@@ -22,6 +22,7 @@ namespace Consumables.Books.Abilities {
 		protected override void Awaker() {
 			base.Awaker();
 			bookIcon = Resources.Load<Sprite>("Images/BasiliskRareBook");
+			venomousNeedlePrefab = Resources.Load("Prefabs/Attacks/VenomousNeedle") as GameObject;
 		}
 
 
