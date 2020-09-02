@@ -13,6 +13,7 @@ using Consumables.Books.Drops;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine;
 using User;
+using Photon.Pun;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -164,7 +165,7 @@ namespace Characters.Interfaces {
 
         //method used in the Awake
         protected virtual void Awaker() {
-            //Debug.Log("Awaker");
+            //Debug.Log("AwakerPC");
             bondDic.Add("ryuyuki", RyuyukiBond);
             bondDic.Add("genee", GeneeBond);
             bondDic.Add("rayaz", RayazBond);
@@ -181,6 +182,12 @@ namespace Characters.Interfaces {
             attackDic.Add(Attack.SpecialAttack, SpecialAttack);
             attackDic.Add(Attack.Book, BookAttack);
             gameObject.layer = 8; //PC layer
+            gameObject.tag="Player";
+            if(this.GetComponent<PhotonView>().IsMine){
+                uIManager=new GameObject().AddComponent<UIManager>();
+                uIManager.Player=this;
+                uIManager=UIManager.Instance;
+            }
             IsDeath = false;
             buffRadius = 5;
             traitor = false;
@@ -198,12 +205,6 @@ namespace Characters.Interfaces {
             inventory = new GameObject().AddComponent<Inventory>();
             inventory.name = "Inventory";
             UpdateObjectsLists();
-            if (gameObject.GetComponent<FirstPersonController>()) {
-                uIManager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
-                uIController = new UIController();
-                uIController.player = this;
-                uIController.uIManager = this.uIManager;
-            }
 
             interactionDistance = 3;
             looted = false;
@@ -217,8 +218,10 @@ namespace Characters.Interfaces {
             baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
-
-            uIManager = UIManager.Instance;
+            
+            uIController = new UIController();
+            uIController.player = this;
+            uIController.uIManager = UIManager.Instance;
 
             uIManager.FillBar(1, "health");
             currentStamina = stamina;

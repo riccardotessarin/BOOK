@@ -17,6 +17,7 @@ namespace Managers.UI{
         [SerializeField] private Image healthBar;
         [SerializeField] private Image staminaBar;
         [SerializeField] private PlayableCharacter player;
+        public PlayableCharacter Player{get=>player; set{if(!player){player=value;}}}
         [SerializeField] private Image equippedPrimaryObjImage;
         [SerializeField] private Image equippedSecondaryObjImage;
         [SerializeField] private Image inGameObjectMenu;
@@ -41,7 +42,9 @@ namespace Managers.UI{
         [SerializeField] private Image bonusPrefab;
         [SerializeField] private Image malusPrefab;
         private Dictionary<string,Image> statusImageDict=new Dictionary<string, Image>();
-        [SerializeField]private Vector3 statusVector;
+
+        [SerializeField] private Transform canvas;
+        
         
         
         
@@ -73,23 +76,11 @@ namespace Managers.UI{
             }
 
             gameObject.tag="UIManager";
-            //player =GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
-            centerObject=inGameObjectMenu.transform.GetChild(0).GetComponent<Image>();
-            leftObject=inGameObjectMenu.transform.GetChild(1).GetComponent<Image>();
-            rightObject=inGameObjectMenu.transform.GetChild(2).GetComponent<Image>();
-            descriptionText=inGameObjectMenu.transform.GetChild(3).GetChild(0).GetComponent<Text>();
-            chargeTextGame=equippedPrimaryObjImage.transform.GetChild(0).GetComponent<Text>();
-            chargeTextMenu=centerObject.transform.GetChild(0).GetComponent<Text>();
             voidSprite=Resources.Load<Sprite>("Images/voidSprite");
             bonusPrefab=Resources.Load<GameObject>("Prefabs/UI/Bonus").GetComponent<Image>();
             malusPrefab=Resources.Load<GameObject>("Prefabs/UI/Malus").GetComponent<Image>();
-            statusVector= new Vector3(bonusPrefab.rectTransform.position.x,bonusPrefab.rectTransform.position.y,bonusPrefab.rectTransform.rect.width);
-            equippedSecondaryObjImage.sprite=voidSprite;
-            for(int i=0;i<3;i++){
-                plantArray[i]=voidSprite;
-            }
-            attackOrPlant=true;
-            interactionString="";
+        
+            
             
 
         }
@@ -101,8 +92,30 @@ namespace Managers.UI{
         // Start is called before the first frame update
         void Start()
         {
-            var players = GameObject.FindGameObjectsWithTag("Player");
-            player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine).GetComponent<PlayableCharacter>();
+            /*var players = GameObject.FindGameObjectsWithTag("Player");
+            Debug.Log(players.Count());
+            player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine).GetComponent<PlayableCharacter>();*/
+            canvas=GameObject.FindGameObjectWithTag("Canvas").transform;
+            healthBar=canvas.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();
+            staminaBar=canvas.GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>();
+            equippedPrimaryObjImage=canvas.GetChild(1).GetChild(0).GetComponent<Image>();
+            equippedSecondaryObjImage=canvas.GetChild(3).GetChild(0).GetComponent<Image>();
+            inGameObjectMenu=canvas.GetChild(2).GetComponent<Image>();
+            interactionText=canvas.GetChild(4).GetComponent<Text>();
+            statusArea=canvas.GetChild(5).GetComponent<Image>();
+            centerObject=inGameObjectMenu.transform.GetChild(0).GetComponent<Image>();
+            leftObject=inGameObjectMenu.transform.GetChild(1).GetComponent<Image>();
+            rightObject=inGameObjectMenu.transform.GetChild(2).GetComponent<Image>();
+            descriptionText=inGameObjectMenu.transform.GetChild(3).GetChild(0).GetComponent<Text>();
+            chargeTextGame=equippedPrimaryObjImage.transform.GetChild(0).GetComponent<Text>();
+            chargeTextMenu=centerObject.transform.GetChild(0).GetComponent<Text>();
+            
+            equippedSecondaryObjImage.sprite=voidSprite;
+            for(int i=0;i<3;i++){
+                plantArray[i]=voidSprite;
+            }
+            attackOrPlant=true;
+            interactionString="";
             equippedPrimaryObjImage.sprite=player.BaseAttackSprite;
             chargeString="X"+PlayableCharacter.INFINITY;
             chargeTextGame.text=chargeString;
@@ -135,12 +148,13 @@ namespace Managers.UI{
                     plantArray[0]=player.ListPlants[count-1].PlantIcon;
                 }
             }
-
+            Debug.Log("start");
         }
 
         // Update is called once per frame
         void Update()
         {
+            
             equippedPrimaryObjImage.sprite=centerObject.sprite;
             chargeTextGame.text=chargeTextMenu.text;
             attackOrPlant=player.PowerMode;
