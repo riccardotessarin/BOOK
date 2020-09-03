@@ -15,9 +15,5 @@ namespace Networking {
                 Destroy(this);
             }
         }
-
-        private void Start() {
-            
-        }
     }
 }

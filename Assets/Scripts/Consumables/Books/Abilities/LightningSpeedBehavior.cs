@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
+using Characters.Interfaces;
 
 namespace Consumables.Books.Abilities {
-	public class WaterShieldBehavior : MonoBehaviour {
+	public class LightningSpeedBehavior : MonoBehaviour {
+
+		private GameObject player;
 
 		private void Awake() {
 			StartCoroutine(WaitAndDestroy(30.0F));
@@ -17,20 +21,15 @@ namespace Consumables.Books.Abilities {
 
 		// Use this for initialization
 		void Start() {
-
-		}
-
-		private void OnCollisionEnter(Collision collision) {
-			Transform child = gameObject.transform.GetChild(0);
-			ParticleSystem particle = child.GetComponent<ParticleSystem>();
-			if (!particle.isPlaying) {
-				particle.Play();
-			}
+			// Finding player
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
+			player = players.FirstOrDefault();
 		}
 
 		// Update is called once per frame
 		void Update() {
-
+			gameObject.transform.position = player.transform.position;
 		}
 	}
 }

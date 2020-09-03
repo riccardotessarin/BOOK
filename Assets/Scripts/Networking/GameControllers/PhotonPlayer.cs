@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Networking.GameControllers {
     public class PhotonPlayer : MonoBehaviour {
@@ -21,6 +23,8 @@ namespace Networking.GameControllers {
                 GameSetup.instance.SpawnPoints[spawnPicker].position, GameSetup.instance.SpawnPoints[spawnPicker].rotation, 0);
 
             MyPlayerAvatar.GetComponentInChildren<MeshRenderer>().material = controlledPlayerMaterial;
+            
+            _photonView.RPC("RPC_InstantiatePlayer", RpcTarget.OthersBuffered, PlayerInfo.Instance.SelectedClass);
         }
 
 #endregion
@@ -28,8 +32,8 @@ namespace Networking.GameControllers {
 #region RPC
 
         [PunRPC]
-        private void RPC_InstantiatePlayer(EnumUtility.PlayerClass playerClass) {
-            MyPlayerAvatar = InstantiatePlayer(playerClass.ToString());
+        private void RPC_InstantiatePlayer(string playerClass) {
+            MyPlayerAvatar = InstantiatePlayer(playerClass);
         }
 
 #endregion
