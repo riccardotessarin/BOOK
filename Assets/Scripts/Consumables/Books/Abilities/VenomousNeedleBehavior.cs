@@ -19,21 +19,11 @@ public class VenomousNeedleBehavior : MonoBehaviour {
 		Character enemy = collision.gameObject.GetComponent<Character>();
 		if (enemy != null) {
 			Debug.Log(enemy + " hitted");
-			StartCoroutine(DamageOverTime(enemy));
-		} else {
-			Destroy(gameObject);
-		}
-	}
-
-	// Incomplete
-	private IEnumerator DamageOverTime(Character enemy) {
-		Character.Damage needleDamage = new Character.Damage(3.0F /*damage dealt*/, EnumUtility.AttackType.Basilisk);
-		float totalDamage = 15.0F;
-		while (totalDamage > 0) {
+			Character.Damage needleDamage = new Character.Damage(10.0F /*damage dealt*/, EnumUtility.AttackType.Basilisk);
 			enemy.SendMessage("TakeDamage", needleDamage, SendMessageOptions.DontRequireReceiver);
-			yield return new WaitForSecondsRealtime(3);
-			Destroy(gameObject);
+			enemy.Poisoned = true;
 		}
+		Destroy(gameObject);
 	}
 
 	// Use this for initialization
