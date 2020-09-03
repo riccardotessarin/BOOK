@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace Networking {
     public class PhotonLobby : MonoBehaviourPunCallbacks {
         [SerializeField] private Button findGameButton;
         [SerializeField] private Button cancelButton;
+        [SerializeField] private TextMeshProUGUI classText;
 
         public static PhotonLobby Instance { get; private set; }
 
@@ -41,6 +43,21 @@ namespace Networking {
             cancelButton.interactable = false;
 
             PhotonNetwork.LeaveRoom();
+        }
+
+        public void OnGeneeButtonClick() {
+            classText.text = EnumUtility.PlayerClass.GeneePlayer.ToString().Replace("Player", "");
+            PlayerInfo.Instance.SelectedClass = EnumUtility.PlayerClass.GeneePlayer.ToString();
+        }
+        
+        public void OnRayazButtonClick() {
+            classText.text = EnumUtility.PlayerClass.RayazPlayer.ToString().Replace("Player", "");
+            PlayerInfo.Instance.SelectedClass = EnumUtility.PlayerClass.RayazPlayer.ToString();
+        }
+        
+        public void OnRyuyukiButtonClick() {
+            classText.text = EnumUtility.PlayerClass.RyuyukiPlayer.ToString().Replace("Player", "");
+            PlayerInfo.Instance.SelectedClass = EnumUtility.PlayerClass.RyuyukiPlayer.ToString();
         }
 
 #endregion
