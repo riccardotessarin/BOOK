@@ -182,12 +182,15 @@ namespace Characters.Interfaces {
             attackDic.Add(Attack.SpecialAttack, SpecialAttack);
             attackDic.Add(Attack.Book, BookAttack);
             gameObject.layer = 8; //PC layer
-            gameObject.tag="Player";
-            if(this.GetComponent<PhotonView>().IsMine){
-                uIManager=new GameObject().AddComponent<UIManager>();
-                uIManager.Player=this;
-                uIManager=UIManager.Instance;
+            gameObject.tag = "Player";
+            if (GetComponent<PhotonView>().IsMine) {
+                uIManager = new GameObject().AddComponent<UIManager>();
+                uIManager.Player = this;
+                uIManager = UIManager.Instance;
+            } else {
+                Destroy(camera);
             }
+
             IsDeath = false;
             buffRadius = 5;
             traitor = false;
@@ -218,7 +221,7 @@ namespace Characters.Interfaces {
             baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
-            
+
             uIController = new UIController();
             uIController.player = this;
             uIController.uIManager = UIManager.Instance;

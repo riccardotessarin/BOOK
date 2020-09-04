@@ -26,4 +26,10 @@ public class EnumUtility {
         Nothing
 	}
 
+	public enum PlayerClass {
+		RayazPlayer,
+		GeneePlayer,
+		RyuyukiPlayer
+	}
+
 }

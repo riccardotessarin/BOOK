@@ -1,7 +1,5 @@
-using UnityEngine;
-using Characters.PC;
-using Characters.Interfaces;
 using StateMachine.States;
+using UnityEngine;
 
 namespace Managers {
 	public class GameManager : MonoBehaviour {
