@@ -11,6 +11,7 @@ namespace StateMachine.Actions.Implementations{
     {
         private PlayableCharacter player= GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
         public void Execute(){
+            Debug.Log(player.gameObject.ToString());
             if(!player.IsAttacking || player.IsDeath){
                 if(Input.GetMouseButtonDown(0)){
                     if(player.PowerMode)

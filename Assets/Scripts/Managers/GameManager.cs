@@ -5,7 +5,6 @@ using StateMachine.States;
 
 namespace Managers {
 	public class GameManager : MonoBehaviour {
-		[SerializeField] private PlayableCharacter player;
 
 		public static GameManager Instance { get; private set; }
 		public State CurrentState { get; set; }

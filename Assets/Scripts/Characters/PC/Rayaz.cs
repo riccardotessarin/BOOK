@@ -37,6 +37,7 @@ namespace Characters.PC{
         protected override void Starter(){
             base.Starter();
             baseAttackDescription=$"poisonous bullet(Recoil: {baseAttackRecoil*100/hp}%)";
+            prefabFog=Resources.Load<GameObject>("Prefab/Attacks/Fog").GetComponent<PoisonFog>();
         }
         /*protected override void BaseAttack(){
             
