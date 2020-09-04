@@ -15,6 +15,7 @@ namespace Characters.NPC {
         public bool DropPage{get=>dropPage;}
         [SerializeField]private bool drop; //true, drop something //false drop nothing
         public bool Drop{get=>drop;}
+         
 
         //private HealthStabilizer stabDrop;
         
@@ -28,6 +29,7 @@ namespace Characters.NPC {
             basePower = 2;
             speed = 30;
             drop=HasDrop(0.6f);
+            
 
         }
 

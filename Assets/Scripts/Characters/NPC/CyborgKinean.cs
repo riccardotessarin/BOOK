@@ -17,6 +17,8 @@ namespace Characters.NPC {
         [SerializeField] EnumUtility.AttackType specialAttackAttribute;
         [SerializeField] Damage specialDamage;
         private bool rarityDrop;//True common / false rare
+        
+
 
 
 
@@ -34,6 +36,7 @@ namespace Characters.NPC {
             specialAttackAttribute=RandomAttackType();
             typeDrop=specialAttackAttribute;
             SetDropLoot();
+            
         }
 
         protected override void Starter() {
@@ -96,7 +99,6 @@ namespace Characters.NPC {
         ///</summary>
         IEnumerator SpecialAttackDamage() {
             isAttacking = true;
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
             RaycastHit hit;
             if (Physics.SphereCast(transform.position, transform.position.y / 2, transform.forward, out hit, maxAttackDistance, PCLAYERMASK)) {
                 Debug.Log("HIT");
@@ -106,7 +108,7 @@ namespace Characters.NPC {
             }
 
             yield return new WaitForSeconds(speed / 60f);
-            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            
             isAttacking = false;
         }
 

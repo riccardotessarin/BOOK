@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 5847235076899159797}
   - component: {fileID: 4488081043271654000}
   - component: {fileID: -3384627998435102579}
-  - component: {fileID: 9026628952982015791}
   - component: {fileID: 5531308792047584230}
   m_Layer: 0
   m_Name: RayazPlayer
@@ -262,29 +261,6 @@ MonoBehaviour:
   rotationSpeed: 200
   speedH: 2
   speedV: 2
---- !u!114 &9026628952982015791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5847235077789650009}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  observableSearch: 2
-  Synchronization: 0
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 5531308792047584230}
-  viewIdField: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &5531308792047584230
 MonoBehaviour:
   m_ObjectHideFlags: 0
