@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 7888979365343398981}
   - component: {fileID: 1092046840659928600}
   - component: {fileID: 7649947647725734719}
+  - component: {fileID: -3320151235760506284}
   m_Layer: 0
   m_Name: RyuyukiPlayer
   m_TagString: Player
@@ -573,6 +574,20 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!136 &-3320151235760506284
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7888979364920183152}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7888979364920183154
 GameObject:
   m_ObjectHideFlags: 0

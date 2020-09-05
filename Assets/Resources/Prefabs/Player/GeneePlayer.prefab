@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 4442307789813925659}
   - component: {fileID: -5450647280255959815}
   - component: {fileID: 3412834848890432784}
+  - component: {fileID: -8709819314203006171}
   m_Layer: 0
   m_Name: GeneePlayer
   m_TagString: Player
@@ -310,6 +311,7 @@ MonoBehaviour:
   staminaConsumed: 0
   staminaRecharging: 0
   staminaRecharged: 0
+  isMine: 0
   invicible: 0
   damageReceivedMultiplicator: 1
 --- !u!114 &4442307789813925659
@@ -474,6 +476,19 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!65 &-8709819314203006171
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642135605159317208}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1642135605159317210
 GameObject:
   m_ObjectHideFlags: 0

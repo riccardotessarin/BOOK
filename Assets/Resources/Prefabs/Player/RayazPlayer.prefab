@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4488081043271654000}
   - component: {fileID: -3384627998435102579}
   - component: {fileID: 5531308792047584230}
+  - component: {fileID: -746472540071693569}
   m_Layer: 0
   m_Name: RayazPlayer
   m_TagString: Player
@@ -386,6 +387,20 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!136 &-746472540071693569
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5847235077789650009}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5847235077789650011
 GameObject:
   m_ObjectHideFlags: 0
