@@ -24,6 +24,8 @@ namespace Networking.GameControllers {
 
             MyPlayerAvatar = player.GetComponent<PlayableCharacter>();
             MyPlayerAvatar.Player = this;
+            
+            PhotonView.RPC("RPC_SavePlayerInstance", RpcTarget.OthersBuffered, player.GetComponent<PhotonView>().ViewID);
         }
 
 #endregion
@@ -32,7 +34,17 @@ namespace Networking.GameControllers {
 
         [PunRPC]
         private void RPC_BasicAttack() {
+            if (MyPlayerAvatar == null) {
+                return;
+            }
+            
             StartCoroutine(MyPlayerAvatar.BaseAttackDamage());
+        }
+        
+        [PunRPC]
+        private void RPC_SavePlayerInstance(int playerID) {
+            PhotonView.Find(playerID);
+            MyPlayerAvatar = PhotonView.Find(playerID)?.GetComponent<PlayableCharacter>();
         }
 
 #endregion
