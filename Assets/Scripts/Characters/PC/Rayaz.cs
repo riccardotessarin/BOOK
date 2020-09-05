@@ -112,7 +112,8 @@ namespace Characters.PC{
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Basilisk);
             currentHp-=baseAttackRecoil;
-            uIManager.FillBar(currentHp/hp,"health");
+            if(isMine)
+                uIManager.FillBar(currentHp/hp,"health");
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position,camera.transform.forward,out hit,baseAttackRange)){
                 Character hitted=hit.collider.GetComponent<Character>();

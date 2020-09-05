@@ -106,6 +106,7 @@ namespace Characters.PC{
         }
 
         protected override void TakeDamage(Damage damage){
+            Debug.Log("taking damage");
             float dam= damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec;
             if (dam< currentHp){
                 Debug.Log("taking damage");
