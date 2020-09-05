@@ -100,14 +100,16 @@ namespace Characters.PC{
             float dam= damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec;
             if (dam< currentHp){
                 currentHp-=dam;
-                uIManager.FillBar(currentHp/hp,"health");
+                
             }
             else{
                 currentHp=0;
-                uIManager.FillBar(0,"health");
+                
                 Death();
 
             }
+            if(isMine)
+                uIManager.FillBar(currentHp/hp,"health");
         }
         protected override IEnumerator BaseAttackDamage(){
             isAttacking=true;

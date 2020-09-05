@@ -46,7 +46,7 @@ namespace Characters.PC{
         protected override void Updater(){
             base.Updater();
             specialAttackDescription=$"the last scale,that hitted a target, explodes and freeze all characters in a certain area, slowing their speed (Recoil: {specialAttackRecoil*100/hp}%; Last target: {lastTarget!=null})";
-            if (equippedAttack==Attack.SpecialAttack && PowerMode)
+            if (equippedAttack==Attack.SpecialAttack && PowerMode && isMine)
                 UIManager.ChangeDescriptionText(specialAttackDescription);
 
             if(lastTarget)
@@ -111,14 +111,15 @@ namespace Characters.PC{
                 Debug.Log("taking damage");
                 currentHp-=dam;
                 
-                uIManager.FillBar(currentHp/hp,"health");
             }
             else{
                 currentHp=0;
-                uIManager.FillBar(0,"health");
+                
                 Death();
 
             }
+            if(isMine)
+                uIManager.FillBar(currentHp/hp,"health");
             
                 
         }

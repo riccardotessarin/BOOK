@@ -58,7 +58,8 @@ namespace MalusEBonus{
             else{
                 bonusList.Add(bonus);
                 ActivateBonus(bonus);
-                player.UIManager.AddBonusImage(imageDict[bonus.Stat],bonus.Positive,bonus.Name,bonus.Stat==Stats.Weakness);
+                if(player.IsMine)
+                    player.UIManager.AddBonusImage(imageDict[bonus.Stat],bonus.Positive,bonus.Name,bonus.Stat==Stats.Weakness);
                 return true;
             }
         }
@@ -70,7 +71,8 @@ namespace MalusEBonus{
             if(index!=-1){
                 DeActivateBonus(bonusList[index]);
                 bonusList.RemoveAt(index);
-                player.UIManager.RemoveBonusImage(name);
+                if(player.IsMine)
+                    player.UIManager.RemoveBonusImage(name);
                 return true;
             }
             else{

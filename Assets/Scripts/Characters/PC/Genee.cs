@@ -87,14 +87,15 @@ namespace Characters.PC{
                 float dam= (damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec)*damageReceivedMultiplicator;
                 if (dam< currentHp){
                     currentHp-=dam;
-                    uIManager.FillBar(currentHp/hp,"health");
+                    
                 }
                 else{
                     currentHp=0;
-                    uIManager.FillBar(0,"health");
+                    
                     Death();
 
                 }
+                uIManager.FillBar(currentHp/hp,"health");
                 
             }
         }
@@ -122,7 +123,8 @@ namespace Characters.PC{
         protected override IEnumerator SpecialEffect(){
             isAttacking=true;
             currentHp-=specialAttackRecoil;
-            uIManager.FillBar(currentHp/hp,"health");
+            if(isMine)
+                uIManager.FillBar(currentHp/hp,"health");
             invicible=true;
             yield return new WaitForSeconds(speed/120f);
             isAttacking=false;

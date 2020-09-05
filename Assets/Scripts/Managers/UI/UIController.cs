@@ -11,6 +11,7 @@ namespace Managers.UI{
     {
         public UIManager uIManager;
         public PlayableCharacter player;
+        
 
         ///<summary>
         ///scroll from left to right the inventory UI
@@ -22,6 +23,7 @@ namespace Managers.UI{
                     if(count!=0){
                         player.EquippedAttack=PlayableCharacter.Attack.Book;
                         player.EquippedBook=player.ListBooks[count-1];
+                        
                         if(count==1){
                             uIManager.ScrollUpMenu(player.SpecialAttackSprite);
                         }
@@ -30,10 +32,12 @@ namespace Managers.UI{
                         }
                         uIManager.ChangeChargeText(player.EquippedBook.CurrentCharges.ToString());
                         uIManager.ChangeDescriptionText(player.EquippedBook.Description);
+                        
 
                     }
                     else{
                         player.EquippedAttack=PlayableCharacter.Attack.SpecialAttack;
+                        if(uIManager)
                         uIManager.ScrollUpMenu(player.BaseAttackSprite);
                         uIManager.ChangeDescriptionText(player.SpecialAttackDescription);
                     }

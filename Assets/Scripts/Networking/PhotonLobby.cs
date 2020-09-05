@@ -95,6 +95,7 @@ namespace Networking {
             };
 
             PhotonNetwork.CreateRoom($"Room {randomRoomName}", roomOptions);
+            Debug.LogWarning($"Room name: {PhotonNetwork.CurrentRoom.Name}");
         }
     }
 }

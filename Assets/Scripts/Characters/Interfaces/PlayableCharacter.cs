@@ -147,6 +147,8 @@ namespace Characters.Interfaces {
         [SerializeField] protected float staminaConsumed;
         [SerializeField] protected bool staminaRecharging = false;
         [SerializeField] protected float staminaRecharged;
+        [SerializeField] protected bool isMine;
+        public bool IsMine=>isMine;
 
 
         // enum with the type of Attack equipped
@@ -167,7 +169,8 @@ namespace Characters.Interfaces {
 
         //method used in the Awake
         protected virtual void Awaker() {
-            if (GetComponent<PhotonView>().IsMine) {
+            isMine=GetComponent<PhotonView>().IsMine;
+            if (isMine) {
                 camera.enabled = true;
                 audioListener.enabled = true;
                     
@@ -203,7 +206,7 @@ namespace Characters.Interfaces {
 
             isAttacking = false;
             basePower = 5;
-            if (!malusManager) {
+            if (!malusManager && isMine) {
                 malusManager = new GameObject().AddComponent<MalusManager>();
                 malusManager.name = "Malus Manager";
                 malusManager.player = this;
@@ -225,15 +228,18 @@ namespace Characters.Interfaces {
             baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
             currentHp = hp;
-
-            uIController = new UIController();
-            uIController.player = this;
-            uIController.uIManager = UIManager.Instance;
-
-            uIManager.FillBar(1, "health");
             currentStamina = stamina;
+            
+                uIController = new UIController();
+                uIController.player = this;
+            if(isMine){
+                uIController.uIManager = UIManager.Instance;
 
-            uIManager.FillBar(1, "stamina");
+                uIManager.FillBar(1, "health");
+                
+
+                uIManager.FillBar(1, "stamina");
+            }
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
             staminaConsumed = stamina * 10 / 100;
@@ -457,12 +463,13 @@ namespace Characters.Interfaces {
                     deadPC.Looted = false;
                 } else {
                     Debug.Log("Looting Traitor");
-                    if (bookAdded) {
+                    if (bookAdded && isMine) {
                         uIManager.AddBook(dropBook.BookIcon);
                     }
 
                     if (plantAdded) {
-                        UIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
+                        if(isMine)
+                            UIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
                         if (listPlants.Count() == 1) {
                             equippedPlant = dropPlant;
                         }
@@ -476,7 +483,7 @@ namespace Characters.Interfaces {
                     if (!inventory.TryAddConsumableToInventory(page)) {
                         deadNPC.Looted = false;
                     } else {
-                        if (affectEquippedBook) {
+                        if (affectEquippedBook && isMine) {
                             uIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
                         }
                     }
@@ -487,7 +494,7 @@ namespace Characters.Interfaces {
                 Sprite booksprite = dropBook.BookIcon;
                 if (!dropBook.PickDrop(inventory)) {
                     deadNPC.Looted = false;
-                } else {
+                } else if(isMine) {
                     uIManager.AddBook(booksprite);
                 }
             }
@@ -516,7 +523,7 @@ namespace Characters.Interfaces {
             string description = interacted.Description;
             if (!interacted.PickDrop(inventory)) {
                 //failed interaction
-            } else {
+            } else if (isMine){
                 uIManager.AddPlant(plantSprite, description);
             }
 
@@ -559,7 +566,8 @@ namespace Characters.Interfaces {
 
         protected virtual void UseStamina(float staminaUsed) {
             currentStamina -= staminaUsed;
-            uIManager.FillBar(currentStamina / stamina, "stamina");
+            if(isMine)
+                uIManager.FillBar(currentStamina / stamina, "stamina");
         }
 
         protected virtual void ResetStamina() {
@@ -571,14 +579,16 @@ namespace Characters.Interfaces {
         protected IEnumerator StaminaRecharge() {
             staminaRecharging = true;
             currentStamina = currentStamina + staminaRecharged > stamina ? stamina : currentStamina + staminaRecharged;
-            uIManager.FillBar(currentStamina / stamina, "stamina");
+            if(isMine)
+                uIManager.FillBar(currentStamina / stamina, "stamina");
             yield return new WaitForSeconds(120f / speed);
             staminaRecharging = false;
         }
 
         protected override void RecoverHP(float hpRecovered) {
             base.RecoverHP(hpRecovered);
-            uIManager.FillBar(currentHp / hp, "health");
+            if(isMine)
+                uIManager.FillBar(currentHp / hp, "health");
         }
     }
 }
