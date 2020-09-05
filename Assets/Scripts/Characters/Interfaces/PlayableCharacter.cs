@@ -179,6 +179,7 @@ namespace Characters.Interfaces {
                 audioListener.enabled = true;
 
                 uIManager = new GameObject().AddComponent<UIManager>();
+                uIManager.name=gameObject.ToString()+" UIManager";
                 uIManager.Player = this;
                 uIManager = UIManager.Instance;
             }
@@ -257,7 +258,8 @@ namespace Characters.Interfaces {
 
         //method used in Update
         protected virtual void Updater() {
-            MalusCheck();
+            if(isMine)
+                MalusCheck();
             UpdateObjectsLists();
             if (gameObject.GetComponent<FirstPersonController>())
                 InteractionTextRayCast();

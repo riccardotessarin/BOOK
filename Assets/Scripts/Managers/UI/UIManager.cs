@@ -75,7 +75,7 @@ namespace Managers.UI{
                 Destroy(this);
             }
 
-            gameObject.tag="UIManager";
+            //gameObject.tag="UIManager";
             voidSprite=Resources.Load<Sprite>("Images/voidSprite");
             bonusPrefab=Resources.Load<GameObject>("Prefabs/UI/Bonus").GetComponent<Image>();
             malusPrefab=Resources.Load<GameObject>("Prefabs/UI/Malus").GetComponent<Image>();
