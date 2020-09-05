@@ -351,7 +351,8 @@ namespace Managers.UI{
         }
 
         public void ResetInteractionText(){
-            uIManager.ChangeInteractionText("");
+            if(player.IsMine)
+                uIManager.ChangeInteractionText("");
         }
 
         

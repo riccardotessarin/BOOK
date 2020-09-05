@@ -217,6 +217,7 @@ MonoBehaviour:
   staminaConsumed: 0
   staminaRecharging: 0
   staminaRecharged: 0
+  isMine: 0
   specialAttackRadius: 0
   targetEnemy: {fileID: 0}
   fogDamage: 0
