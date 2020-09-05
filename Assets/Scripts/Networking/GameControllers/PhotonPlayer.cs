@@ -5,27 +5,34 @@ using UnityEngine;
 
 namespace Networking.GameControllers {
     public class PhotonPlayer : MonoBehaviour {
-        [SerializeField] private Material controlledPlayerMaterial;
+        private PlayableCharacter MyPlayerAvatar { get; set; }
 
-        private PhotonView _photonView;
-
-        public GameObject MyPlayerAvatar { get; private set; }
+        public PhotonView PhotonView { get; private set; }
 
 #region Unity methods
 
         private void Awake() {
-            _photonView = GetComponent<PhotonView>();
+            PhotonView = GetComponent<PhotonView>();
         }
 
         private void Start() {
-            if (!_photonView.IsMine) return;
+            if (!PhotonView.IsMine) return;
 
             int spawnPicker = Random.Range(0, GameSetup.instance.SpawnPoints.Length);
-            MyPlayerAvatar = PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", PlayerInfo.Instance.SelectedClass),
+            var player = PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", PlayerInfo.Instance.SelectedClass),
                 GameSetup.instance.SpawnPoints[spawnPicker].position, GameSetup.instance.SpawnPoints[spawnPicker].rotation, 0);
 
-            MyPlayerAvatar.GetComponent<PlayableCharacter>().Player = this;
-            MyPlayerAvatar.GetComponentInChildren<MeshRenderer>().material = controlledPlayerMaterial;
+            MyPlayerAvatar = player.GetComponent<PlayableCharacter>();
+            MyPlayerAvatar.Player = this;
+        }
+
+#endregion
+
+#region RPC
+
+        [PunRPC]
+        private void RPC_BasicAttack() {
+            StartCoroutine(MyPlayerAvatar.BaseAttackDamage());
         }
 
 #endregion

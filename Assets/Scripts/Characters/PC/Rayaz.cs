@@ -108,7 +108,7 @@ namespace Characters.PC{
             if(isMine)
                 uIManager.FillBar(currentHp/hp,"health");
         }
-        protected override IEnumerator BaseAttackDamage(){
+        public override IEnumerator BaseAttackDamage(){
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Basilisk);
             currentHp-=baseAttackRecoil;

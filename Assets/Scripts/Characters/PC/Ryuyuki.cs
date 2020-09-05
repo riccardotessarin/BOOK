@@ -124,7 +124,7 @@ namespace Characters.PC{
                 
         }
 
-        protected override IEnumerator BaseAttackDamage(){
+        public override IEnumerator BaseAttackDamage(){
             isAttacking=true;
             baseDamage=new Damage(currentBasePower,EnumUtility.AttackType.Niflheim);
             currentHp-=baseAttackRecoil;
