@@ -19,7 +19,8 @@ using Photon.Pun;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
         [SerializeField] private AudioListener audioListener;
-        
+
+        private PhotonView _photonView;
         public bool IsAttacking {
             get => isAttacking;
         }
@@ -80,6 +81,9 @@ namespace Characters.Interfaces {
 
 
         [SerializeField] protected Camera camera;
+
+        public Camera Camera => camera;
+
         [SerializeField] protected Dictionary<string, bool> bondCheckDict = new Dictionary<string, bool>();
         [SerializeField] protected Dictionary<string, bool> testDict = new Dictionary<string, bool>();
         [SerializeField] protected float baseAttackRecoil;
@@ -150,7 +154,6 @@ namespace Characters.Interfaces {
         [SerializeField] protected bool isMine;
         public bool IsMine=>isMine;
 
-
         // enum with the type of Attack equipped
         public enum Attack {
             BaseAttack, //0
@@ -169,11 +172,12 @@ namespace Characters.Interfaces {
 
         //method used in the Awake
         protected virtual void Awaker() {
-            isMine=GetComponent<PhotonView>().IsMine;
+            _photonView = GetComponent<PhotonView>();
+            isMine=_photonView.IsMine;
             if (isMine) {
                 camera.enabled = true;
                 audioListener.enabled = true;
-                    
+
                 uIManager = new GameObject().AddComponent<UIManager>();
                 uIManager.Player = this;
                 uIManager = UIManager.Instance;
@@ -288,7 +292,7 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    StartCoroutine(BaseAttackDamage());
+                    _photonView.RPC("RPC_BasicAttack", RpcTarget.All);
                     UseStamina(staminaConsumed);
                 }
             }
@@ -590,5 +594,14 @@ namespace Characters.Interfaces {
             if(isMine)
                 uIManager.FillBar(currentHp / hp, "health");
         }
+
+#region RPC
+
+        [PunRPC]
+        private void RPC_BasicAttack() {
+            StartCoroutine(BaseAttackDamage());
+        }
+
+#endregion
     }
 }

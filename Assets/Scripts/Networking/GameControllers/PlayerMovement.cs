@@ -1,7 +1,5 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityStandardAssets.Characters.FirstPerson;
 
 namespace Networking.GameControllers {

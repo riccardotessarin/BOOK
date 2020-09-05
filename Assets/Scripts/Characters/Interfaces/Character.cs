@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Attacks;
- 
+
 
 namespace Characters.Interfaces {
     public abstract class Character : MonoBehaviour {
@@ -14,11 +14,21 @@ namespace Characters.Interfaces {
         [SerializeField] protected float basePower;
         [SerializeField] protected float currentBasePower;
         [SerializeField] protected bool isDeath;
-        public bool IsDeath { get=>isDeath; protected set=>isDeath=value; }
+
+        public bool IsDeath {
+            get => isDeath;
+            protected set => isDeath = value;
+        }
+
         [SerializeField] protected bool isAttacking;
         [SerializeField] bool poisoned;
         [SerializeField] protected bool looted; //false if has a dropLoot / true if it hasn't or it has been taken
-        public bool Looted{get=>looted; set=>looted=value;}
+
+        public bool Looted {
+            get => looted;
+            set => looted = value;
+        }
+
         public const int PCLAYERMASK = 1 << 8; //layer 8
         public const int NPCLAYERMASK = 1 << 9; // layer 9 
 
@@ -37,6 +47,7 @@ namespace Characters.Interfaces {
             public float DamageRec { get; }
             public EnumUtility.AttackType AttackType { get; }
         }
+
         ///<summary>
         ///Method used to deal damage to the character instance,
         ///it is used by both PC and NPC, it is protected so use with
@@ -48,6 +59,7 @@ namespace Characters.Interfaces {
         (not implemented yet), activate the event linked to the death of the character instance*/
 
         protected abstract void Death();
+
         ///<summary>
         ///Method that activate baseAttack Coroutine, 
         ///PCs use this woth a particular input,
@@ -58,27 +70,29 @@ namespace Characters.Interfaces {
         public override string ToString() {
             return type;
         }
+
         ///<summary>
         ///Method used for modify speed of character instance,
         ///protected so same as TakeDamage
         ///</summary>
         protected virtual void ModifySpeed(float modifier) {
             currentSpeed *= modifier;
-            Debug.Log(ToString() + " speed modified: "+currentSpeed);
+            Debug.Log(ToString() + " speed modified: " + currentSpeed);
         }
+
         ///<summary>
         ///modify hp max
         ///</summary> 
-        protected virtual void ModifyHpMax(float modifier){
-            hp*=modifier;
-            if(currentHp>hp)
-                currentHp=hp;
-            Debug.Log(ToString()+ " max hp modified: "+hp);
+        protected virtual void ModifyHpMax(float modifier) {
+            hp *= modifier;
+            if (currentHp > hp)
+                currentHp = hp;
+            Debug.Log(ToString() + " max hp modified: " + hp);
         }
 
-        protected virtual void ModifyBasePower(float modifier){
-            currentBasePower*=modifier;
-            Debug.Log(ToString()+" basePower modified: "+currentBasePower);
+        protected virtual void ModifyBasePower(float modifier) {
+            currentBasePower *= modifier;
+            Debug.Log(ToString() + " basePower modified: " + currentBasePower);
         }
 
         /*Coroutine used for calculating in time damage caused by poisoned status
@@ -94,12 +108,12 @@ namespace Characters.Interfaces {
             Poisoned = true;
         }
 
-        protected virtual void RecoverHP(float hpRecovered){
-            if(currentHp+hpRecovered>hp)
-                currentHp=hp;
+        protected virtual void RecoverHP(float hpRecovered) {
+            if (currentHp + hpRecovered > hp)
+                currentHp = hp;
             else
-                currentHp+=hpRecovered;
-            Debug.Log("hp recovered. Current hp: "+currentHp);
+                currentHp += hpRecovered;
+            Debug.Log("hp recovered. Current hp: " + currentHp);
         }
     }
 }
