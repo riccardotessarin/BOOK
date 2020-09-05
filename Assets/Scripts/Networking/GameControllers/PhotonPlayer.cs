@@ -33,12 +33,12 @@ namespace Networking.GameControllers {
 #region RPC
 
         [PunRPC]
-        private void RPC_BasicAttack() {
+        private void RPC_BasicAttack(Vector3 position, Vector3 direction) {
             if (MyPlayerAvatar == null) {
                 return;
             }
             
-            StartCoroutine(MyPlayerAvatar.BaseAttackDamage());
+            StartCoroutine(MyPlayerAvatar.BaseAttackDamage(position, direction));
         }
         
         [PunRPC]

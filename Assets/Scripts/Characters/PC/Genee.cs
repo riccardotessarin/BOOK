@@ -107,14 +107,14 @@ namespace Characters.PC {
             }
         }
 
-        public override IEnumerator BaseAttackDamage() {
+        public override IEnumerator BaseAttackDamage(Vector3 position, Vector3 direction) {
             isAttacking = true;
             baseDamage = new Damage(currentBasePower, EnumUtility.AttackType.Neptunian);
             currentHp -= baseAttackRecoil;
             if(isMine)
                 uIManager.FillBar(currentHp / hp, "health");
             RaycastHit hit;
-            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, baseAttackRange)) {
+            if (Physics.Raycast(position, direction, out hit, baseAttackRange)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted) {
                     hitted.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
