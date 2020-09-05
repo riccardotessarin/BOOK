@@ -1,4 +1,5 @@
 using System.IO;
+using Characters.Interfaces;
 using Photon.Pun;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ namespace Networking.GameControllers {
             MyPlayerAvatar = PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", PlayerInfo.Instance.SelectedClass),
                 GameSetup.instance.SpawnPoints[spawnPicker].position, GameSetup.instance.SpawnPoints[spawnPicker].rotation, 0);
 
+            MyPlayerAvatar.GetComponent<PlayableCharacter>().Player = this;
             MyPlayerAvatar.GetComponentInChildren<MeshRenderer>().material = controlledPlayerMaterial;
         }
 
