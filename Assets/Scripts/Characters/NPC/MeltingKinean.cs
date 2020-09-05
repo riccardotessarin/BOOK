@@ -15,6 +15,11 @@ namespace Characters.NPC {
         public bool DropPage{get=>dropPage;}
         [SerializeField]private bool drop; //true, drop something //false drop nothing
         public bool Drop{get=>drop;}
+
+
+        [SerializeField] private int randomIdle;
+        [SerializeField] private int randomAttack;
+        [SerializeField] private Animator animator;
          
 
         //private HealthStabilizer stabDrop;
@@ -29,7 +34,7 @@ namespace Characters.NPC {
             basePower = 2;
             speed = 30;
             drop=HasDrop(0.6f);
-            
+            animator=this.GetComponent<Animator>();
 
         }
 
@@ -39,6 +44,7 @@ namespace Characters.NPC {
                 dropPage=HasDrop(0.8f);
                 SetDropLoot();
             }
+            SetIdleStance();
             
         }
 
@@ -47,8 +53,18 @@ namespace Characters.NPC {
             if (DetectionZone()) {
                 //Debug.Log(secondType+" "+type+"detecting "+target.type);
                 transform.LookAt(target.transform);
-                if (BaseAttackZone())
+                animator.SetBool("HasTarget",true);
+                SetHorizontalDistance();
+                if (BaseAttackZone()){
+                    animator.SetBool("InRange",true);
                     BaseAttack();
+                }
+                else{
+                    animator.SetBool("InRange",false);
+                }
+            }
+            else{
+                animator.SetBool("HasTarget",false);
             }
         }
         protected bool HasDrop(float diffVal){
@@ -70,7 +86,33 @@ namespace Characters.NPC {
         }
 
         //public HealthStabilizer GetDropHS(){}
+        private void SetIdleStance(){
+            randomIdle=Random.Range(0,4);
+            animator.SetInteger("RandomIdle",randomIdle);
+        }
+        private void SetHorizontalDistance(){
+            float distance=this.transform.position.x;
+            animator.SetFloat("DistanceHorizontal",distance);
+        }
 
+        private void SetAttackMove(){
+            randomAttack=Random.Range(0,5);
+            animator.SetInteger("RandomAttack",randomAttack);
+        }
+
+        protected override IEnumerator BaseAttackDamage() {
+            isAttacking = true;
+            animator.SetBool("IsAttacking",isAttacking);
+            SetAttackMove();
+            
+            yield return new WaitForSeconds(speed/60f);
+            target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
+            
+            isAttacking = false;
+            animator.SetBool("IsAttacking",isAttacking);
+        }
+
+        
         
 
 

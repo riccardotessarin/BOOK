@@ -133,11 +133,10 @@ namespace Characters.Interfaces {
 
         protected virtual IEnumerator BaseAttackDamage() {
             isAttacking = true;
-            Color baseColor = gameObject.GetComponent<Renderer>().material.color;
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
+            
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
             yield return new WaitForSeconds(speed / 60f);
-            gameObject.GetComponent<Renderer>().material.color = baseColor;
+            
             isAttacking = false;
         }
 
