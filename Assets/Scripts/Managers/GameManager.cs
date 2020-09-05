@@ -1,3 +1,4 @@
+using Photon.Pun;
 using StateMachine.States;
 using UnityEngine;
 
@@ -23,7 +24,6 @@ namespace Managers {
 		// Update is called once per frame
 		private void Update() {
 			CurrentState?.Execute();
-
 		}
 	}
 }
