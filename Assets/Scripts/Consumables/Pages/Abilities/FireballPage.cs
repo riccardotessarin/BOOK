@@ -1,9 +1,4 @@
-﻿using Consumables.Books.Abilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Consumables.Pages.Abilities {
 	class FireballPage : Page {

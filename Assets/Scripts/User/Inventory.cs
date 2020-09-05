@@ -14,7 +14,7 @@ using Consumables.Books.Drops;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
-		public Transform booksContainer;     // Check if public is correct
+		public Transform booksContainer;
 		public Transform plantsContainer;
 
 		private readonly List<Book> _books = new List<Book>();
