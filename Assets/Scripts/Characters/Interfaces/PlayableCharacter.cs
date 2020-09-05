@@ -18,6 +18,8 @@ using Photon.Pun;
 //using Books;
 namespace Characters.Interfaces {
     public abstract class PlayableCharacter : Character {
+        [SerializeField] private AudioListener audioListener;
+        
         public bool IsAttacking {
             get => isAttacking;
         }
@@ -165,6 +167,15 @@ namespace Characters.Interfaces {
 
         //method used in the Awake
         protected virtual void Awaker() {
+            if (GetComponent<PhotonView>().IsMine) {
+                camera.enabled = true;
+                audioListener.enabled = true;
+                    
+                uIManager = new GameObject().AddComponent<UIManager>();
+                uIManager.Player = this;
+                uIManager = UIManager.Instance;
+            }
+
             //Debug.Log("AwakerPC");
             bondDic.Add("ryuyuki", RyuyukiBond);
             bondDic.Add("genee", GeneeBond);
@@ -183,13 +194,6 @@ namespace Characters.Interfaces {
             attackDic.Add(Attack.Book, BookAttack);
             gameObject.layer = 8; //PC layer
             gameObject.tag = "Player";
-            if (GetComponent<PhotonView>().IsMine) {
-                uIManager = new GameObject().AddComponent<UIManager>();
-                uIManager.Player = this;
-                uIManager = UIManager.Instance;
-            } else {
-                Destroy(camera);
-            }
 
             IsDeath = false;
             buffRadius = 5;

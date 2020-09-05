@@ -6,41 +6,50 @@ using Characters.Interfaces;
 using Managers;
 using StateMachine.States;
 
-namespace StateMachine.Actions.Implementations{
-    public class InGameInputsAction : IAction
-    {
-        private PlayableCharacter player= GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
-        public void Execute(){
-            if(!player.IsAttacking || player.IsDeath){
-                if(Input.GetMouseButtonDown(0)){
-                    if(player.PowerMode)
-                        player.Attacker();
-                    else{
-                        player.UseEquippedConsumable();
-                    }
-                    
-                }
-                if (Input.GetKeyDown(KeyCode.Q)) {
-                    GameManager.Instance.CurrentState = new PauseMenuState();
-                    Debug.Log("Changing to pause menu state");
-                    player.UIManager.ActivateMenu(true);
+namespace StateMachine.Actions.Implementations {
+    public class InGameInputsAction : IAction {
+        private readonly PlayableCharacter _player = GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
 
-                }
-                if(Input.GetKeyDown(KeyCode.F)){
-                    player.PowerMode = !(player.PowerMode);
-                    Debug.Log("PowerMode Active: "+player.PowerMode);
-                    player.UIManager.SwitchMode(player.PowerMode);
-                }
-                if(Input.GetKeyDown(KeyCode.X)){
-                    Debug.Log("Trying to loot");
-                    player.LootAction();
-                }
-                if(Input.GetKeyDown(KeyCode.E)){
-                    Debug.Log("Trying to interact");
-                    player.InteractAction();
-                }
+        public void Execute() {
+            
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            if (!_player.IsAttacking || _player.IsDeath) {
+                HandlePlayerInputs();
             }
         }
-        
+
+        private void HandlePlayerInputs() {
+            if (Input.GetMouseButtonDown(0)) {
+                if (_player.PowerMode)
+                    _player.Attacker();
+                else {
+                    _player.UseEquippedConsumable();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q)) {
+                GameManager.Instance.CurrentState = new PauseMenuState();
+                Debug.Log("Changing to pause menu state");
+                _player.UIManager.ActivateMenu(true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F)) {
+                _player.PowerMode = !(_player.PowerMode);
+                Debug.Log("PowerMode Active: " + _player.PowerMode);
+                _player.UIManager.SwitchMode(_player.PowerMode);
+            }
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                Debug.Log("Trying to loot");
+                _player.LootAction();
+            }
+
+            if (Input.GetKeyDown(KeyCode.E)) {
+                Debug.Log("Trying to interact");
+                _player.InteractAction();
+            }
+        }
     }
 }
