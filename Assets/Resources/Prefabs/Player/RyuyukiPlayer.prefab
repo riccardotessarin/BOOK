@@ -530,6 +530,7 @@ MonoBehaviour:
   staminaConsumed: 0
   staminaRecharging: 0
   staminaRecharged: 0
+  isMine: 0
   lastTarget: {fileID: 0}
   specialAttackRadius: 0
   speedModifier: 0
