@@ -3,6 +3,7 @@ using System.Collections;
 using Characters;
 using Characters.Interfaces;
 using Attacks;
+using Photon.Pun;
 
 public class FireballBehavior : MonoBehaviour {
 
@@ -27,14 +28,14 @@ public class FireballBehavior : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter(Collision collision) {
-		Character enemy = collision.gameObject.GetComponent<Character>();
-		Character.Damage fireballDamage = new Character.Damage(600.0F /*damage dealt*/, EnumUtility.AttackType.Inferno);
+		var enemy = collision.gameObject.GetComponent<Character>();
+		var fireballDamage = new Character.Damage(600.0F /*damage dealt*/, EnumUtility.AttackType.Inferno);
 		if (enemy != null) {
 			Debug.Log(enemy + " hitted");
 			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
 		}
 		//Instantiate(explosionVFX, transform.parent);
-		Destroy(gameObject);
+		PhotonNetwork.Destroy(gameObject);
 	}
 
 	// Update is called once per frame

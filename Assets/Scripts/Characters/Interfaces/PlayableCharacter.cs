@@ -298,7 +298,7 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    _photonView.RPC("RPC_BasicAttack", RpcTarget.All, null);
+                    Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, null);
                     UseStamina(staminaConsumed);
                 }
             }
@@ -397,7 +397,7 @@ namespace Characters.Interfaces {
         }
 
         //Coroutine to make base attack and check if hitted
-        protected abstract IEnumerator BaseAttackDamage();
+        public abstract IEnumerator BaseAttackDamage();
 
         //Coroutine to activate special ability
         protected abstract IEnumerator SpecialEffect();
@@ -603,10 +603,10 @@ namespace Characters.Interfaces {
 
 #region RPC
 
-        [PunRPC]
+        /*[PunRPC]
         private void RPC_BasicAttack() {
             StartCoroutine(BaseAttackDamage());
-        }
+        }*/
 
 #endregion
     }
