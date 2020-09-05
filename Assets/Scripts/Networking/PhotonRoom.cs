@@ -56,7 +56,7 @@ namespace Networking {
 #region Photon callbacks
 
         public override void OnJoinedRoom() {
-            Debug.Log("Joined a room");
+            Debug.LogWarning($"Joined: {PhotonNetwork.CurrentRoom.Name}");
 
             StartGame();
         }
