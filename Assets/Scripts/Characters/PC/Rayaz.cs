@@ -29,11 +29,8 @@ namespace Characters.PC{
             fogDuration=10;
             elementType=EnumUtility.AttackType.Basilisk;
             elementSprite=Resources.Load<Sprite>("Images/PoisonPowerSprite");
-            
-            
-            
-
         }
+        
         protected override void Starter(){
             base.Starter();
             baseAttackDescription=$"poisonous bullet(Recoil: {baseAttackRecoil*100/hp}%)";

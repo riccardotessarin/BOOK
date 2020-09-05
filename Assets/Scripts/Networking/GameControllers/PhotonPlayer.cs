@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Networking.GameControllers {
     public class PhotonPlayer : MonoBehaviour {
