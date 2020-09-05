@@ -265,7 +265,7 @@ namespace Characters.Interfaces {
             if(isMine)
                 MalusCheck();
             UpdateObjectsLists();
-            if (gameObject.GetComponent<FirstPersonController>())
+            if (isMine)
                 InteractionTextRayCast();
             ResetStamina();
         }
