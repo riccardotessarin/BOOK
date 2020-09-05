@@ -41,6 +41,7 @@ MonoBehaviour:
   - RPC_InstantiatePlayer
   - RPC_ShootFireball
   - RPC_BasicAttack
+  - RPC_SavePlayerInstance
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

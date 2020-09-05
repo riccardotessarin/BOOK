@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4488081043271654000}
   - component: {fileID: -3384627998435102579}
   - component: {fileID: 5531308792047584230}
-  - component: {fileID: -746472540071693569}
+  - component: {fileID: 4810106041000664067}
   m_Layer: 0
   m_Name: RayazPlayer
   m_TagString: Player
@@ -387,8 +387,8 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!136 &-746472540071693569
-CapsuleCollider:
+--- !u!65 &4810106041000664067
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -397,9 +397,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5847235077789650011
 GameObject:
@@ -504,7 +503,6 @@ GameObject:
   - component: {fileID: 5847235077976861559}
   - component: {fileID: 5847235077976861556}
   - component: {fileID: 5847235077976861557}
-  - component: {fileID: 5847235077976861558}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -520,7 +518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5847235077976861552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.57, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5847235077789749369}
@@ -573,17 +571,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &5847235077976861558
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5847235077976861552}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
