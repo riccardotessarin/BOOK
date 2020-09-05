@@ -10,6 +10,7 @@ using Characters.NPC;
 using Consumables.Pages;
 using Consumables.Healables.Plants.Drops;
 using Consumables.Books.Drops;
+using Networking.GameControllers;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine;
 using User;
@@ -21,6 +22,9 @@ namespace Characters.Interfaces {
         [SerializeField] private AudioListener audioListener;
 
         private PhotonView _photonView;
+
+        public PhotonPlayer Player { get; set; }
+
         public bool IsAttacking {
             get => isAttacking;
         }
@@ -294,7 +298,7 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    _photonView.RPC("RPC_BasicAttack", RpcTarget.All);
+                    _photonView.RPC("RPC_BasicAttack", RpcTarget.All, null);
                     UseStamina(staminaConsumed);
                 }
             }

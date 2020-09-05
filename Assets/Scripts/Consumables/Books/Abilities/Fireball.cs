@@ -1,12 +1,9 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using Characters.Interfaces;
-using UnityEngine.UI;
+﻿using System.Collections;
 using System.Linq;
-using Photon.Pun;
+using Characters.Interfaces;
 using Managers;
-using Object = UnityEngine.Object;
+using Photon.Pun;
+using UnityEngine;
 
 namespace Consumables.Books.Abilities {
     public class Fireball : Book {
@@ -35,10 +32,13 @@ namespace Consumables.Books.Abilities {
             var players = GameObject.FindGameObjectsWithTag("Player");
             player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
             if (Equals(player, null)) return;
+
+            var cameraTransform = player.GetComponent<PlayableCharacter>().Camera.transform;
+            bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/Fireball", cameraTransform.position + cameraTransform.forward * 2, cameraTransform.rotation);
+            bookVFX.transform.parent = container;
             
-            var camera = player.GetComponent<PlayableCharacter>().Camera;
-            
-            player.GetComponent<PhotonView>().RPC("RPC_ShootFireball", RpcTarget.All, camera.transform);
+            GameManager.Instance.StartCoroutine(MoveFireball());
+            // player.GetComponent<PhotonView>().RPC("RPC_ShootFireball", RpcTarget.All, cameraTransform.position, cameraTransform.rotation, cameraTransform.forward);
 
             RemoveCharge(); // Remove charge after the ability is used
         }
@@ -46,22 +46,11 @@ namespace Consumables.Books.Abilities {
         private IEnumerator MoveFireball() {
             while (true) {
                 yield return new WaitForEndOfFrame();
-                
-                if (!Equals(bookVFX, null)) {
+
+                if (bookVFX != null) {
                     bookVFX.transform.Translate(Vector3.forward * (Time.unscaledDeltaTime * fireballSpeed), Space.Self);
                 }
             }
         }
-        
-#region RPC
-
-        [PunRPC]
-        private void RPC_ShootFireball(Transform transform) {
-            // Define the behavior of the ability
-            bookVFX = Object.Instantiate(fireballPrefab, transform.position + transform.forward * 2, transform.rotation, container);
-            GameManager.Instance.StartCoroutine(MoveFireball());
-        }
-
-#endregion
     }
 }
