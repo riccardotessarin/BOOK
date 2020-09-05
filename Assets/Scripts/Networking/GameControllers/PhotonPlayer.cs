@@ -14,27 +14,30 @@ namespace Networking.GameControllers {
 
 #region Unity methods
 
-        private void Start() {
+        private void Awake() {
             _photonView = GetComponent<PhotonView>();
+        }
+
+        private void Start() {
             if (!_photonView.IsMine) return;
             
             int spawnPicker = Random.Range(0, GameSetup.instance.SpawnPoints.Length);
             MyPlayerAvatar = PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", PlayerInfo.Instance.SelectedClass),
-                GameSetup.instance.SpawnPoints[spawnPicker].position, GameSetup.instance.SpawnPoints[spawnPicker].rotation, 0);
+				GameSetup.instance.SpawnPoints[spawnPicker].position, GameSetup.instance.SpawnPoints[spawnPicker].rotation, 0);
 
             MyPlayerAvatar.GetComponentInChildren<MeshRenderer>().material = controlledPlayerMaterial;
             
-            _photonView.RPC("RPC_InstantiatePlayer", RpcTarget.OthersBuffered, PlayerInfo.Instance.SelectedClass);
+            // _photonView.RPC("RPC_InstantiatePlayer", RpcTarget.OthersBuffered, PlayerInfo.Instance.SelectedClass);
         }
 
 #endregion
 
 #region RPC
 
-        [PunRPC]
+        /*[PunRPC]
         private void RPC_InstantiatePlayer(string playerClass) {
             MyPlayerAvatar = InstantiatePlayer(playerClass);
-        }
+        }*/
 
 #endregion
         
