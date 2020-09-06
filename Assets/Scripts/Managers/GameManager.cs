@@ -26,14 +26,11 @@ namespace Managers {
 
 		// Start is called before the first frame update
 		private void Start() {
-			if (!_photonView.IsMine) return;
-
-			if (PhotonNetwork.IsMasterClient) {
+			if (_photonView.IsMine) {
 				InstantiateNPC();
 			}
 			
 			CurrentState = new InGameState();
-			
 		}
 
 		private void InstantiateNPC() {
@@ -43,8 +40,6 @@ namespace Managers {
 
 		// Update is called once per frame
 		private void Update() {
-			if (!_photonView.IsMine) return;
-			
 			CurrentState?.Execute();
 		}
 	}
