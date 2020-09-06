@@ -1488,7 +1488,7 @@ GameObject:
   - component: {fileID: 7157887834996908123}
   - component: {fileID: 872850050764962072}
   m_Layer: 0
-  m_Name: Melting_kinean
+  m_Name: Melting_Kinean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

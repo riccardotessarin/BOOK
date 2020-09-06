@@ -31059,7 +31059,7 @@ GameObject:
   - component: {fileID: 8101520198515674356}
   - component: {fileID: 7483679636502696694}
   m_Layer: 0
-  m_Name: Cyborg Kinean
+  m_Name: Cyborg_Kinean
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
