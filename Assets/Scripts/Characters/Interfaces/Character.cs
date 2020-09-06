@@ -85,10 +85,10 @@ namespace Characters.Interfaces {
         ///modify hp max
         ///</summary> 
         protected virtual void ModifyHpMax(float modifier) {
-            hp *= modifier;
-            if (currentHp > hp)
-                currentHp = hp;
-            Debug.Log(ToString() + " max hp modified: " + hp);
+            hpMax *= modifier;
+            if (currentHp > hpMax)
+                currentHp = hpMax;
+            Debug.Log(ToString() + " max hp modified: " + hpMax);
         }
 
         protected virtual void ModifyBasePower(float modifier) {
