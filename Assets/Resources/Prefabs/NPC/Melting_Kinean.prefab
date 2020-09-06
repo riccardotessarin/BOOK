@@ -1484,8 +1484,9 @@ GameObject:
   m_Component:
   - component: {fileID: 802497533248120875}
   - component: {fileID: 7325395617368573265}
-  - component: {fileID: 5178172952282166246}
   - component: {fileID: 5178172952282166265}
+  - component: {fileID: 7157887834996908123}
+  - component: {fileID: 872850050764962072}
   m_Layer: 0
   m_Name: Melting_kinean
   m_TagString: Untagged
@@ -1500,9 +1501,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4429381054326331960}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.91, y: 0.5399997, z: 14.15}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 6465561850127465491}
   - {fileID: 747190788880973743}
@@ -1528,19 +1529,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &5178172952282166246
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4429381054326331960}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.2932625, z: 1}
-  m_Center: {x: 0, y: 1.320686, z: 0}
 --- !u!114 &5178172952282166265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1574,6 +1562,42 @@ MonoBehaviour:
   drop: 0
   randomIdle: 0
   animator: {fileID: 0}
+--- !u!114 &7157887834996908123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429381054326331960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!136 &872850050764962072
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429381054326331960}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4455205181366913249
 GameObject:
   m_ObjectHideFlags: 0
