@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Characters.Interfaces;
+using Photon.Pun;
 
 public class VenomousNeedleBehavior : MonoBehaviour {
 	private void Awake() {
@@ -11,7 +12,7 @@ public class VenomousNeedleBehavior : MonoBehaviour {
 	private IEnumerator WaitAndDestroy(float waitTime) {
 		while (true) {
 			yield return new WaitForSecondsRealtime(waitTime);
-			Destroy(gameObject);
+			PhotonNetwork.Destroy(gameObject);
 		}
 	}
 
@@ -23,7 +24,7 @@ public class VenomousNeedleBehavior : MonoBehaviour {
 			enemy.SendMessage("TakeDamage", needleDamage, SendMessageOptions.DontRequireReceiver);
 			enemy.Poisoned = true;
 		}
-		Destroy(gameObject);
+		PhotonNetwork.Destroy(gameObject);
 	}
 
 	// Use this for initialization

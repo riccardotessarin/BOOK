@@ -21,7 +21,7 @@ namespace Consumables.Books.Abilities {
 		}
 
 		private void OnCollisionEnter(Collision collision) {
-			Transform child = gameObject.transform.GetChild(0);
+			Transform child = gameObject.transform.Find("Splash");
 			ParticleSystem particle = child.GetComponent<ParticleSystem>();
 			if (!particle.isPlaying) {
 				particle.Play();
