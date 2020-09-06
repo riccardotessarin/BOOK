@@ -17,6 +17,7 @@ namespace Characters.NPC {
         [SerializeField] EnumUtility.AttackType specialAttackAttribute;
         [SerializeField] Damage specialDamage;
         private bool rarityDrop;//True common / false rare
+        [SerializeField] private Animator animator;
         
 
 
@@ -31,11 +32,12 @@ namespace Characters.NPC {
             specialAttackRadius = 7;
             basePower = 2;
             specialPower = 3;
-            speed = 40;
+            speed = 20;
             maxAttackDistance = 10;
             specialAttackAttribute=RandomAttackType();
             typeDrop=specialAttackAttribute;
             SetDropLoot();
+            animator=GetComponent<Animator>();
             
         }
 
@@ -48,15 +50,31 @@ namespace Characters.NPC {
             base.Updater();
 
             if (DetectionZone()) {
-                if (BaseAttackZone())
+                animator.SetBool("HasTarget",true);
+                if (BaseAttackZone()){
                     BaseAttack();
-                else if (SpecialAttackZone())
+                }
+                else if (SpecialAttackZone()){
                     SpecialAttack();
+                }
             }
+            else{
+                animator.SetBool("HasTarget",false);
+            }
+        }
+        protected override IEnumerator BaseAttackDamage(){
+            isAttacking = true;
+            animator.SetBool("IsAttacking",isAttacking);
+            
+            yield return new WaitForSeconds(speed / 60f);
+            target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
+            isAttacking = false;
+            animator.SetBool("IsAttacking",isAttacking);
         }
 
         protected override void Death() {
-            IsDeath = true;
+            base.Death();
+            animator.SetTrigger("IsDeath");
         }
 
 
@@ -100,16 +118,16 @@ namespace Characters.NPC {
         IEnumerator SpecialAttackDamage() {
             isAttacking = true;
             RaycastHit hit;
+            animator.SetBool("IsAttacking",isAttacking);
+            yield return new WaitForSeconds(speed / 60f);
             if (Physics.SphereCast(transform.position, transform.position.y / 2, transform.forward, out hit, maxAttackDistance, PCLAYERMASK)) {
                 Debug.Log("HIT");
                 hit.transform.SendMessage("TakeDamage", specialDamage, SendMessageOptions.DontRequireReceiver);
             } else {
                 Debug.Log("MISS");
             }
-
-            yield return new WaitForSeconds(speed / 60f);
-            
             isAttacking = false;
+            animator.SetBool("IsAttacking",isAttacking);
         }
 
         private EnumUtility.AttackType RandomAttackType(){
@@ -129,6 +147,32 @@ namespace Characters.NPC {
             ret.AddComponent(Inventory.BookDropDictionary[specialAttackAttribute][i]);
             ret.name=ret.GetComponent<BookDrop>().Name;
             return ret.GetComponent<BookDrop>();
+        }
+
+        protected override IEnumerator TakingDamage(Damage damage){
+            isAttacking=true;
+           
+            Debug.Log("cyborg damage taken");
+            
+            
+            Debug.Log("Low Damage");
+            //animator.Play("anim_warrior_qr_1_Get_Hit_1",-1,0);
+            //animator.SetBool("BigHit",false);
+            //animator.SetBool("TakingDamage",takingDamage);
+            animator.SetTrigger("Hitted");
+            yield return new WaitForSeconds(0.1f);
+            
+            if (damage.DamageRec < currentHp) {
+                Debug.Log("Calculating Damage");
+                currentHp -= damage.DamageRec;
+                Debug.Log(gameObject.ToString() + " took damage");
+            } else{
+                Debug.Log("Death");
+                Death();
+
+            }
+            
+            isAttacking=false;
         }
     }
 }
