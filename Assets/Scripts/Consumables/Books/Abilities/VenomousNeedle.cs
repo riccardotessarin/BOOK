@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Linq;
 using Managers;
+using Photon.Pun;
+using Characters.Interfaces;
 
 namespace Consumables.Books.Abilities {
 	public class VenomousNeedle : Book {
@@ -25,7 +27,7 @@ namespace Consumables.Books.Abilities {
 			venomousNeedlePrefab = Resources.Load("Prefabs/Attacks/VenomousNeedle") as GameObject;
 		}
 
-
+		/*
 		public override void UseConsumable() {
 			var players = GameObject.FindGameObjectsWithTag("Player");
 			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
@@ -38,6 +40,22 @@ namespace Consumables.Books.Abilities {
 			bookVFX.transform.parent = container;
 			GameManager.Instance.StartCoroutine(MoveNeedle());
 			RemoveCharge();     // Remove charge after the ability is used
+		}
+		*/
+
+		public override void UseConsumable() {
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
+
+			var cameraTransform = player.GetComponent<PlayableCharacter>().Camera.transform;
+			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/VenomousNeedle", cameraTransform.position + cameraTransform.forward * 2, cameraTransform.rotation);
+			bookVFX.transform.parent = container;
+
+			GameManager.Instance.StartCoroutine(MoveNeedle());
+			// player.GetComponent<PhotonView>().RPC("RPC_ShootFireball", RpcTarget.All, cameraTransform.position, cameraTransform.rotation, cameraTransform.forward);
+
+			RemoveCharge(); // Remove charge after the ability is used
 		}
 
 		private IEnumerator MoveNeedle() {

@@ -29,7 +29,7 @@ public class FireballBehavior : MonoBehaviour {
 
 	private void OnCollisionEnter(Collision collision) {
 		var enemy = collision.gameObject.GetComponent<Character>();
-		var fireballDamage = new Character.Damage(600.0F /*damage dealt*/, EnumUtility.AttackType.Inferno);
+		var fireballDamage = new Character.Damage(20.0F /*damage dealt*/, EnumUtility.AttackType.Inferno);
 		if (enemy != null) {
 			Debug.Log(enemy + " hitted");
 			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
