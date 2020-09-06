@@ -18,7 +18,7 @@ namespace Characters.NPC {
 
 
         [SerializeField] private int randomIdle;
-        [SerializeField] private int randomAttack;
+        
         [SerializeField] private Animator animator;
          
 
@@ -34,7 +34,7 @@ namespace Characters.NPC {
             basePower = 2;
             speed = 30;
             drop=HasDrop(0.6f);
-            animator=this.GetComponent<Animator>();
+            animator=GetComponent<Animator>();
 
         }
 
@@ -50,21 +50,23 @@ namespace Characters.NPC {
 
         protected override void Updater() {
             base.Updater();
-            if (DetectionZone()) {
-                //Debug.Log(secondType+" "+type+"detecting "+target.type);
-                transform.LookAt(target.transform);
-                animator.SetBool("HasTarget",true);
-                SetHorizontalDistance();
-                if (BaseAttackZone()){
-                    animator.SetBool("InRange",true);
-                    BaseAttack();
+            if(!isAttacking){
+                if (DetectionZone()) {
+                    //Debug.Log(secondType+" "+type+"detecting "+target.type);
+                    transform.LookAt(target.transform);
+                    animator.SetBool("HasTarget",true);
+                    SetHorizontalDistance();
+                    if (BaseAttackZone()){
+                        animator.SetBool("InRange",true);
+                        BaseAttack();
+                    }
+                    else{
+                        animator.SetBool("InRange",false);
+                    }
                 }
                 else{
-                    animator.SetBool("InRange",false);
+                    animator.SetBool("HasTarget",false);
                 }
-            }
-            else{
-                animator.SetBool("HasTarget",false);
             }
         }
         protected bool HasDrop(float diffVal){
@@ -95,15 +97,12 @@ namespace Characters.NPC {
             animator.SetFloat("DistanceHorizontal",distance);
         }
 
-        private void SetAttackMove(){
-            randomAttack=Random.Range(0,5);
-            animator.SetInteger("RandomAttack",randomAttack);
-        }
+        
 
         protected override IEnumerator BaseAttackDamage() {
             isAttacking = true;
             animator.SetBool("IsAttacking",isAttacking);
-            SetAttackMove();
+            
             
             yield return new WaitForSeconds(speed/60f);
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
@@ -112,6 +111,37 @@ namespace Characters.NPC {
             animator.SetBool("IsAttacking",isAttacking);
         }
 
+        protected override IEnumerator TakingDamage(Damage damage){
+            isAttacking=true;
+           
+            Debug.Log("melting damage taken");
+            
+            
+            Debug.Log("Low Damage");
+            //animator.Play("anim_warrior_qr_1_Get_Hit_1",-1,0);
+            //animator.SetBool("BigHit",false);
+            //animator.SetBool("TakingDamage",takingDamage);
+            animator.SetTrigger("Hitted");
+            yield return new WaitForSeconds(0.1f);
+            
+            if (damage.DamageRec < currentHp) {
+                Debug.Log("Calculating Damage");
+                currentHp -= damage.DamageRec;
+                Debug.Log(gameObject.ToString() + " took damage");
+            } else{
+                Debug.Log("Death");
+                Death();
+
+            }
+            
+            isAttacking=false;
+            
+        }
+
+        protected override void Death(){
+            base.Death();
+            animator.SetTrigger("IsDeath");
+        }
         
         
 

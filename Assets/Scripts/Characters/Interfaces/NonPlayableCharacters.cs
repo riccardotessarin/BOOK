@@ -17,6 +17,7 @@ namespace Characters.Interfaces {
 
         protected Damage baseDamage;
         [SerializeField] protected EnumUtility.AttackType typeDrop; 
+        
 
 
         protected virtual void Awaker() {
@@ -26,9 +27,11 @@ namespace Characters.Interfaces {
             target = null;
             isAttacking = false;
             looted=false;
+            
         }
 
         protected virtual void Starter() {
+            hpMax=hp;
             currentHp = hp;
             currentSpeed = speed;
             currentBasePower=basePower;
@@ -56,9 +59,7 @@ namespace Characters.Interfaces {
         void Update() {
             if (!IsDeath) {
                 Updater();
-            } else {
-                gameObject.GetComponent<Renderer>().material.color = Color.black;
-            }
+            } 
         }
 
         protected override void Death() {
@@ -124,11 +125,20 @@ namespace Characters.Interfaces {
         }
 
         protected override void TakeDamage(Damage damage) {
+            if(!IsDeath){
+                StartCoroutine(TakingDamage(damage));
+            }
+        }
+
+        protected virtual IEnumerator TakingDamage(Damage damage){
+            isAttacking=true;
+            yield return new WaitForSeconds(0.3f);
             if (damage.DamageRec < currentHp) {
                 currentHp -= damage.DamageRec;
                 Debug.Log(gameObject.ToString() + " took damage");
             } else
                 Death();
+            isAttacking=false;
         }
 
         protected virtual IEnumerator BaseAttackDamage() {

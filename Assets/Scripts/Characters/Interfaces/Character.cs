@@ -6,6 +6,7 @@ using Attacks;
 namespace Characters.Interfaces {
     public abstract class Character : MonoBehaviour {
         [SerializeField] protected float hp;
+        [SerializeField] protected float hpMax;
         [SerializeField] protected float currentHp;
         public string type;
 
@@ -109,8 +110,8 @@ namespace Characters.Interfaces {
         }
 
         protected virtual void RecoverHP(float hpRecovered) {
-            if (currentHp + hpRecovered > hp)
-                currentHp = hp;
+            if (currentHp + hpRecovered > hpMax)
+                currentHp = hpMax;
             else
                 currentHp += hpRecovered;
             Debug.Log("hp recovered. Current hp: " + currentHp);

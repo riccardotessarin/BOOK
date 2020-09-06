@@ -177,7 +177,8 @@ namespace Characters.Interfaces {
         //method used in the Awake
         protected virtual void Awaker() {
             _photonView = GetComponent<PhotonView>();
-            isMine=_photonView.IsMine;
+            //isMine=_photonView.IsMine;
+            isMine=true;
             if (isMine) {
                 camera.enabled = true;
                 audioListener.enabled = true;
@@ -236,6 +237,7 @@ namespace Characters.Interfaces {
             //Debug.Log("Starter");
             baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
+            hpMax=hp;
             currentHp = hp;
             currentStamina = stamina;
             
@@ -298,7 +300,8 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
+                    StartCoroutine(BaseAttackDamage(camera.transform.position,camera.transform.forward));
+                    //Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
                     UseStamina(staminaConsumed);
                 }
             }
@@ -554,6 +557,12 @@ namespace Characters.Interfaces {
             Debug.Log($"{gameObject.ToString()} revived");
             currentHp = hp / 6;
             isDeath = false;
+        }
+
+        protected override void ModifyHpMax(float modifier){
+            base.ModifyHpMax(modifier);
+            if(isMine)
+                uIManager.FillBar(currentHp/hp,"health");
         }
 
         protected void ModifyRecoil(float modifier) {
