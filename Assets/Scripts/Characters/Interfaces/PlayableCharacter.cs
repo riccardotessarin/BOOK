@@ -177,8 +177,8 @@ namespace Characters.Interfaces {
         //method used in the Awake
         protected virtual void Awaker() {
             _photonView = GetComponent<PhotonView>();
-            //isMine=_photonView.IsMine;
-            isMine=true;
+            isMine=_photonView.IsMine;
+            //isMine=true;
             if (isMine) {
                 camera.enabled = true;
                 audioListener.enabled = true;
