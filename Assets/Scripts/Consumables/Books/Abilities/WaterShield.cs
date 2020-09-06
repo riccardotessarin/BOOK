@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Managers;
+using Photon.Pun;
 
 namespace Consumables.Books.Abilities {
 	public class WaterShield : Book {
@@ -32,7 +33,7 @@ namespace Consumables.Books.Abilities {
 			player = players.FirstOrDefault();
 			var playerTransform = player.transform;
 			// Define the behavior of the ability
-			bookVFX = Object.Instantiate(waterShieldPrefab, playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
+			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/WaterShield", playerTransform.position + playerTransform.forward * 2, playerTransform.rotation);
 			//Camera camera = Camera.main;
 			//bookVFX = Object.Instantiate(fireballPrefab, camera.transform.position + camera.transform.forward * 2, camera.transform.rotation);
 			bookVFX.transform.parent = container;

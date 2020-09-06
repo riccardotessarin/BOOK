@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 namespace Consumables.Books.Abilities{
 	public class IceStalagmite : Book
@@ -30,7 +31,7 @@ namespace Consumables.Books.Abilities{
 			var playerTransform = player.transform;
 			RaycastHit hit;
 			Physics.Raycast(playerTransform.position, Camera.main.transform.forward, out hit, 6);
-			bookVFX = Object.Instantiate(iceStalagmitePrefab, hit.point, playerTransform.rotation);
+			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/IceStalagmite", hit.point, playerTransform.rotation);
 			bookVFX.transform.parent = container;
 			RemoveCharge();     // Remove charge after the ability is used
 		}

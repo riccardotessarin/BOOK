@@ -4,6 +4,7 @@ using MalusEBonus;
 using Characters.Interfaces;
 using Managers;
 using System.Linq;
+using Photon.Pun;
 
 namespace Consumables.Books.Abilities {
 	public class LightningSpeed : Book {
@@ -42,7 +43,7 @@ namespace Consumables.Books.Abilities {
 			malusManager.Add(bonus);
 
 			// Instance prefab
-			bookVFX = Object.Instantiate(electricityPrefab, playerTransform.position, playerTransform.rotation);
+			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/Electricity", playerTransform.position, playerTransform.rotation);
 
 			// Wait and destroy
 			GameManager.Instance.StartCoroutine(WaitAndRemoveBookBonus(30.0F, bonus, malusManager));

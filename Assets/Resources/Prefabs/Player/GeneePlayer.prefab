@@ -262,6 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
+  hpMax: 0
   currentHp: 0
   type: 
   speed: 0

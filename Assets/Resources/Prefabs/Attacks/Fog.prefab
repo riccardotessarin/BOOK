@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5063040146010604932}
   - component: {fileID: 5125032141596485296}
   - component: {fileID: 2056284942155317106}
+  - component: {fileID: -764335516319037120}
   m_Layer: 0
   m_Name: Fog
   m_TagString: Untagged
@@ -4767,3 +4768,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fd1f019b1cbc2346879c28ed25fe7ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-764335516319037120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387523396965606375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 0
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

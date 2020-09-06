@@ -4,6 +4,7 @@ using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
 using MalusEBonus;
+using Photon.Pun;
 
 namespace Characters.PC {
     public class Rayaz : PlayableCharacter {
@@ -154,7 +155,7 @@ namespace Characters.PC {
         ///</summary>
         protected IEnumerator PFog() {
             //instanziare prefab poisonfog e poi distruggerlo
-            PoisonFog fog = Instantiate<PoisonFog>(prefabFog, targetEnemy.transform);
+            var fog = PhotonNetwork.Instantiate("Prefabs/Attacks/Fog", targetEnemy.transform.position, targetEnemy.transform.rotation).GetComponent<PoisonFog>();
             fog.Caster = this;
             fog.Damage = new Damage(fogDamage, EnumUtility.AttackType.Basilisk);
             yield return new WaitForSeconds(fogDuration);
