@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Characters.Interfaces;
 using Photon.Pun;
 using UnityEngine;
 namespace Consumables.Books.Abilities{
@@ -27,10 +28,13 @@ namespace Consumables.Books.Abilities{
 
 		public override void UseConsumable() {
 			var players = GameObject.FindGameObjectsWithTag("Player");
-			player = players.FirstOrDefault();
+			player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
 			var playerTransform = player.transform;
+
+			var cameraTransform = player.GetComponent<PlayableCharacter>().Camera.transform;
 			RaycastHit hit;
-			Physics.Raycast(playerTransform.position, Camera.main.transform.forward, out hit, 6);
+			Physics.Raycast(playerTransform.position, cameraTransform.forward, out hit, 6);
 			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/IceStalagmite", hit.point, playerTransform.rotation);
 			bookVFX.transform.parent = container;
 			RemoveCharge();     // Remove charge after the ability is used

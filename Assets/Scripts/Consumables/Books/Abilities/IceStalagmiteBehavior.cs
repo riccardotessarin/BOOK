@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Characters.Interfaces;
+using Photon.Pun;
 
 public class IceStalagmiteBehavior : MonoBehaviour {
 
@@ -26,7 +27,7 @@ public class IceStalagmiteBehavior : MonoBehaviour {
 	private IEnumerator WaitAndDestroy(float waitTime) {
 		while (true) {
 			yield return new WaitForSecondsRealtime(waitTime);
-			Destroy(gameObject);
+			PhotonNetwork.Destroy(gameObject);
 		}
 	}
 

@@ -31,19 +31,20 @@ namespace Consumables.Books.Abilities {
 		public override void UseConsumable() {
 			// Finding player
 			var players = GameObject.FindGameObjectsWithTag("Player");
-			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
-			player = players.FirstOrDefault();
+			player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
 			var playerTransform = player.transform;
 			PlayableCharacter currentPlayer = player.GetComponent<PlayableCharacter>();
 			
 			// Applying speed bonus
 			MalusManager malusManager = currentPlayer.malusManager;
 			var bonusName = "lightningSpeedBookBonus" + System.DateTime.Now.ToString("s");
-			var bonus = new Bonus(true, MalusManager.Stats.Speed, 0.7f, bonusName);
+			var bonus = new Bonus(true, MalusManager.Stats.Speed, 1.7f, bonusName);
 			malusManager.Add(bonus);
 
 			// Instance prefab
 			bookVFX = PhotonNetwork.Instantiate("Prefabs/Attacks/Electricity", playerTransform.position, playerTransform.rotation);
+			bookVFX.transform.parent = container;
 
 			// Wait and destroy
 			GameManager.Instance.StartCoroutine(WaitAndRemoveBookBonus(30.0F, bonus, malusManager));

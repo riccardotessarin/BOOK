@@ -7,6 +7,7 @@ using UnityEngine;
 using Characters.Interfaces;
 using Attacks;
 using System.Collections;
+using Photon.Pun;
 
 namespace Consumables.Books.Abilities {
 	class FirePillarBehavior : MonoBehaviour {
@@ -37,7 +38,7 @@ namespace Consumables.Books.Abilities {
 		private IEnumerator WaitAndDestroy(float waitTime) {
 			while (true) {
 				yield return new WaitForSecondsRealtime(waitTime);
-				Destroy(gameObject);
+				PhotonNetwork.Destroy(gameObject);
 			}
 		}
 

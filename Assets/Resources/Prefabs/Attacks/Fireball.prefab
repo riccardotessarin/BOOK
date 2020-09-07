@@ -4880,7 +4880,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50fbe820a3747654c94606a8f7482369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionVFX: {fileID: 0}
 --- !u!114 &-9034060120534323364
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,10 +7,7 @@ using Photon.Pun;
 
 public class FireballBehavior : MonoBehaviour {
 
-	[SerializeField] private GameObject explosionVFX;
-
 	private void Awake() {
-		explosionVFX = Resources.Load("") as GameObject;
 		StartCoroutine(WaitAndDestroy(30.0F));
 	}
 
@@ -34,7 +31,6 @@ public class FireballBehavior : MonoBehaviour {
 			Debug.Log(enemy + " hitted");
 			enemy.SendMessage("TakeDamage", fireballDamage, SendMessageOptions.DontRequireReceiver);
 		}
-		//Instantiate(explosionVFX, transform.parent);
 		PhotonNetwork.Destroy(gameObject);
 	}
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Characters.Interfaces;
+using Photon.Pun;
 
 namespace Consumables.Books.Abilities {
 	public class LightningSpeedBehavior : MonoBehaviour {
@@ -9,6 +10,9 @@ namespace Consumables.Books.Abilities {
 		private GameObject player;
 
 		private void Awake() {
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
 			StartCoroutine(WaitAndDestroy(30.0F));
 		}
 
@@ -21,10 +25,6 @@ namespace Consumables.Books.Abilities {
 
 		// Use this for initialization
 		void Start() {
-			// Finding player
-			var players = GameObject.FindGameObjectsWithTag("Player");
-			//player = players.FirstOrDefault(player => player.GetComponent<PhotonView>().IsMine);
-			player = players.FirstOrDefault();
 		}
 
 		// Update is called once per frame
