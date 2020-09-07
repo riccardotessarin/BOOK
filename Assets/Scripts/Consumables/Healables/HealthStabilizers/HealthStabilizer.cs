@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Characters.Interfaces;
+using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +15,14 @@ namespace Consumables.Healables.HealthStabilizers {
 
 		public string Description => "A pill made of condensed blood. You can use it to instantly restore 10% of your health.";
 
-		public int HealthPercentage => 10;
+		public float HealthPercentage => 10;
 
 		public void UseConsumable() {
-			// TODO: Trigger health restore function
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			var player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
+			var toHeal = player.GetComponent<Character>();
+			toHeal.SendMessage("RecoverHP", HealthPercentage, SendMessageOptions.DontRequireReceiver);
 			Destroy(this.gameObject);
 		}
 

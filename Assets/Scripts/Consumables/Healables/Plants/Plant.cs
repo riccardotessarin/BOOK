@@ -6,12 +6,14 @@ using Characters.Interfaces;
 using UnityEngine.Playables;
 using System;
 using Managers;
+using System.Linq;
+using Photon.Pun;
 
 namespace Consumables.Healables.Plants {
 	public abstract class Plant : IPlant {
 		public abstract string Name { get; }
 		public abstract string Description { get; }
-		public int HealthPercentage => 50;
+		public float HealthPercentage => 50;
 		public abstract EnumUtility.CharacterType Type { get; }
 
 		[SerializeField] protected Sprite plantIcon;
@@ -29,7 +31,13 @@ namespace Consumables.Healables.Plants {
 		public void UseConsumable() {
 			PlayableCharacter currentPlayer = GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
 			bool compatible = CheckCompatibility(currentPlayer);
-			//TODO: Trigger a restore health function
+
+			var players = GameObject.FindGameObjectsWithTag("Player");
+			var player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
+			if (Equals(player, null)) return;
+			var toHeal = player.GetComponent<Character>();
+			toHeal.SendMessage("RecoverHP", HealthPercentage, SendMessageOptions.DontRequireReceiver);
+
 			Inventory.Instance.TryRemoveConsumableFromInventory(this);
 			//Destroy(this);
 			if (!compatible) {
