@@ -182,6 +182,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
+  speedToTransmit: 0
 --- !u!82 &3811287988644366576
 AudioSource:
   m_ObjectHideFlags: 0
@@ -345,6 +346,9 @@ MonoBehaviour:
   staminaRecharged: 0
   isMine: 0
   anim: {fileID: 0}
+  animator: {fileID: 0}
+  controller: {fileID: 0}
+  isReanimating: 0
   lastTarget: {fileID: 0}
   specialAttackRadius: 0
   speedModifier: 0
@@ -413,6 +417,7 @@ GameObject:
   - component: {fileID: 3811287988642501424}
   - component: {fileID: 3811287988644269840}
   - component: {fileID: 3811287988631961942}
+  - component: {fileID: 3739198815846550632}
   m_Layer: 0
   m_Name: FirstPersonCharacter
   m_TagString: MainCamera
@@ -493,6 +498,19 @@ Behaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3811287988640469266}
   m_Enabled: 1
+--- !u!114 &3739198815846550632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3811287988640469266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 29ac70c6bc481c64fb76807cbc16dc82, type: 2}
 --- !u!1001 &6879184428091597120
 PrefabInstance:
   m_ObjectHideFlags: 0
