@@ -50,7 +50,7 @@ namespace Characters.Interfaces {
         protected virtual void Updater() { }
 
         void FixedUpdate() {
-            if (Poisoned) {
+            if (Poisoned && !isDeath) {
                 StartCoroutine(PoisonDamage());
             }
         }
@@ -104,12 +104,18 @@ namespace Characters.Interfaces {
             Collider[] hitcolliders = Physics.OverlapSphere(transform.position, detectionRadius, PCLAYERMASK);
             if (hitcolliders.Length != 0) {
                 if (!target) {
-                    target = hitcolliders[0].GetComponent<PlayableCharacter>();
-                    transform.LookAt(target.transform);
-                    return true;
+                    for(int i=0;i<hitcolliders.Length;i++){
+                        target = hitcolliders[i].GetComponent<PlayableCharacter>();
+                        if(!target.IsDeath){
+                            transform.LookAt(target.transform);
+                            return true;
+                        }
+                    }
+                    target=null;
+                    return false;
                 } else {
                     foreach (var collider in hitcolliders) {
-                        if (collider.gameObject == target.gameObject) {
+                        if (collider.gameObject == target.gameObject && !target.IsDeath) {
                             transform.LookAt(target.transform);
                             return true;
                         }
@@ -145,7 +151,7 @@ namespace Characters.Interfaces {
             isAttacking = true;
             
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
-            yield return new WaitForSeconds(speed / 60f);
+            yield return new WaitForSeconds(60f/currentSpeed);
             
             isAttacking = false;
         }

@@ -11,6 +11,7 @@ namespace Characters.PC {
         [SerializeField] protected float specialAttackRadius;
         [SerializeField] protected float speedModifier;
         [SerializeField] protected float maxlastTargetDistance;
+        [SerializeField] protected Animation anim;
 
 
         // Start is called before the first frame update
@@ -23,12 +24,13 @@ namespace Characters.PC {
             //Debug.Log("Awaker Ryuyuki");
             stamina = 50;
             specialAttackRadius = 10;
-            speed = 60;
+            speed = 120;
             baseAttackRange = 10;
-            speedModifier = 0.1f;
+            speedModifier = 0.5f;
             maxlastTargetDistance = 20;
             elementType = EnumUtility.AttackType.Niflheim;
             elementSprite = Resources.Load<Sprite>("Images/IcePowerSprite");
+            anim=transform.GetChild(1).GetComponent<Animation>();
         }
 
         protected override void Starter() {
@@ -36,6 +38,8 @@ namespace Characters.PC {
             //Debug.Log("Starter Ryuyuki");
             baseAttackDescription = $"ice scale(Recoil: {baseAttackRecoil * 100 / hp}%)";
             specialAttackDescription = $"the last scale,that hitted a target, explodes and freeze all characters in a certain area, slowing their speed (Recoil: {specialAttackRecoil * 100 / hp}%; Last target: {lastTarget != null})";
+            anim["punch"].layer=123;
+            anim["hpunch"].layer=123;
         }
 
         protected override void Updater() {
@@ -100,19 +104,22 @@ namespace Characters.PC {
         }
 
         protected override void TakeDamage(Damage damage) {
-            Debug.Log("taking damage1");
-            float dam = damage.AttackType == weakness ? damage.DamageRec * weaknessMultiplicator : damage.DamageRec;
-            if (dam < currentHp) {
-                Debug.Log("taking damage2");
-                currentHp -= dam;
-            } else {
-                currentHp = 0;
+            if(!isDeath){
+                Debug.Log("taking damage1");
+                anim.Play("hit");
+                float dam = damage.AttackType == weakness ? damage.DamageRec * weaknessMultiplicator : damage.DamageRec;
+                if (dam < currentHp) {
+                    Debug.Log("taking damage2");
+                    currentHp -= dam;
+                } else {
+                    currentHp = 0;
 
-                Death();
+                    Death();
+                }
+
+                if (isMine)
+                    uIManager.FillBar(currentHp / hp, "health");
             }
-
-            if (isMine)
-                uIManager.FillBar(currentHp / hp, "health");
         }
 
         public override IEnumerator BaseAttackDamage(Vector3 position, Vector3 direction) {
@@ -122,6 +129,7 @@ namespace Characters.PC {
             if (isMine)
                 uIManager.FillBar(currentHp / hp, "health");
             RaycastHit hit;
+            
             if (Physics.Raycast(position, direction, out hit, baseAttackRange)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted) {
@@ -129,8 +137,8 @@ namespace Characters.PC {
                     hitted.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
                 }
             }
-
-            yield return new WaitForSeconds(speed / 120f);
+            anim.Play("punch");
+            yield return new WaitForSeconds(60f/currentSpeed);
             isAttacking = false;
         }
 
@@ -138,6 +146,7 @@ namespace Characters.PC {
             isAttacking = true;
             currentHp -= specialAttackRecoil;
             uIManager.FillBar(currentHp / hp, "health");
+            anim.Play("hpunch");
             Collider[] hitcolliders = Physics.OverlapSphere(lastTarget.transform.position, specialAttackRadius);
             foreach (var collider in hitcolliders) {
                 Character character = collider.GetComponent<Character>();
@@ -146,7 +155,7 @@ namespace Characters.PC {
                 }
             }
 
-            yield return new WaitForSeconds(speed / 120f);
+            yield return new WaitForSeconds(120f/currentSpeed);
             isAttacking = false;
             yield return new WaitForSeconds(10);
             foreach (var collider in hitcolliders) {
@@ -182,6 +191,30 @@ namespace Characters.PC {
             }
 
             Debug.Log(ToString() + "weakness modified");
+        }
+
+        protected override void Death(){
+            base.Death();
+            //StartCoroutine(DeathAnimation());
+            anim.Play("death");
+        }
+
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            var value=currentSpeed/speed;
+            anim["idle"].speed=value;
+            anim["punch"].speed=value;
+            anim["run"].speed=value;
+            anim["walk"].speed=value;
+            anim["hpunch"].speed=value;
+        }
+
+        
+
+        protected override void Revive(){
+            base.Revive();
+            anim.Stop();
+            anim.Play("idle");
         }
     }
 }

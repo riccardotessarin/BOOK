@@ -32,10 +32,10 @@ namespace Characters.NPC {
             baseAttackRadius = 2.5f;
             detectionRadius = 10;
             basePower = 2;
-            speed = 30;
+            speed = 120;
             drop=HasDrop(0.6f);
             animator=GetComponent<Animator>();
-
+            animator.SetFloat("Speed",currentSpeed/speed);
         }
 
         protected override void Starter() {
@@ -104,7 +104,7 @@ namespace Characters.NPC {
             animator.SetBool("IsAttacking",isAttacking);
             
             
-            yield return new WaitForSeconds(speed/60f);
+            yield return new WaitForSeconds(60f/currentSpeed);
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
             
             isAttacking = false;
@@ -143,7 +143,11 @@ namespace Characters.NPC {
             animator.SetTrigger("IsDeath");
         }
         
-        
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            var value=currentSpeed/speed;
+            animator.SetFloat("Speed",value);
+        }
 
 
         // Update is called once per frame

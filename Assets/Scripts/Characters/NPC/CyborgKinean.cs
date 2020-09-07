@@ -32,13 +32,13 @@ namespace Characters.NPC {
             specialAttackRadius = 7;
             basePower = 2;
             specialPower = 3;
-            speed = 20;
+            speed = 100;
             maxAttackDistance = 10;
             specialAttackAttribute=RandomAttackType();
             typeDrop=specialAttackAttribute;
             SetDropLoot();
             animator=GetComponent<Animator>();
-            
+            animator.SetFloat("Speed",currentSpeed/speed);
         }
 
         protected override void Starter() {
@@ -66,7 +66,7 @@ namespace Characters.NPC {
             isAttacking = true;
             animator.SetBool("IsAttacking",isAttacking);
             
-            yield return new WaitForSeconds(speed / 60f);
+            yield return new WaitForSeconds(60f/currentSpeed);
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
             isAttacking = false;
             animator.SetBool("IsAttacking",isAttacking);
@@ -119,7 +119,7 @@ namespace Characters.NPC {
             isAttacking = true;
             RaycastHit hit;
             animator.SetBool("IsAttacking",isAttacking);
-            yield return new WaitForSeconds(speed / 60f);
+            yield return new WaitForSeconds(120f/currentSpeed);
             if (Physics.SphereCast(transform.position, transform.position.y / 2, transform.forward, out hit, maxAttackDistance, PCLAYERMASK)) {
                 Debug.Log("HIT");
                 hit.transform.SendMessage("TakeDamage", specialDamage, SendMessageOptions.DontRequireReceiver);
@@ -173,6 +173,12 @@ namespace Characters.NPC {
             }
             
             isAttacking=false;
+        }
+
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            var value=currentSpeed/speed;
+            animator.SetFloat("Speed",value);
         }
     }
 }

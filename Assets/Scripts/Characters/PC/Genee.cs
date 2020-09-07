@@ -9,6 +9,7 @@ namespace Characters.PC {
     public class Genee : PlayableCharacter {
         [SerializeField] bool invicible;
         [SerializeField] float damageReceivedMultiplicator = 1;
+        [SerializeField] private Animator animator;
 
 
         // Start is called before the first frame update
@@ -19,17 +20,19 @@ namespace Characters.PC {
             hp = 50;
             stamina = 50;
             weaknessSprite = Resources.Load<Sprite>("Images/ElectricPowerAttack");
-            speed = 60;
+            speed = 120;
             baseAttackRange = 10;
             invicible = false;
             elementType = EnumUtility.AttackType.Neptunian;
             elementSprite = Resources.Load<Sprite>("Images/WaterPowerSprite");
+            animator=transform.GetChild(1).GetComponent<Animator>();
         }
 
         protected override void Starter() {
             base.Starter();
             baseAttackDescription = $"water projectiles(Recoil: {baseAttackRecoil * 100 / hp}%)";
             specialAttackDescription = $"become invicible for a limited time(Recoil: {specialAttackRecoil * 100 / hp}%)";
+            animator.SetFloat("Speed",currentSpeed/speed);
         }
 
         /*protected override void BaseAttack(){
@@ -86,7 +89,8 @@ namespace Characters.PC {
         }
 
         protected override void TakeDamage(Damage damage){
-            if(!invicible){
+            if(!invicible && !isDeath){
+                animator.SetTrigger("hitted");
                 float dam= (damage.AttackType==weakness ? damage.DamageRec*weaknessMultiplicator:damage.DamageRec)*damageReceivedMultiplicator;
                 if (dam< currentHp){
                     currentHp-=dam;
@@ -120,9 +124,10 @@ namespace Characters.PC {
                     hitted.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
                 }
             }
-
-            yield return new WaitForSeconds(speed / 120f);
+            animator.SetBool("isAttacking",isAttacking);
+            yield return new WaitForSeconds(60f/currentSpeed);
             isAttacking = false;
+            animator.SetBool("isAttacking",isAttacking);
         }
 
         ///<summary>
@@ -135,9 +140,10 @@ namespace Characters.PC {
             if(isMine)
                 uIManager.FillBar(currentHp/hp,"health");
             invicible=true;
-            yield return new WaitForSeconds(speed/120f);
+            animator.SetBool("specialAttack",isAttacking);
+            yield return new WaitForSeconds(120f/currentSpeed);
             isAttacking=false;
-
+            animator.SetBool("specialAttack",isAttacking);
             yield return new WaitForSeconds(15);
             invicible = false;
         }
@@ -155,6 +161,25 @@ namespace Characters.PC {
             }
 
             Debug.Log(ToString() + "weakness modified");
+        }
+
+        protected override void Death(){
+            base.Death();
+            //StartCoroutine(DeathAnimation());
+            animator.SetTrigger("isDeath");
+        }
+
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            var value=currentSpeed/speed;
+            animator.SetFloat("Speed",value);
+        }
+
+        
+
+        protected override void Revive(){
+            base.Revive();
+            animator.SetTrigger("Revived");
         }
     }
 }

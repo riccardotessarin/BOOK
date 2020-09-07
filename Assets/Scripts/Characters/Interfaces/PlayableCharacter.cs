@@ -156,6 +156,7 @@ namespace Characters.Interfaces {
         [SerializeField] protected bool staminaRecharging = false;
         [SerializeField] protected float staminaRecharged;
         [SerializeField] protected bool isMine;
+        
         public bool IsMine=>isMine;
 
         // enum with the type of Attack equipped
@@ -230,6 +231,7 @@ namespace Characters.Interfaces {
             looted = false;
             weakness = EnumUtility.AttackType.Nothing;
             activateElementBonus = false;
+            
         }
 
         //method used in the Start
@@ -273,11 +275,12 @@ namespace Characters.Interfaces {
         }
 
         void Update() {
-            Updater();
+            if(!isDeath)
+                Updater();
         }
 
         void FixedUpdate() {
-            if (Poisoned)
+            if (Poisoned && !isDeath)
                 StartCoroutine(PoisonDamage());
         }
 
@@ -330,7 +333,7 @@ namespace Characters.Interfaces {
         protected IEnumerator UseBook() {
             isAttacking = true;
             equippedBook.UseConsumable();
-            yield return new WaitForSeconds(speed / 120f);
+            yield return new WaitForSeconds(120f/currentSpeed);
             isAttacking = false;
         }
 
@@ -395,8 +398,9 @@ namespace Characters.Interfaces {
         ///method that invoke the right fuction in base of the equippedAttack
         ///</summary>
         public void Attacker() {
-            if (currentStamina >= staminaConsumed)
+            if (currentStamina >= staminaConsumed){
                 attackDic[equippedAttack].DynamicInvoke();
+            }
         }
 
         //Coroutine to make base attack and check if hitted
@@ -553,7 +557,7 @@ namespace Characters.Interfaces {
             isAttacking = false;
         }
 
-        private void Revive() {
+        protected virtual void Revive() {
             Debug.Log($"{gameObject.ToString()} revived");
             currentHp = hp / 6;
             isDeath = false;
@@ -600,7 +604,7 @@ namespace Characters.Interfaces {
             currentStamina = currentStamina + staminaRecharged > stamina ? stamina : currentStamina + staminaRecharged;
             if(isMine)
                 uIManager.FillBar(currentStamina / stamina, "stamina");
-            yield return new WaitForSeconds(120f / speed);
+            yield return new WaitForSeconds(120f /currentSpeed);
             staminaRecharging = false;
         }
 

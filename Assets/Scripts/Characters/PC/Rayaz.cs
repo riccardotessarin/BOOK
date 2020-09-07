@@ -13,6 +13,7 @@ namespace Characters.PC {
         [SerializeField] float fogDamage;
         [SerializeField] float fogDuration;
         [SerializeField] PoisonFog prefabFog;
+        [SerializeField] protected Animation anim;
 
         // Start is called before the first frame update
         protected override void Awaker() {
@@ -23,19 +24,22 @@ namespace Characters.PC {
             hp = 50;
             stamina = 50;
             specialAttackRadius = 10;
-            speed = 60;
+            speed = 120;
             baseAttackRange = 10;
             targetEnemy = null;
             fogDamage = 2;
             fogDuration = 10;
             elementType = EnumUtility.AttackType.Basilisk;
             elementSprite = Resources.Load<Sprite>("Images/PoisonPowerSprite");
+            anim=transform.GetChild(1).GetComponent<Animation>();
         }
 
         protected override void Starter() {
             base.Starter();
             baseAttackDescription = $"poisonous bullet(Recoil: {baseAttackRecoil * 100 / hp}%)";
             prefabFog = Resources.Load<GameObject>("Prefabs/Attacks/Fog").GetComponent<PoisonFog>();
+            anim["punch"].layer=123;
+            anim["hpunch"].layer=123;
         }
 
         /*protected override void BaseAttack(){
@@ -100,17 +104,20 @@ namespace Characters.PC {
         }
 
         protected override void TakeDamage(Damage damage) {
-            float dam = damage.AttackType == weakness ? damage.DamageRec * weaknessMultiplicator : damage.DamageRec;
-            if (dam < currentHp) {
-                currentHp -= dam;
-            } else {
-                currentHp = 0;
+            if(!isDeath){
+                anim.Play("hit");
+                float dam = damage.AttackType == weakness ? damage.DamageRec * weaknessMultiplicator : damage.DamageRec;
+                if (dam < currentHp) {
+                    currentHp -= dam;
+                } else {
+                    currentHp = 0;
 
-                Death();
+                    Death();
+                }
+
+                if (isMine)
+                    uIManager.FillBar(currentHp / hp, "health");
             }
-
-            if (isMine)
-                uIManager.FillBar(currentHp / hp, "health");
         }
 
         public override IEnumerator BaseAttackDamage(Vector3 position, Vector3 direction) {
@@ -120,14 +127,15 @@ namespace Characters.PC {
             if (isMine)
                 uIManager.FillBar(currentHp / hp, "health");
             RaycastHit hit;
+            
             if (Physics.Raycast(position, direction, out hit, baseAttackRange)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted) {
                     hitted.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
                 }
             }
-
-            yield return new WaitForSeconds(speed / 120f);
+            anim.Play("punch");
+            yield return new WaitForSeconds(60f/currentSpeed);
             isAttacking = false;
         }
 
@@ -137,6 +145,7 @@ namespace Characters.PC {
             currentHp -= specialAttackRecoil;
             uIManager.FillBar(currentHp / hp, "health");
             RaycastHit hit;
+            
             if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, baseAttackRange)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted) {
@@ -144,8 +153,8 @@ namespace Characters.PC {
                     hitted.Poisoned = true;
                 }
             }
-
-            yield return new WaitForSeconds(speed / 120f);
+            anim.Play("hpunch");
+            yield return new WaitForSeconds(120f/currentSpeed);
             isAttacking = false;
         }
 
@@ -170,6 +179,31 @@ namespace Characters.PC {
             }
 
             Debug.Log(ToString() + "weakness modified");
+        }
+
+
+        protected override void Death(){
+            base.Death();
+            //StartCoroutine(DeathAnimation());
+            anim.Play("death");
+        }
+
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            var value=currentSpeed/speed;
+            anim["idle"].speed=value;
+            anim["punch"].speed=value;
+            anim["run"].speed=value;
+            anim["walk"].speed=value;
+            anim["hpunch"].speed=value;
+        }
+
+        
+
+        protected override void Revive(){
+            base.Revive();
+            anim.Stop();
+            anim.Play("idle");
         }
     }
 }
