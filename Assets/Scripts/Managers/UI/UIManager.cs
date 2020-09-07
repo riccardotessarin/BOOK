@@ -8,6 +8,7 @@ using Consumables.Healables.Plants.Drops;
 using Consumables.Books.Drops;
 using System.Linq;
 using Photon.Pun;
+using Photon;
 
 namespace Managers.UI{
     public class UIManager : MonoBehaviour
@@ -44,6 +45,14 @@ namespace Managers.UI{
         private Dictionary<string,Image> statusImageDict=new Dictionary<string, Image>();
 
         [SerializeField] private Transform canvas;
+        [SerializeField] private Text chat;
+        [SerializeField] private string textChat;
+        [SerializeField] private Image viewfinder;
+        [SerializeField] private Text messageToWrite;
+        [SerializeField] private bool chatMode;
+        public bool ChatMode=>chatMode;
+        private bool firstWords;
+    
         
         
         
@@ -103,13 +112,17 @@ namespace Managers.UI{
             inGameObjectMenu=canvas.GetChild(2).GetComponent<Image>();
             interactionText=canvas.GetChild(4).GetComponent<Text>();
             statusArea=canvas.GetChild(5).GetComponent<Image>();
+            viewfinder=canvas.GetChild(6).GetComponent<Image>();
+            chat=canvas.GetChild(7).GetComponent<Text>();
+            messageToWrite=canvas.GetChild(8).GetComponent<Text>();
             centerObject=inGameObjectMenu.transform.GetChild(0).GetComponent<Image>();
             leftObject=inGameObjectMenu.transform.GetChild(1).GetComponent<Image>();
             rightObject=inGameObjectMenu.transform.GetChild(2).GetComponent<Image>();
             descriptionText=inGameObjectMenu.transform.GetChild(3).GetChild(0).GetComponent<Text>();
             chargeTextGame=equippedPrimaryObjImage.transform.GetChild(0).GetComponent<Text>();
             chargeTextMenu=centerObject.transform.GetChild(0).GetComponent<Text>();
-            
+            chatMode=false;
+            firstWords=true;
             equippedSecondaryObjImage.sprite=voidSprite;
             for(int i=0;i<3;i++){
                 plantArray[i]=voidSprite;
@@ -167,7 +180,33 @@ namespace Managers.UI{
             }
             interactionText.text=interactionString;
             SetStatusBar();
-
+            if(chatMode){
+                foreach (char c in Input.inputString)
+                {
+                    if (c == '\b') // has backspace/delete been pressed?
+                    {
+                        if (messageToWrite.text.Length != 0)
+                        {
+                            messageToWrite.text = messageToWrite.text.Substring(0, messageToWrite.text.Length - 1);
+                        }
+                    }
+                    else if ((c == '\n') || (c == '\r')) // enter/return
+                    {
+                        SendMessageToChat();
+                        ChangeChatMode();
+                        firstWords=true;
+                        print("User entered their name: " + messageToWrite.text);
+                        messageToWrite.text="";
+                    }
+                    else if((c=='t' || c=='T') && firstWords){
+                        firstWords=false;
+                    }
+                    else
+                    {
+                        messageToWrite.text += c;
+                    }
+                }
+            }
 
         }
 
@@ -354,6 +393,21 @@ namespace Managers.UI{
                 statusImageDict[key].rectTransform.localPosition=new Vector3(190-49*i,0,0);
                 i++;
             }
+        }
+
+        public void SendMessageToChat(){
+            if(player.IsMine){
+                player.GetComponent<PhotonView>().RPC("NewMessage",RpcTarget.All,messageToWrite.text);
+            }
+        }
+        [PunRPC]
+        private void NewMessage(string newMessage){
+            textChat = textChat + newMessage;
+            chat.text = textChat;
+        }
+
+        public void ChangeChatMode(){
+            chatMode= !chatMode;
         }
     }
 }
