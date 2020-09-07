@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using Characters.Interfaces;
 
 namespace UnityStandardAssets.Characters.FirstPerson {
     [RequireComponent(typeof(CharacterController))]
@@ -41,6 +42,13 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         
         protected CharacterController m_CharacterController;
 
+        protected PlayableCharacter playableCharacter;//zeph
+        protected EnumUtility.CharacterType characterType;//zeph
+        public float speedToTransmit;//zeph
+        public bool isJumping{get=>m_Jump;} //zeph
+        public bool IsWalking=>m_IsWalking; //zeph
+        public float RunSpeed=>m_RunSpeed;//
+
         // Use this for initialization
         protected virtual void Start() {
             m_CharacterController = GetComponent<CharacterController>();
@@ -53,6 +61,8 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
             m_MouseLook.Init(transform, m_Camera.transform);
+            playableCharacter=GetComponent<PlayableCharacter>();
+            characterType=playableCharacter.RaceType;
         }
 
 
@@ -89,6 +99,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         protected virtual void FixedUpdate() {
             float speed;
             GetInput(out speed);
+            speedToTransmit=speed; //zeph
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward * m_Input.y + transform.right * m_Input.x;
 

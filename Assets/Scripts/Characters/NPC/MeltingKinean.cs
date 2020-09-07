@@ -5,12 +5,13 @@ using Characters.Interfaces;
 using Consumables.Pages;
 using Consumables.Pages.Abilities;
 using Consumables;
+using User;
 
 
 
 namespace Characters.NPC {
     public class MeltingKinean : NonPlayableCharacters {
-        private EnumUtility.PageType pageDrop;
+        
         [SerializeField]private bool dropPage; //true, drop is a page // false drop is a health stabilizer
         public bool DropPage{get=>dropPage;}
         [SerializeField]private bool drop; //true, drop something //false drop nothing
@@ -35,17 +36,17 @@ namespace Characters.NPC {
             speed = 120;
             drop=HasDrop(0.6f);
             animator=GetComponent<Animator>();
-            animator.SetFloat("Speed",currentSpeed/speed);
+            
         }
 
         protected override void Starter() {
             base.Starter();
             if(drop){
                 dropPage=HasDrop(0.8f);
-                SetDropLoot();
+
             }
             SetIdleStance();
-            
+            animator.SetFloat("Speed",currentSpeed/speed);
         }
 
         protected override void Updater() {
@@ -73,17 +74,10 @@ namespace Characters.NPC {
             float val=Random.Range(0.1f,1.0f);
             return (val<=diffVal);
         }
-
-        protected override void SetDropLoot(){
-            if(dropPage){
-                pageDrop= (EnumUtility.PageType)Random.Range(0,3);
-            }
-            else{
-                //health stabilizer
-            }
-        }
+        protected override void SetDropLoot(){}
+        
         public Page GetDropPage(){
-            Page page= new FireballPage();
+            Page page= Inventory.pageList[Random.Range(0,Inventory.pageList.Count)];
             return page;
         }
 
@@ -96,7 +90,7 @@ namespace Characters.NPC {
             float distance=this.transform.position.x;
             animator.SetFloat("DistanceHorizontal",distance);
         }
-
+        
         
 
         protected override IEnumerator BaseAttackDamage() {
@@ -141,6 +135,7 @@ namespace Characters.NPC {
         protected override void Death(){
             base.Death();
             animator.SetTrigger("IsDeath");
+            
         }
         
         protected override void ModifySpeed(float modifier){

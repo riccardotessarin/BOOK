@@ -13,7 +13,7 @@ namespace Characters.PC {
         [SerializeField] float fogDamage;
         [SerializeField] float fogDuration;
         [SerializeField] PoisonFog prefabFog;
-        [SerializeField] protected Animation anim;
+        
 
         // Start is called before the first frame update
         protected override void Awaker() {
@@ -50,6 +50,22 @@ namespace Characters.PC {
             if (targetEnemy && targetEnemy.IsDeath) {
                 StartCoroutine(PFog());
                 targetEnemy = null;
+            }
+        }
+
+        protected override void FixedUpdater()
+        {
+            base.FixedUpdater();
+            while(controller.IsWalking){
+                while(controller.speedToTransmit==controller.RunSpeed){
+                    UseStamina(2);
+                    anim.Play("run");
+                }
+                anim.Play("walk");
+            }
+            if(controller.isJumping){
+                anim.Stop();
+                anim.Play("jump");
             }
         }
 

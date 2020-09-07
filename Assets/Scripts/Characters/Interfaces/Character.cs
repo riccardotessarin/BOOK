@@ -101,7 +101,7 @@ namespace Characters.Interfaces {
         protected virtual IEnumerator PoisonDamage() {
             Poisoned = false;
 
-            gameObject.GetComponent<Renderer>().material.color = Color.magenta;
+            
             TakeDamage(new Damage(3, EnumUtility.AttackType.Basilisk));
 
             yield return new WaitForSecondsRealtime(3);

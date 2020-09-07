@@ -65,6 +65,8 @@ namespace Characters.Interfaces {
         protected override void Death() {
             IsDeath = true;
             StartCoroutine(DeathVanishing());
+            GetComponent<CapsuleCollider>().direction=2;
+            GetComponent<CapsuleCollider>().radius=1.5f;
         }
 
         protected IEnumerator DeathVanishing(){

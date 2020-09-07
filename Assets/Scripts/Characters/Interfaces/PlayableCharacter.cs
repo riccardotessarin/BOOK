@@ -156,6 +156,12 @@ namespace Characters.Interfaces {
         [SerializeField] protected bool staminaRecharging = false;
         [SerializeField] protected float staminaRecharged;
         [SerializeField] protected bool isMine;
+        [SerializeField] protected Animation anim;
+        [SerializeField] protected Animator animator;
+
+        [SerializeField] protected FirstPersonController controller;
+        [SerializeField] protected bool isReanimating;
+        public bool IsReanimating=>isReanimating;
         
         public bool IsMine=>isMine;
 
@@ -227,10 +233,11 @@ namespace Characters.Interfaces {
             inventory.name = "Inventory";
             UpdateObjectsLists();
 
-            interactionDistance = 3;
+            interactionDistance = 5;
             looted = false;
             weakness = EnumUtility.AttackType.Nothing;
             activateElementBonus = false;
+            isReanimating=false;
             
         }
 
@@ -246,7 +253,7 @@ namespace Characters.Interfaces {
                 uIController = new UIController();
                 uIController.player = this;
             if(isMine){
-                uIController.uIManager = UIManager.Instance;
+                uIController.uIManager = uIManager;
 
                 uIManager.FillBar(1, "health");
                 
@@ -262,6 +269,7 @@ namespace Characters.Interfaces {
             if (listPlants.Count() != 0) {
                 equippedPlant = listPlants[0];
             }
+            controller=GetComponent<FirstPersonController>();
         }
 
         //method used in Update
@@ -280,13 +288,17 @@ namespace Characters.Interfaces {
         }
 
         void FixedUpdate() {
+            FixedUpdater();
+        }
+
+        protected virtual void FixedUpdater(){
             if (Poisoned && !isDeath)
                 StartCoroutine(PoisonDamage());
         }
 
         protected void InteractionTextRayCast() {
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+            if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, interactionDistance)) {
                 uIController.InteractionTextControl(hit, traitor);
             } else {
                 uIController.ResetInteractionText();
@@ -296,6 +308,7 @@ namespace Characters.Interfaces {
         protected override void Death() {
             IsDeath = true;
             Debug.Log("DEATH");
+            GetComponent<CapsuleCollider>().direction=2;
         }
 
         protected override void BaseAttack() {
@@ -453,7 +466,7 @@ namespace Characters.Interfaces {
         ///</summary>
         public void LootAction() {
             RaycastHit hit;
-            if (!isAttacking && Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+            if (!isAttacking && Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, interactionDistance)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted && hitted.IsDeath && !hitted.Looted) {
                     if (hitted is PlayableCharacter && traitor) {
@@ -525,7 +538,7 @@ namespace Characters.Interfaces {
         ///</summary>
         public void InteractAction() {
             RaycastHit hit;
-            if (!isAttacking && Physics.Raycast(transform.position, camera.transform.forward, out hit, interactionDistance)) {
+            if (!isAttacking && Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, interactionDistance)) {
                 if (hit.collider.GetComponent<PlantDrop>()) {
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
                 } else if (hit.collider.GetComponent<PlayableCharacter>()) {
@@ -550,16 +563,18 @@ namespace Characters.Interfaces {
 
         private IEnumerator ReviveTeamMember(PlayableCharacter revived) {
             isAttacking = true;
-
+            isReanimating=true;
             yield return new WaitForSecondsRealtime(3f);
             revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
 
             isAttacking = false;
+            isReanimating=false;
         }
 
         protected virtual void Revive() {
             Debug.Log($"{gameObject.ToString()} revived");
             currentHp = hp / 6;
+            GetComponent<CapsuleCollider>().direction=1;
             isDeath = false;
         }
 

@@ -9,7 +9,7 @@ namespace Characters.PC {
     public class Genee : PlayableCharacter {
         [SerializeField] bool invicible;
         [SerializeField] float damageReceivedMultiplicator = 1;
-        [SerializeField] private Animator animator;
+        
 
 
         // Start is called before the first frame update
@@ -34,7 +34,26 @@ namespace Characters.PC {
             specialAttackDescription = $"become invicible for a limited time(Recoil: {specialAttackRecoil * 100 / hp}%)";
             animator.SetFloat("Speed",currentSpeed/speed);
         }
-
+        protected override void FixedUpdater()
+        {
+            base.FixedUpdater();
+            animator.SetBool("IsWalking",controller.IsWalking);
+            if(controller.IsWalking){
+                if(controller.speedToTransmit==controller.RunSpeed){
+                    UseStamina(2);
+                    animator.SetBool("isRunning",true);
+                }
+                else{
+                    animator.SetBool("isRunning",false);
+                }
+            }
+            if(controller.isJumping){
+                animator.SetBool("isJumping",true);
+            }
+            else{
+                animator.SetBool("isJumping",false);
+            }
+        }
         /*protected override void BaseAttack(){
             
         }*/

@@ -249,8 +249,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 6465561850127465491}
   m_AABB:
-    m_Center: {x: -0.000000029802322, y: 1.9173319, z: -0.15211622}
-    m_Extent: {x: 0.27947015, y: 0.32575846, z: 0.23883308}
+    m_Center: {x: -0.000000029802322, y: 2.8759978, z: -0.22817436}
+    m_Extent: {x: 0.41920522, y: 0.4886377, z: 0.35824963}
   m_DirtyAABB: 0
 --- !u!183 &5645754232717031436
 Cloth:

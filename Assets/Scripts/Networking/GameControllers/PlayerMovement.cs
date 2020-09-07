@@ -30,8 +30,8 @@ namespace Networking.GameControllers {
             if (!_photonView.IsMine) {
                 return;
             }
-            
-            base.FixedUpdate();
+            if(!playableCharacter.IsDeath || !playableCharacter.IsReanimating)
+                base.FixedUpdate();
         }
 
         protected override void OnControllerColliderHit(ControllerColliderHit hit) {

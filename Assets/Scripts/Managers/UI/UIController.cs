@@ -323,6 +323,7 @@ namespace Managers.UI{
         ///traitor is a bool that represent if player is traitor
         ///</summary>
         public  void InteractionTextControl(RaycastHit hit,bool traitor){
+            Debug.Log("UIControlInteractionText");
             if(hit.collider.GetComponent<Character>()){
                 Character hitted=hit.collider.GetComponent<Character>();
                 if(hitted.IsDeath && hitted.Looted==false){
@@ -337,10 +338,11 @@ namespace Managers.UI{
                         }
                     }
                     else if(hitted is NonPlayableCharacters){
-                        //Debug.Log("loot");
+                        Debug.Log("loot");
                         if(hitted.GetComponent<MeltingKinean>() && !hitted.GetComponent<MeltingKinean>().Drop)
                             return;
                         uIManager.ChangeInteractionText("Press 'X' to loot");
+                        Debug.Log("loot2");
                     }
                 }
             }

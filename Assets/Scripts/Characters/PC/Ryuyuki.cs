@@ -11,7 +11,7 @@ namespace Characters.PC {
         [SerializeField] protected float specialAttackRadius;
         [SerializeField] protected float speedModifier;
         [SerializeField] protected float maxlastTargetDistance;
-        [SerializeField] protected Animation anim;
+        
 
 
         // Start is called before the first frame update
@@ -52,6 +52,21 @@ namespace Characters.PC {
                 DistanceCheckLastTarget();
         }
 
+        protected override void FixedUpdater()
+        {
+            base.FixedUpdater();
+            while(controller.IsWalking){
+                while(controller.speedToTransmit==controller.RunSpeed){
+                    UseStamina(2);
+                    anim.Play("run");
+                }
+                anim.Play("walk");
+            }
+            if(controller.isJumping){
+                anim.Stop();
+                anim.Play("jump");
+            }
+        }
         protected override void SpecialAttack() {
             if (!isAttacking && lastTarget) {
                 if (currentHp <= specialAttackRecoil) {

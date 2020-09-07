@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.UIElements;
 using Consumables.Books.Drops;
+using Consumables.Pages.Abilities;
 
 namespace User {
 	public class Inventory : MonoBehaviour {
@@ -29,7 +30,10 @@ namespace User {
 				{ EnumUtility.AttackType.Raijin, new[]{typeof(LightningSpeedDrop), typeof(ElectricalDischargeDrop)} }
 			};
 
-		
+		public static List<Page> pageList = 
+			new List<Page>{new BlindingCloudPage(), new BodyFreezePage(), new ElectricalDischargePage(),
+			new FireballPage(),new FirePillarPage(), new IceStalagmitePage(), new LightningSpeedPage(),
+			new SurgingTidePage(), new VenomousNeedlePage(), new WaterShieldPage()};
 
 
 		public IList<Book> Books{get=>_books;}

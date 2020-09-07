@@ -25,7 +25,7 @@ namespace Characters.NPC {
 
         protected override void Awaker() {
             base.Awaker();
-            hp = 50;
+            hp = 30;
             secondType = "cyborg";
             baseAttackRadius = 2.5f;
             detectionRadius = 10;
@@ -38,12 +38,13 @@ namespace Characters.NPC {
             typeDrop=specialAttackAttribute;
             SetDropLoot();
             animator=GetComponent<Animator>();
-            animator.SetFloat("Speed",currentSpeed/speed);
+            
         }
 
         protected override void Starter() {
             base.Starter();
             specialDamage = new Damage(specialPower, specialAttackAttribute);
+            animator.SetFloat("Speed",currentSpeed/speed);
         }
 
         protected override void Updater() {
@@ -75,6 +76,7 @@ namespace Characters.NPC {
         protected override void Death() {
             base.Death();
             animator.SetTrigger("IsDeath");
+            
         }
 
 
