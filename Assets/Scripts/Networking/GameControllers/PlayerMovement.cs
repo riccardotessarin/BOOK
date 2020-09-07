@@ -22,7 +22,6 @@ namespace Networking.GameControllers {
             if (!_photonView.IsMine) {
                 return;
             }
-
             base.Update();
         }
 
@@ -30,7 +29,7 @@ namespace Networking.GameControllers {
             if (!_photonView.IsMine) {
                 return;
             }
-            if(!playableCharacter.IsDeath || !playableCharacter.IsReanimating)
+            if(!playableCharacter.IsDeath && !playableCharacter.IsReanimating && !playableCharacter.UIManager.ChatMode)
                 base.FixedUpdate();
         }
 

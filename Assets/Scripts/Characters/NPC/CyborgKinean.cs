@@ -75,7 +75,7 @@ namespace Characters.NPC {
 
         protected override void Death() {
             base.Death();
-            animator.SetTrigger("IsDeath");
+            animator.SetTrigger("IsDead");
             
         }
 
