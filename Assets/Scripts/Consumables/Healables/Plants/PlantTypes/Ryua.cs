@@ -14,7 +14,7 @@ namespace Consumables.Healables.Plants.PlantTypes {
 
 		protected override void Awaker() {
 			base.Awaker();
-			plantIcon = (Sprite)Resources.LoadAll("Images/pngwing.com", typeof(Sprite))[2];
+			plantIcon = (Sprite)Resources.Load("Images/Ryua", typeof(Sprite));
 		}
 
 		// Use this for initialization

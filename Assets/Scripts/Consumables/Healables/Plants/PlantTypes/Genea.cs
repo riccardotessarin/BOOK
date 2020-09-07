@@ -13,7 +13,7 @@ namespace Consumables.Healables.Plants.PlantTypes {
 
 		protected override void Awaker() {
 			base.Awaker();
-			plantIcon = (Sprite)Resources.LoadAll("Images/pngwing.com", typeof(Sprite))[0];
+			plantIcon = (Sprite)Resources.Load("Images/Genea", typeof(Sprite));
 		}
 
 		// Use this for initialization
