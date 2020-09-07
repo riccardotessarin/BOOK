@@ -37,7 +37,7 @@ namespace Characters.PC {
         protected override void FixedUpdater()
         {
             base.FixedUpdater();
-            animator.SetBool("IsWalking",controller.IsWalking);
+            /*animator.SetBool("IsWalking",controller.IsWalking);
             if(controller.IsWalking){
                 if(controller.speedToTransmit==controller.RunSpeed){
                     UseStamina(2);
@@ -52,7 +52,7 @@ namespace Characters.PC {
             }
             else{
                 animator.SetBool("isJumping",false);
-            }
+            }*/
         }
         /*protected override void BaseAttack(){
             

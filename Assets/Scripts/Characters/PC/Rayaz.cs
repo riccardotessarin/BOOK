@@ -55,17 +55,23 @@ namespace Characters.PC {
 
         protected override void FixedUpdater()
         {
-            base.FixedUpdater();
-            while(controller.IsWalking){
-                while(controller.speedToTransmit==controller.RunSpeed){
-                    UseStamina(2);
-                    anim.Play("run");
+            if(!isDeath){
+                base.FixedUpdater();
+                if(controller.IsWalking){
+                    if(controller.speedToTransmit==controller.RunSpeed){
+                        UseStamina(2);
+                        anim.Play("run");
+                    }
+                    if(controller.speedToTransmit==controller.WalkingSpeed)
+                        anim.Play("walk");
                 }
-                anim.Play("walk");
-            }
-            if(controller.isJumping){
-                anim.Stop();
-                anim.Play("jump");
+                
+                else if(controller.isJumping){
+                    anim.Play("jump");
+                }
+                else if(!isAttacking){
+                    anim.Stop();
+                }
             }
         }
 

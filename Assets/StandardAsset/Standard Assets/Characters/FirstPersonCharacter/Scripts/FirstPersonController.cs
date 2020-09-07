@@ -47,7 +47,8 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         public float speedToTransmit;//zeph
         public bool isJumping{get=>m_Jump;} //zeph
         public bool IsWalking=>m_IsWalking; //zeph
-        public float RunSpeed=>m_RunSpeed;//
+        public float RunSpeed=>m_RunSpeed;//zeph
+        public float WalkingSpeed=>m_WalkSpeed;//zeph
 
         // Use this for initialization
         protected virtual void Start() {

@@ -54,17 +54,27 @@ namespace Characters.PC {
 
         protected override void FixedUpdater()
         {
-            base.FixedUpdater();
-            while(controller.IsWalking){
-                while(controller.speedToTransmit==controller.RunSpeed){
-                    UseStamina(2);
-                    anim.Play("run");
+            if(!isDeath){
+                base.FixedUpdater();
+                if(controller.IsWalking){
+                    Debug.Log("moving");
+                    if(controller.speedToTransmit==controller.RunSpeed){
+                        Debug.Log("running");
+                        UseStamina(2);
+                        anim.Play("run");
+                    }
+                    if(controller.speedToTransmit==controller.WalkingSpeed){
+                        Debug.Log("running");
+                        anim.Play("walk");
+                    }
                 }
-                anim.Play("walk");
-            }
-            if(controller.isJumping){
-                anim.Stop();
-                anim.Play("jump");
+                
+                else if(controller.isJumping){
+                    anim.Play("jump");
+                }
+                else if(!isAttacking){
+                    anim.Play("idle");
+                }
             }
         }
         protected override void SpecialAttack() {
