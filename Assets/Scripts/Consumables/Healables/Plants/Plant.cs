@@ -29,17 +29,16 @@ namespace Consumables.Healables.Plants {
 		protected virtual void Awaker() {	}
 
 		public void UseConsumable() {
-			PlayableCharacter currentPlayer = GameObject.FindWithTag("Player").GetComponent<PlayableCharacter>();
-			bool compatible = CheckCompatibility(currentPlayer);
-
 			var players = GameObject.FindGameObjectsWithTag("Player");
 			var player = players.FirstOrDefault(p => p.GetComponent<PhotonView>().IsMine);
 			if (Equals(player, null)) return;
-			var toHeal = player.GetComponent<Character>();
-			toHeal.SendMessage("RecoverHP", HealthPercentage, SendMessageOptions.DontRequireReceiver);
+			Character toHeal = player.GetComponent<Character>();
+			PlayableCharacter currentPlayer = player.GetComponent<PlayableCharacter>();
+			bool compatible = CheckCompatibility(currentPlayer);
+
+			GameManager.Instance.StartCoroutine(HealOverTime(1.0f, toHeal));
 
 			Inventory.Instance.TryRemoveConsumableFromInventory(this);
-			//Destroy(this);
 			if (!compatible) {
 				TriggerMalus(currentPlayer);
 			}
@@ -82,6 +81,16 @@ namespace Consumables.Healables.Plants {
 					break;
 			}
 
+		}
+
+		private IEnumerator HealOverTime(float waitTime, Character toHeal) {
+			float healed = 0.0f;
+			float healDot = 2.0f;
+			while(healed < HealthPercentage) {
+				yield return new WaitForSecondsRealtime(waitTime);
+				toHeal.SendMessage("RecoverHP", healDot, SendMessageOptions.DontRequireReceiver);
+				healed += healDot;
+			}
 		}
 
 		private IEnumerator WaitAndRemoveMalus(float waitTime, Bonus malus, MalusManager malusManager) {
