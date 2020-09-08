@@ -72,7 +72,7 @@ namespace User {
 			if (TryAddConsumableToInventory(book)) {
 				Debug.Log("Fireball added to inventory!");
 			}
-			if (TryAddConsumableToInventory(new IceStalagmite(booksContainer))) {
+			if (TryAddConsumableToInventory(new WaterShield(booksContainer))) {
 				Debug.Log("Water Shield added to inventory!");
 			}
 			if (TryAddConsumableToInventory(new FirePillar(booksContainer))) {

@@ -5,6 +5,8 @@ using Photon.Pun;
 
 public class IceStalagmiteBehavior : MonoBehaviour {
 
+	private bool active = false;
+
 	// Use this for initialization
 	void Start() {
 
@@ -12,7 +14,8 @@ public class IceStalagmiteBehavior : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other) {
 		Character enemy = other.gameObject.GetComponent<Character>();
-		if (enemy != null) {
+		if (enemy != null && !active) {
+			active = true;
 			Animation animation = gameObject.GetComponent<Animation>();
 			if (!animation.isPlaying) {
 				animation.Play();
