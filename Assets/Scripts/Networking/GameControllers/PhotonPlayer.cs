@@ -1,5 +1,6 @@
 using System.IO;
 using Characters.Interfaces;
+using Managers.UI;
 using Photon.Pun;
 using UnityEngine;
 
@@ -60,6 +61,10 @@ namespace Networking.GameControllers {
             MyPlayerAvatar.IsDeath = false;
         }
 
+        [PunRPC]
+        private void RPC_NewMessage(string newMessage) {
+            UIManager.Instance.WriteMessageToChat(newMessage);
+        }
 #endregion
 
         private GameObject InstantiatePlayer(string instanceSelectedClass) {
