@@ -139,7 +139,11 @@ namespace Characters.Interfaces {
         }
 
         protected override void TakeDamage(Damage damage) {
+<<<<<<< HEAD
             if (!IsDeath) {
+=======
+            if(!IsDeath){
+>>>>>>> a57abb0a961b3fb80eeed27d8c0f21707cdee530
                 _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage.DamageRec, damage.AttackType);
             }
         }
