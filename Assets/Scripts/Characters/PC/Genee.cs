@@ -38,7 +38,7 @@ namespace Characters.PC {
         {
             base.FixedUpdater();
             animator.SetBool("IsWalking",!controller.IsWalking);
-            if(controller.IsWalking){
+            if(!controller.IsWalking){
                 if(controller.speedToTransmit==controller.RunSpeed){
                     UseStamina(0.5f);
                     animator.SetBool("isRunning",true);
