@@ -48,7 +48,8 @@ namespace Networking.GameControllers {
 #endregion
 
 #region RPC
-
+        
+        [PunRPC]
         private void RPC_SetOtherPlayerMovementInfo(float speedToTransmit, bool isJumping, bool isWalking, float runSpeed, float walkingSpeed, Vector2 moveDir) {
             this.speedToTransmit = speedToTransmit;
             IsJumping = isJumping;
