@@ -17,10 +17,10 @@ namespace Characters.PC {
             base.Awaker();
             type = "genee";
             raceType = EnumUtility.CharacterType.Genee;
-            hp = 50;
+            hp = 80;
             stamina = 50;
             weaknessSprite = Resources.Load<Sprite>("Images/ElectricPowerAttack");
-            speed = 120;
+            speed = 100;
             baseAttackRange = 10;
             invicible = false;
             elementType = EnumUtility.AttackType.Neptunian;

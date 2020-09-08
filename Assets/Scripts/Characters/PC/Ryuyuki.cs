@@ -22,7 +22,7 @@ namespace Characters.PC {
             weaknessSprite = Resources.Load<Sprite>("Images/FirePowerSprite");
             hp = 50;
             //Debug.Log("Awaker Ryuyuki");
-            stamina = 50;
+            stamina = 60;
             specialAttackRadius = 10;
             speed = 120;
             baseAttackRange = 10;
