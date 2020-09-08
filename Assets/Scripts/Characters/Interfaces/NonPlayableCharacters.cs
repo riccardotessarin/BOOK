@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Attacks;
+using Photon.Pun;
 
 namespace Characters.Interfaces {
     public abstract class NonPlayableCharacters : Character {
@@ -16,18 +17,20 @@ namespace Characters.Interfaces {
 
 
         protected Damage baseDamage;
-        [SerializeField] protected EnumUtility.AttackType typeDrop; 
-        
+        [SerializeField] protected EnumUtility.AttackType typeDrop;
+
+        private PhotonView _photonView;
 
 
         protected virtual void Awaker() {
+            _photonView = GetComponent<PhotonView>();
+            
             gameObject.layer = 9; //NPC layer
             type = "kinean";
             IsDeath = false;
             target = null;
             isAttacking = false;
             looted=false;
-            
         }
 
         protected virtual void Starter() {
@@ -134,7 +137,7 @@ namespace Characters.Interfaces {
 
         protected override void TakeDamage(Damage damage) {
             if(!IsDeath){
-                StartCoroutine(TakingDamage(damage));
+                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage);
             }
         }
 
@@ -167,5 +170,13 @@ namespace Characters.Interfaces {
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
         
+#region RPC
+
+        [PunRPC]
+        private void RPC_NPCTakeDamage(Damage damage) {
+            StartCoroutine(TakingDamage(damage));
+        }
+
+#endregion
     }
 }

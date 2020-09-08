@@ -116,5 +116,9 @@ namespace Characters.Interfaces {
                 currentHp += hpRecovered;
             Debug.Log("hp recovered. Current hp: " + currentHp);
         }
+
+        public void SynchHP(float hp) {
+            currentHp = hp;
+        }
     }
 }

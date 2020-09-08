@@ -126,9 +126,6 @@ namespace Characters.PC {
                     uIManager.FillBar(currentHp / hp, "health");
                     UIManager.TakeDamage();
                 }
-                
-
-
             }
         }
 

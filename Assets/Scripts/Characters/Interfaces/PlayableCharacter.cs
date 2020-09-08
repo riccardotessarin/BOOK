@@ -39,7 +39,7 @@ namespace Characters.Interfaces {
 
         [SerializeField] protected float stamina;
         [SerializeField] protected float currentStamina;
-        public float CurrentStamin=>currentStamina;
+        public float CurrentStamin => currentStamina;
         Inventory inventory;
         [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
 
@@ -164,9 +164,9 @@ namespace Characters.Interfaces {
 
         [SerializeField] protected FirstPersonController controller;
         [SerializeField] protected bool isReanimating;
-        public bool IsReanimating=>isReanimating;
-        
-        public bool IsMine=>isMine;
+        public bool IsReanimating => isReanimating;
+
+        public bool IsMine => isMine;
 
         // enum with the type of Attack equipped
         public enum Attack {
@@ -187,14 +187,14 @@ namespace Characters.Interfaces {
         //method used in the Awake
         protected virtual void Awaker() {
             _photonView = GetComponent<PhotonView>();
-            isMine=_photonView.IsMine;
+            isMine = _photonView.IsMine;
             //isMine=true;
             if (isMine) {
                 camera.enabled = true;
                 audioListener.enabled = true;
 
                 uIManager = new GameObject().AddComponent<UIManager>();
-                uIManager.name=gameObject.ToString()+" UIManager";
+                uIManager.name = gameObject.ToString() + " UIManager";
                 uIManager.Player = this;
                 uIManager = UIManager.Instance;
             }
@@ -240,8 +240,7 @@ namespace Characters.Interfaces {
             looted = false;
             weakness = EnumUtility.AttackType.Nothing;
             activateElementBonus = false;
-            isReanimating=false;
-            
+            isReanimating = false;
         }
 
         //method used in the Start
@@ -249,20 +248,21 @@ namespace Characters.Interfaces {
             //Debug.Log("Starter");
             baseAttackSprite = Resources.Load<Sprite>($"Images/{this.type}BaseAttack");
             specialAttackSprite = Resources.Load<Sprite>($"Images/{this.type}SpecialAttack");
-            hpMax=hp;
+            hpMax = hp;
             currentHp = hp;
             currentStamina = stamina;
-            
-                uIController = new UIController();
-                uIController.player = this;
-            if(isMine){
+
+            uIController = new UIController();
+            uIController.player = this;
+            if (isMine) {
                 uIController.uIManager = uIManager;
 
                 uIManager.FillBar(1, "health");
-                
+
 
                 uIManager.FillBar(1, "stamina");
             }
+
             baseAttackRecoil = hp * 3 / 100;
             specialAttackRecoil = hp * 15 / 100;
             staminaConsumed = stamina * 10 / 100;
@@ -272,21 +272,24 @@ namespace Characters.Interfaces {
             if (listPlants.Count() != 0) {
                 equippedPlant = listPlants[0];
             }
-            controller=GetComponent<FirstPersonController>();
+
+            controller = GetComponent<FirstPersonController>();
         }
 
         //method used in Update
         protected virtual void Updater() {
-            if(isMine)
+            if (isMine) {
                 MalusCheck();
-            UpdateObjectsLists();
-            if (isMine)
                 InteractionTextRayCast();
+                Player.PhotonView.RPC("RPC_SynchHp", RpcTarget.OthersBuffered, currentHp);
+            }
+
+            UpdateObjectsLists();
             ResetStamina();
         }
 
         void Update() {
-            if(!isDeath)
+            if (!isDeath)
                 Updater();
         }
 
@@ -294,7 +297,7 @@ namespace Characters.Interfaces {
             FixedUpdater();
         }
 
-        protected virtual void FixedUpdater(){
+        protected virtual void FixedUpdater() {
             if (Poisoned && !isDeath)
                 StartCoroutine(PoisonDamage());
         }
@@ -311,7 +314,7 @@ namespace Characters.Interfaces {
         protected override void Death() {
             IsDeath = true;
             Debug.Log("DEATH");
-            GetComponent<CapsuleCollider>().direction=2;
+            GetComponent<CapsuleCollider>().direction = 2;
         }
 
         protected override void BaseAttack() {
@@ -319,7 +322,8 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
+                    StartCoroutine(BaseAttackDamage(camera.transform.position, camera.transform.forward));
+                    //Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
                     UseStamina(staminaConsumed);
                 }
             }
@@ -348,7 +352,7 @@ namespace Characters.Interfaces {
         protected IEnumerator UseBook() {
             isAttacking = true;
             equippedBook.UseConsumable();
-            yield return new WaitForSeconds(120f/currentSpeed);
+            yield return new WaitForSeconds(120f / currentSpeed);
             isAttacking = false;
         }
 
@@ -413,7 +417,7 @@ namespace Characters.Interfaces {
         ///method that invoke the right fuction in base of the equippedAttack
         ///</summary>
         public void Attacker() {
-            if (currentStamina >= staminaConsumed){
+            if (currentStamina >= staminaConsumed) {
                 attackDic[equippedAttack].DynamicInvoke();
             }
         }
@@ -500,7 +504,7 @@ namespace Characters.Interfaces {
                     }
 
                     if (plantAdded) {
-                        if(isMine)
+                        if (isMine)
                             uIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
                         if (listPlants.Count() == 1) {
                             equippedPlant = dropPlant;
@@ -515,27 +519,26 @@ namespace Characters.Interfaces {
                     if (!inventory.TryAddConsumableToInventory(page)) {
                         deadNPC.Looted = false;
                     } else {
-                        if(IsMine)
+                        if (IsMine)
                             uIManager.AddMessageForSinglePlayer($"{page.Name} added to Inventory");
                         if (affectEquippedBook && isMine) {
                             uIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
                         }
                     }
-                }
-                else {
-                    HealthStabilizer healthStabilizer=deadNPC.GetDropHS();
+                } else {
+                    HealthStabilizer healthStabilizer = deadNPC.GetDropHS();
                     healthStabilizer.UseConsumable();
-                    if(isMine)
+                    if (isMine)
                         uIManager.AddMessageForSinglePlayer($"{healthStabilizer.Name} used");
                 }
             } else if (deadType == typeof(CyborgKinean)) {
                 CyborgKinean deadNPC = dead.GetComponent<CyborgKinean>();
                 BookDrop dropBook = deadNPC.GetDrop();
                 Sprite booksprite = dropBook.BookIcon;
-                string namedropBook=dropBook.Name;
+                string namedropBook = dropBook.Name;
                 if (!dropBook.PickDrop(inventory)) {
                     deadNPC.Looted = false;
-                } else if(isMine) {
+                } else if (isMine) {
                     uIManager.AddBook(booksprite);
                     uIManager.AddMessageForSinglePlayer($"{namedropBook} added to Inventory");
                 }
@@ -555,14 +558,11 @@ namespace Characters.Interfaces {
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
                 } else if (hit.collider.GetComponent<PlayableCharacter>()) {
                     StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
-                }
-                else if(hit.collider.GetComponent<Trial>()){
+                } else if (hit.collider.GetComponent<Trial>()) {
                     StartCoroutine(StartTrial(hit.collider.GetComponent<Trial>()));
-                }
-                else if(hit.collider.GetComponent<TrialObject>()){
+                } else if (hit.collider.GetComponent<TrialObject>()) {
                     StartCoroutine(CollectTrialObject(hit.collider.GetComponent<TrialObject>()));
-                }
-                else if(hit.collider.GetComponent<TrialButton>()){
+                } else if (hit.collider.GetComponent<TrialButton>()) {
                     StartCoroutine(PressButton(hit.collider.GetComponent<TrialButton>()));
                 }
             }
@@ -572,10 +572,10 @@ namespace Characters.Interfaces {
             isAttacking = true;
             Sprite plantSprite = interacted.PlantIcon;
             string description = interacted.Description;
-            string plantName=interacted.Name;
+            string plantName = interacted.Name;
             if (!interacted.PickDrop(inventory)) {
                 //failed interaction
-            } else if (isMine){
+            } else if (isMine) {
                 uIManager.AddPlant(plantSprite, description);
                 uIManager.AddMessageForSinglePlayer($"{plantName} added to Inventory");
             }
@@ -584,75 +584,72 @@ namespace Characters.Interfaces {
             isAttacking = false;
         }
 
-        private IEnumerator StartTrial(Trial interacted){
-            isAttacking=true;
-            if(!interacted.Starting && !interacted.Completed){
+        private IEnumerator StartTrial(Trial interacted) {
+            isAttacking = true;
+            if (!interacted.Starting && !interacted.Completed) {
                 interacted.StartTrial();
-                if(isMine)
+                if (isMine)
                     uIManager.AddMessageForSinglePlayer($"{interacted.Description}");
-
-            }
-            else if(interacted is BloodAltar && interacted.Starting && !interacted.Completed){
-                if(currentHp>10){
+            } else if (interacted is BloodAltar && interacted.Starting && !interacted.Completed) {
+                if (currentHp > 10) {
                     interacted.GetComponent<BloodAltar>().AddLife(10f);
-                    currentHp=currentHp-10;
-                    if(isMine){
+                    currentHp = currentHp - 10;
+                    if (isMine) {
                         uIManager.AddMessageForSinglePlayer($"taked life");
-                        uIManager.FillBar(currentHp/hp,"health");
+                        uIManager.FillBar(currentHp / hp, "health");
                     }
-                    
-                }
-                else{
-                    if(isMine)
+                } else {
+                    if (isMine)
                         UIManager.AddMessageForSinglePlayer($"Not enough Life");
                     Debug.Log("Don't have enough life");
                 }
-                    
             }
+
             yield return new WaitForSeconds(0.5f);
-            isAttacking=false;
+            isAttacking = false;
         }
 
-        private IEnumerator CollectTrialObject(TrialObject trialObject){
-            isAttacking=true;
+        private IEnumerator CollectTrialObject(TrialObject trialObject) {
+            isAttacking = true;
             trialObject.Collect();
-            if(isMine)
+            if (isMine)
                 UIManager.AddMessageForSinglePlayer($"trial Object Collected");
             yield return new WaitForSeconds(0.5f);
-            isAttacking=false;
+            isAttacking = false;
         }
-        private IEnumerator PressButton(TrialButton button){
-            isAttacking=true;
+
+        private IEnumerator PressButton(TrialButton button) {
+            isAttacking = true;
             button.PressButton();
-            if(isMine)
+            if (isMine)
                 UIManager.AddMessageForSinglePlayer($"trial button pressed");
             yield return new WaitForSeconds(0.5f);
-            isAttacking=false;
+            isAttacking = false;
         }
 
         private IEnumerator ReviveTeamMember(PlayableCharacter revived) {
             isAttacking = true;
-            isReanimating=true;
-            if(isMine)
+            isReanimating = true;
+            if (isMine)
                 UIManager.AddMessageForSinglePlayer($"reviving");
             yield return new WaitForSecondsRealtime(3f);
             revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
-            
+
             isAttacking = false;
-            isReanimating=false;
+            isReanimating = false;
         }
 
         protected virtual void Revive() {
             Debug.Log($"{gameObject.ToString()} revived");
             currentHp = hp / 6;
-            GetComponent<CapsuleCollider>().direction=1;
+            GetComponent<CapsuleCollider>().direction = 1;
             isDeath = false;
         }
 
-        protected override void ModifyHpMax(float modifier){
+        protected override void ModifyHpMax(float modifier) {
             base.ModifyHpMax(modifier);
-            if(isMine)
-                uIManager.FillBar(currentHp/hp,"health");
+            if (isMine)
+                uIManager.FillBar(currentHp / hp, "health");
         }
 
         protected void ModifyRecoil(float modifier) {
@@ -674,9 +671,8 @@ namespace Characters.Interfaces {
         }
 
         protected virtual void UseStamina(float staminaUsed) {
-        
-            currentStamina=currentStamina<=staminaUsed?0:currentStamina-staminaUsed;
-            if(isMine)
+            currentStamina = currentStamina <= staminaUsed ? 0 : currentStamina - staminaUsed;
+            if (isMine)
                 uIManager.FillBar(currentStamina / stamina, "stamina");
         }
 
@@ -689,19 +685,19 @@ namespace Characters.Interfaces {
         protected IEnumerator StaminaRecharge() {
             staminaRecharging = true;
             currentStamina = currentStamina + staminaRecharged > stamina ? stamina : currentStamina + staminaRecharged;
-            if(isMine)
+            if (isMine)
                 uIManager.FillBar(currentStamina / stamina, "stamina");
-            yield return new WaitForSeconds(120f /currentSpeed);
+            yield return new WaitForSeconds(120f / currentSpeed);
             staminaRecharging = false;
         }
 
         protected override void RecoverHP(float hpRecovered) {
             base.RecoverHP(hpRecovered);
-            if(isMine)
+            if (isMine)
                 uIManager.FillBar(currentHp / hp, "health");
         }
 
-        protected override void ModifySpeed(float modifier){
+        protected override void ModifySpeed(float modifier) {
             base.ModifySpeed(modifier);
             controller.ModifySpeed(modifier);
         }
