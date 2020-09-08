@@ -56,6 +56,9 @@ namespace StateMachine.Actions.Implementations {
                     Debug.Log("entering chat");
                     _player.UIManager.ChangeChatMode();
                 }
+                if(Input.GetKeyDown(KeyCode.Escape)){
+                    Application.Quit();
+                }
             }
             else{
                 if(Input.GetKeyDown(KeyCode.Escape)){

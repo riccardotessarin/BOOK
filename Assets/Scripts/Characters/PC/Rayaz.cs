@@ -22,10 +22,10 @@ namespace Characters.PC {
             type = "rayaz";
             raceType = EnumUtility.CharacterType.Rayaz;
             weaknessSprite = Resources.Load<Sprite>("Images/WaterPowerSprite");
-            hp = 50;
-            stamina = 50;
+            hp = 40;
+            stamina = 40;
             specialAttackRadius = 10;
-            speed = 120;
+            speed = 160;
             baseAttackRange = 10;
             targetEnemy = null;
             fogDamage = 2;

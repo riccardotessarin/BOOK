@@ -81,6 +81,7 @@ namespace Characters.NPC {
 
         protected override void Death() {
             base.Death();
+            StartCoroutine(DeathVanishing());
             animator.SetTrigger("IsDead");
             
         }
