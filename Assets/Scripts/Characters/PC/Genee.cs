@@ -37,7 +37,7 @@ namespace Characters.PC {
         protected override void FixedUpdater()
         {
             base.FixedUpdater();
-            animator.SetBool("IsWalking",!controller.IsWalking);
+            animator.SetBool("IsWalking",controller.moveDir!=new Vector2(0,0));
             if(!controller.IsWalking){
                 if(controller.speedToTransmit==controller.RunSpeed){
                     UseStamina(0.5f);

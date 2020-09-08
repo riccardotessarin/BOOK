@@ -183,6 +183,7 @@ MonoBehaviour:
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
   speedToTransmit: 0
+  moveDir: {x: 0, y: 0}
 --- !u!82 &3811287988644366576
 AudioSource:
   m_ObjectHideFlags: 0
@@ -353,6 +354,7 @@ MonoBehaviour:
   specialAttackRadius: 0
   speedModifier: 0
   maxlastTargetDistance: 0
+  iceFogPrefab: {fileID: 0}
 --- !u!114 &6248911626096606840
 MonoBehaviour:
   m_ObjectHideFlags: 0

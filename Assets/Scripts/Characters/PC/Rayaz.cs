@@ -61,13 +61,14 @@ namespace Characters.PC {
                 base.FixedUpdater();
                 if(controller.IsWalking){
                     Debug.Log("moving");
-                    if(controller.speedToTransmit==controller.WalkingSpeed){
-                        Debug.Log("walking");
-                        anim.Play("walk");
-                    }
-                    else{
+                    if(controller.moveDir==new Vector2(0,0)){
                         anim.Stop();
                         anim.Play("idle");
+                    }
+                    else{
+                        
+                        Debug.Log("walking");
+                        anim.Play("walk");
                     }
                 }
                 else if(!controller.IsWalking){
@@ -76,6 +77,8 @@ namespace Characters.PC {
                         UseStamina(0.5f);
                         anim.Play("run");
                     }
+                    else if(controller.speedToTransmit==controller.WalkingSpeed)
+                        anim.Play("walk");
                 }
                 
                 else if(controller.isJumping){
