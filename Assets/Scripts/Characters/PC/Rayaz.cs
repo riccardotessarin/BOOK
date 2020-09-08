@@ -62,7 +62,6 @@ namespace Characters.PC {
                 if(controller.IsWalking){
                     Debug.Log("moving");
                     if(controller.moveDir==new Vector2(0,0)){
-                        anim.Stop();
                         anim.Play("idle");
                     }
                     else{
