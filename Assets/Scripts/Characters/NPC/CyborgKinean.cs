@@ -62,6 +62,7 @@ namespace Characters.NPC {
                 }
                 else{
                     animator.SetBool("InRange",false);
+                    transform.position = Vector3.MoveTowards(transform.position,target.transform.position,currentSpeed/20);
                 }
             }
             else{

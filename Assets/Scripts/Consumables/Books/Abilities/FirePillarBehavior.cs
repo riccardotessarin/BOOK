@@ -28,7 +28,7 @@ namespace Consumables.Books.Abilities {
 				if (!particle.isPlaying) {
 					particle.Play();
 				}
-				Character.Damage firePillarDamage = new Character.Damage(200.0F, EnumUtility.AttackType.Inferno);
+				Character.Damage firePillarDamage = new Character.Damage(20F, EnumUtility.AttackType.Inferno);
 				Debug.Log(enemy + " hitted");
 				enemy.SendMessage("TakeDamage", firePillarDamage, SendMessageOptions.DontRequireReceiver);
 				StartCoroutine(WaitAndDestroy(30.0F));
