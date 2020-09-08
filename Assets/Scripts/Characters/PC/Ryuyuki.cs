@@ -58,8 +58,7 @@ namespace Characters.PC {
                 base.FixedUpdater();
                 if (controller.IsWalking) {
                     Debug.Log("moving");
-                    if (controller.moveDir == new Vector2(0, 0)) {
-                        anim.Stop();
+                    if(controller.moveDir==new Vector2(0,0)){
                         anim.Play("idle");
                     } else {
                         Debug.Log("walking");
