@@ -17,6 +17,7 @@ using User;
 using Photon.Pun;
 using Test;
 using Consumables.Healables.HealthStabilizers;
+using Level.Tests;
 
 //using Books;
 namespace Characters.Interfaces {

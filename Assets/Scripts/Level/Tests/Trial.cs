@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Test {
@@ -15,6 +17,12 @@ namespace Test {
         public bool Ended => ended;
         [SerializeField] protected bool lastTrial;
         [SerializeField] protected GameObject library;
+        
+        protected PhotonView photonView;
+
+        private void Awake() {
+            photonView = GetComponent<PhotonView>();
+        }
 
         // Start is called before the first frame update
         void Start() {
@@ -42,22 +50,27 @@ namespace Test {
             }
         }
 
-        public abstract void StartTrial();
-        protected abstract void EndTrial();
+        public virtual void StartTrial() {
+            photonView.RPC("RPC_StartTrial", RpcTarget.AllBuffered);
+        }
 
-        protected virtual void TrialCompleted() {
+        protected virtual void EndTrial() {
+            photonView.RPC("RPC_EndTrial", RpcTarget.AllBuffered);
+        }
+
+        private void TrialCompleted() {
             if (!lastTrial)
                 walls.SetActive(false);
             else
                 SpawnLibraryDoor();
             
             Debug.Log("Access to next area");
-            ended = true;
-            GetComponent<Collider>().enabled = false;
+                        
+            photonView.RPC("RPC_TrialCompleted", RpcTarget.AllBuffered);
         }
 
-        protected virtual void SpawnLibraryDoor() {
-            library.SetActive(true);
+        private void SpawnLibraryDoor() {
+            library.transform.localScale = Vector3.one;
         }
     }
 }
