@@ -548,7 +548,7 @@ namespace Characters.Interfaces {
         }
 
         ///<summary>
-        ///method that makes player interact with interagible object or revive team member
+        ///method that makes player interact with interactable object or revive team member
         ///</summary>
         public void InteractAction() {
             RaycastHit hit;
@@ -593,7 +593,7 @@ namespace Characters.Interfaces {
             } else if (interacted is BloodAltar && interacted.Starting && !interacted.Completed) {
                 if (currentHp > 10) {
                     interacted.GetComponent<BloodAltar>().AddLife(10f);
-                    currentHp = currentHp - 10;
+                    currentHp -= 10;
                     if (isMine) {
                         uIManager.AddMessageForSinglePlayer($"taked life");
                         uIManager.FillBar(currentHp / hp, "health");

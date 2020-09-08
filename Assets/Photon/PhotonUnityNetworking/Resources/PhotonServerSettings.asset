@@ -44,6 +44,11 @@ MonoBehaviour:
   - RPC_SavePlayerInstance
   - SendMessageToChat
   - NewMessage
+  - RPC_SetOtherPlayerMovementInfo
+  - RPC_NPCTakeDamage
+  - RPC_SynchHp
+  - RPC_Revive
+  - RPC_NewMessage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
