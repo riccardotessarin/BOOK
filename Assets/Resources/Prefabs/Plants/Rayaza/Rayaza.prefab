@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2499889650974954808}
   - component: {fileID: 6911445273420410638}
   - component: {fileID: 925185918276293623}
+  - component: {fileID: 6590418318214802105}
   m_Layer: 0
   m_Name: Rayaza
   m_TagString: Untagged
@@ -79,3 +80,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6590418318214802105
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507084904844715819}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2699353, y: 0.35929227, z: 1.6632924}
+  m_Center: {x: 0.17534332, y: 0.1595208, z: -0.0016987622}
