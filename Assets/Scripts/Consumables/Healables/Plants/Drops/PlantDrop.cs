@@ -5,8 +5,6 @@ using User;
 namespace Consumables.Healables.Plants.Drops {
 	public abstract class PlantDrop : MonoBehaviour {
 
-		[SerializeField] public GameObject plantDrop3DModel;
-
 		public abstract string Name { get; }
 		public abstract string Description { get; }
 		public int HealthPercentage => 50;

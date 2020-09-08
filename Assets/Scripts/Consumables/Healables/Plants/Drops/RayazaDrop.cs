@@ -23,8 +23,7 @@ namespace Consumables.Healables.Plants.Drops {
 
 		protected override void Awaker() {
 			base.Awaker();
-			plantIcon = (Sprite)Resources.LoadAll("Images/pngwing.com", typeof(Sprite))[1];
-			plantDrop3DModel = Resources.Load<GameObject>("");
+			plantIcon = (Sprite)Resources.Load("Images/Rayaza", typeof(Sprite));
 		}
 
 		// Use this for initialization

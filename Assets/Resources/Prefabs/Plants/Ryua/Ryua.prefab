@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 5343771691492779609}
+  - component: {fileID: 5129045607455131678}
   m_Layer: 0
-  m_Name: Desert Plant
+  m_Name: Ryua
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,6 +106,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 7.824117, y: 3.0925455, z: 7.4131536}
   m_Center: {x: 0.14043498, y: 1.0462728, z: -0.18138337}
+--- !u!114 &5129045607455131678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4004982678e3d394aabd6dcdfe2e787c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plantDrop3DModel: {fileID: 0}
 --- !u!1 &8299651457170910234
 GameObject:
   m_ObjectHideFlags: 0

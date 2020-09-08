@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6911445273420410638}
   - component: {fileID: 925185918276293623}
   - component: {fileID: 6590418318214802105}
+  - component: {fileID: 8724080143697091332}
   m_Layer: 0
   m_Name: Rayaza
   m_TagString: Untagged
@@ -94,6 +95,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.2699353, y: 0.35929227, z: 1.6632924}
   m_Center: {x: 0.17534332, y: 0.1595208, z: -0.0016987622}
+--- !u!114 &8724080143697091332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507084904844715819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8bcc7bd1802d794cbdbd76181746b1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plantDrop3DModel: {fileID: 0}
 --- !u!1 &7019587881827862541
 GameObject:
   m_ObjectHideFlags: 0
