@@ -9,11 +9,16 @@ namespace Networking.GameControllers {
         private PlayableCharacter MyPlayerAvatar { get; set; }
 
         public PhotonView PhotonView { get; private set; }
+        public string Username { get; set; }
+        public Color UsernameColor { get; set; }
 
 #region Unity methods
 
         private void Awake() {
             PhotonView = GetComponent<PhotonView>();
+            
+            if (PhotonView.IsMine)
+                UsernameColor = new Color(Random.Range(0,255),Random.Range(0,255),Random.Range(0,255));
         }
 
         private void Start() {

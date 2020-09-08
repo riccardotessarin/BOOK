@@ -1,16 +1,21 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.String;
+using Random = UnityEngine.Random;
 
 namespace Networking {
     public class PhotonLobby : MonoBehaviourPunCallbacks {
         [SerializeField] private Button findGameButton;
         [SerializeField] private Button cancelButton;
         [SerializeField] private TextMeshProUGUI classText;
+        [SerializeField] private TMP_InputField usernameInputField;
 
         public static PhotonLobby Instance { get; private set; }
+        public string Username => !(usernameInputField is null) ? usernameInputField.text : Empty;
 
 #region Unity methods
 
@@ -27,6 +32,10 @@ namespace Networking {
             PhotonNetwork.ConnectUsingSettings(); //Connects to master photon server
         }
 
+        private void Update() {
+            findGameButton.interactable = PhotonNetwork.IsConnected && classText.text != Empty && usernameInputField.text != Empty && !cancelButton.IsInteractable();
+        }
+
 #endregion
 
 #region Button callbacks
@@ -35,13 +44,16 @@ namespace Networking {
             findGameButton.interactable = false;
             cancelButton.interactable = true;
 
+            usernameInputField.interactable = false;
+
             PhotonNetwork.JoinRandomRoom();
         }
 
         public void OnCancelButtonClick() {
             findGameButton.interactable = true;
             cancelButton.interactable = false;
-
+            usernameInputField.interactable = true;
+            
             PhotonNetwork.LeaveRoom();
         }
 
@@ -67,7 +79,6 @@ namespace Networking {
         public override void OnConnectedToMaster() {
             Debug.Log("Player has successfully connected to Photon master server");
             PhotonNetwork.AutomaticallySyncScene = true;
-            findGameButton.interactable = true;
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message) {

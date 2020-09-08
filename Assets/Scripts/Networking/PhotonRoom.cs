@@ -1,4 +1,5 @@
 using System.IO;
+using Networking.GameControllers;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,7 +72,8 @@ namespace Networking {
         }
 
         private void CreatePlayer() {
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", "Player"), transform.position, Quaternion.identity, 0);
+            var player = PhotonNetwork.Instantiate(Path.Combine("Prefabs/Player", "Player"), transform.position, Quaternion.identity, 0);
+            player.GetComponent<PhotonPlayer>().Username = PhotonLobby.Instance.Username;
         }
     }
 }
