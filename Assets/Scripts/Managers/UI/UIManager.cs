@@ -99,9 +99,6 @@ namespace Managers.UI {
             voidSprite = Resources.Load<Sprite>("Images/voidSprite");
             bonusPrefab = Resources.Load<GameObject>("Prefabs/UI/Bonus").GetComponent<Image>();
             malusPrefab = Resources.Load<GameObject>("Prefabs/UI/Malus").GetComponent<Image>();
-
-            _photonView = gameObject.AddComponent<PhotonView>();
-            _photonView.ViewID = Random.Range(101, 200);
         }
 
 
@@ -402,16 +399,10 @@ namespace Managers.UI {
 
         public void SendMessageToChat() {
             if (player.IsMine) {
-                _photonView.RPC("NewMessage", RpcTarget.All, messageToWrite.text);
+                player.Player.PhotonView.RPC("RPC_NewMessage", RpcTarget.All, messageToWrite.text);
             }
         }
-
-        [PunRPC]
-        private void NewMessage(string newMessage) {
-            textChat += newMessage;
-            chat.text = textChat;
-        }
-
+        
         public void ChangeChatMode() {
             chatMode = !chatMode;
         }
@@ -432,6 +423,11 @@ namespace Managers.UI {
 
         public void AddMessageForSinglePlayer(string message) {
             textChat += message + "\n";
+            chat.text = textChat;
+        }
+
+        public void WriteMessageToChat(string newMessage) {
+            textChat += newMessage;
             chat.text = textChat;
         }
     }
