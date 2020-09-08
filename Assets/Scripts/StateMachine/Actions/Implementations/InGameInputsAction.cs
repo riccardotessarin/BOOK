@@ -33,6 +33,7 @@ namespace StateMachine.Actions.Implementations {
                 if (Input.GetKeyDown(KeyCode.Q)) {
                     GameManager.Instance.CurrentState = new PauseMenuState();
                     Debug.Log("Changing to pause menu state");
+                    _player.UIManager.App_disViewfinder(false);
                     _player.UIManager.ActivateMenu(true);
                 }
 

@@ -53,10 +53,15 @@ namespace Characters.NPC {
             if (DetectionZone()) {
                 animator.SetBool("HasTarget",true);
                 if (BaseAttackZone()){
+                    animator.SetBool("InRange",true);
                     BaseAttack();
                 }
                 else if (SpecialAttackZone()){
+                    animator.SetBool("InRange",true);
                     SpecialAttack();
+                }
+                else{
+                    animator.SetBool("InRange",false);
                 }
             }
             else{

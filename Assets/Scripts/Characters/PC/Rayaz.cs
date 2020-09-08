@@ -13,6 +13,7 @@ namespace Characters.PC {
         [SerializeField] float fogDamage;
         [SerializeField] float fogDuration;
         [SerializeField] PoisonFog prefabFog;
+        [SerializeField] GameObject mouthFogPrefab;
         
 
         // Start is called before the first frame update
@@ -32,6 +33,7 @@ namespace Characters.PC {
             elementType = EnumUtility.AttackType.Basilisk;
             elementSprite = Resources.Load<Sprite>("Images/PoisonPowerSprite");
             anim=transform.GetChild(1).GetComponent<Animation>();
+            mouthFogPrefab=Resources.Load<GameObject>("Prefabs/Attacks/FogCameraEffect");
         }
 
         protected override void Starter() {
@@ -58,20 +60,27 @@ namespace Characters.PC {
             if(!isDeath){
                 base.FixedUpdater();
                 if(controller.IsWalking){
+                    Debug.Log("moving");
+                    if(controller.speedToTransmit==controller.WalkingSpeed){
+                        Debug.Log("walking");
+                        anim.Play("walk");
+                    }
+                    else{
+                        anim.Play("idle");
+                    }
+                }
+                else if(!controller.IsWalking){
                     if(controller.speedToTransmit==controller.RunSpeed){
+                        Debug.Log("running");
                         UseStamina(2);
                         anim.Play("run");
                     }
-                    if(controller.speedToTransmit==controller.WalkingSpeed)
-                        anim.Play("walk");
                 }
                 
                 else if(controller.isJumping){
                     anim.Play("jump");
                 }
-                else if(!isAttacking){
-                    anim.Stop();
-                }
+                
             }
         }
 
@@ -137,8 +146,10 @@ namespace Characters.PC {
                     Death();
                 }
 
-                if (isMine)
+                if (isMine){
                     uIManager.FillBar(currentHp / hp, "health");
+                    UIManager.TakeDamage();
+                }
             }
         }
 
@@ -176,7 +187,10 @@ namespace Characters.PC {
                 }
             }
             anim.Play("hpunch");
+            GameObject foggy=Instantiate(mouthFogPrefab,camera.transform.position,camera.transform.rotation);
+
             yield return new WaitForSeconds(120f/currentSpeed);
+            Destroy(foggy);
             isAttacking = false;
         }
 

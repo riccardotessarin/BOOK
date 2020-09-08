@@ -501,7 +501,7 @@ namespace Characters.Interfaces {
 
                     if (plantAdded) {
                         if(isMine)
-                            UIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
+                            uIManager.AddPlant(dropPlant.PlantIcon, dropPlant.Description);
                         if (listPlants.Count() == 1) {
                             equippedPlant = dropPlant;
                         }
@@ -515,6 +515,8 @@ namespace Characters.Interfaces {
                     if (!inventory.TryAddConsumableToInventory(page)) {
                         deadNPC.Looted = false;
                     } else {
+                        if(IsMine)
+                            uIManager.AddMessageForSinglePlayer($"{page.Name} added to Inventory");
                         if (affectEquippedBook && isMine) {
                             uIManager.ChangeChargeText(equippedBook.CurrentCharges.ToString());
                         }
@@ -523,15 +525,19 @@ namespace Characters.Interfaces {
                 else {
                     HealthStabilizer healthStabilizer=deadNPC.GetDropHS();
                     healthStabilizer.UseConsumable();
+                    if(isMine)
+                        uIManager.AddMessageForSinglePlayer($"{healthStabilizer.Name} used");
                 }
             } else if (deadType == typeof(CyborgKinean)) {
                 CyborgKinean deadNPC = dead.GetComponent<CyborgKinean>();
                 BookDrop dropBook = deadNPC.GetDrop();
                 Sprite booksprite = dropBook.BookIcon;
+                string namedropBook=dropBook.Name;
                 if (!dropBook.PickDrop(inventory)) {
                     deadNPC.Looted = false;
                 } else if(isMine) {
                     uIManager.AddBook(booksprite);
+                    uIManager.AddMessageForSinglePlayer($"{namedropBook} added to Inventory");
                 }
             }
 
@@ -566,10 +572,12 @@ namespace Characters.Interfaces {
             isAttacking = true;
             Sprite plantSprite = interacted.PlantIcon;
             string description = interacted.Description;
+            string plantName=interacted.Name;
             if (!interacted.PickDrop(inventory)) {
                 //failed interaction
             } else if (isMine){
                 uIManager.AddPlant(plantSprite, description);
+                uIManager.AddMessageForSinglePlayer($"{plantName} added to Inventory");
             }
 
             yield return new WaitForSeconds(0.5f);
@@ -580,14 +588,23 @@ namespace Characters.Interfaces {
             isAttacking=true;
             if(!interacted.Starting && !interacted.Completed){
                 interacted.StartTrial();
+                if(isMine)
+                    uIManager.AddMessageForSinglePlayer($"{interacted.Description}");
+
             }
             else if(interacted is BloodAltar && interacted.Starting && !interacted.Completed){
                 if(currentHp>10){
                     interacted.GetComponent<BloodAltar>().AddLife(10f);
                     currentHp=currentHp-10;
+                    if(isMine){
+                        uIManager.AddMessageForSinglePlayer($"taked life");
+                        uIManager.FillBar(currentHp/hp,"health");
+                    }
                     
                 }
                 else{
+                    if(isMine)
+                        UIManager.AddMessageForSinglePlayer($"Not enough Life");
                     Debug.Log("Don't have enough life");
                 }
                     
@@ -599,12 +616,16 @@ namespace Characters.Interfaces {
         private IEnumerator CollectTrialObject(TrialObject trialObject){
             isAttacking=true;
             trialObject.Collect();
+            if(isMine)
+                UIManager.AddMessageForSinglePlayer($"trial Object Collected");
             yield return new WaitForSeconds(0.5f);
             isAttacking=false;
         }
         private IEnumerator PressButton(TrialButton button){
             isAttacking=true;
             button.PressButton();
+            if(isMine)
+                UIManager.AddMessageForSinglePlayer($"trial button pressed");
             yield return new WaitForSeconds(0.5f);
             isAttacking=false;
         }
@@ -612,9 +633,11 @@ namespace Characters.Interfaces {
         private IEnumerator ReviveTeamMember(PlayableCharacter revived) {
             isAttacking = true;
             isReanimating=true;
+            if(isMine)
+                UIManager.AddMessageForSinglePlayer($"reviving");
             yield return new WaitForSecondsRealtime(3f);
             revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
-
+            
             isAttacking = false;
             isReanimating=false;
         }
