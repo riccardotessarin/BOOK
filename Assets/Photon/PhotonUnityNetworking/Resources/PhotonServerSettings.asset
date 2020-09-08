@@ -49,6 +49,13 @@ MonoBehaviour:
   - RPC_SynchHp
   - RPC_Revive
   - RPC_NewMessage
+  - RPC_Collect
+  - RPC_PressButton
+  - RPC_SyncLifePaid
+  - RPC_WinFunction
+  - RPC_EndTrial
+  - RPC_StartTrial
+  - RPC_TrialCompleted
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
