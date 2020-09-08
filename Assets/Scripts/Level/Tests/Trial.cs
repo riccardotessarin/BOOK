@@ -45,12 +45,14 @@ namespace Test{
         public abstract void StartTrial();
         protected abstract void EndTrial();
         protected virtual void TrialCompleted(){
-            walls.SetActive(false);
+            if(!lastTrial)
+                walls.SetActive(false);
+            else
+                SpawnLibraryDoor();
             Debug.Log("Access to next area");
             ended=true;
             GetComponent<Collider>().enabled=false;
-            if(lastTrial)
-                SpawnLibraryDoor();
+            
         }
         protected virtual void SpawnLibraryDoor(){}
     }
