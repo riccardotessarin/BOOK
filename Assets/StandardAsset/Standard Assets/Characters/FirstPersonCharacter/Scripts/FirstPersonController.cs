@@ -210,7 +210,11 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
 #endif
             // set the desired speed to be walking or running
-            speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
+            speed = m_IsWalking? m_WalkSpeed : m_RunSpeed;
+            if(!m_IsWalking & playableCharacter.CurrentStamin<=0){
+                Debug.Log("Stamina Finished, cannot run");
+                speed=m_WalkSpeed;
+            }
             m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:
@@ -244,6 +248,11 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             }
 
             body.AddForceAtPosition(m_CharacterController.velocity * 0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        public void ModifySpeed(float modifier){
+            m_WalkSpeed*=modifier;
+            m_RunSpeed*=modifier;
         }
     }
 }

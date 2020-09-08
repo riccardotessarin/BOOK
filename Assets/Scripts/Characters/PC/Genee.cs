@@ -40,7 +40,7 @@ namespace Characters.PC {
             animator.SetBool("IsWalking",!controller.IsWalking);
             if(controller.IsWalking){
                 if(controller.speedToTransmit==controller.RunSpeed){
-                    UseStamina(2);
+                    UseStamina(0.5f);
                     animator.SetBool("isRunning",true);
                 }
                 else{

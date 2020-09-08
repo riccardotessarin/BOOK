@@ -39,6 +39,7 @@ namespace Characters.Interfaces {
 
         [SerializeField] protected float stamina;
         [SerializeField] protected float currentStamina;
+        public float CurrentStamin=>currentStamina;
         Inventory inventory;
         [SerializeField] private bool powerMode; //se true sto usando armi, se false consumabili
 
@@ -674,7 +675,8 @@ namespace Characters.Interfaces {
         }
 
         protected virtual void UseStamina(float staminaUsed) {
-            currentStamina -= staminaUsed;
+        
+            currentStamina=currentStamina<=staminaUsed?0:currentStamina-staminaUsed;
             if(isMine)
                 uIManager.FillBar(currentStamina / stamina, "stamina");
         }
@@ -698,6 +700,11 @@ namespace Characters.Interfaces {
             base.RecoverHP(hpRecovered);
             if(isMine)
                 uIManager.FillBar(currentHp / hp, "health");
+        }
+
+        protected override void ModifySpeed(float modifier){
+            base.ModifySpeed(modifier);
+            controller.ModifySpeed(modifier);
         }
 
 #region RPC

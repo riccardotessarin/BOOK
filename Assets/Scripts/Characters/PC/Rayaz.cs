@@ -66,13 +66,14 @@ namespace Characters.PC {
                         anim.Play("walk");
                     }
                     else{
+                        anim.Stop();
                         anim.Play("idle");
                     }
                 }
                 else if(!controller.IsWalking){
                     if(controller.speedToTransmit==controller.RunSpeed){
                         Debug.Log("running");
-                        UseStamina(2);
+                        UseStamina(0.5f);
                         anim.Play("run");
                     }
                 }
