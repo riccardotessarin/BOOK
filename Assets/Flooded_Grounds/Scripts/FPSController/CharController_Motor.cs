@@ -62,6 +62,11 @@ public class CharController_Motor : MonoBehaviour {
 
 		movement = transform.rotation * movement;
 		character.Move (movement * Time.deltaTime);
+
+		if(Input.GetKeyDown(KeyCode.Space)) {
+			GameObject holo = Resources.Load("Prefabs/NPC/HoloMessage") as GameObject;
+			GameObject holoMessage = Instantiate(holo, transform.position + transform.forward * 4 + transform.up * 1 + transform.right * 1, transform.rotation);
+		}
 	}
 
 

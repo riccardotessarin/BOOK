@@ -20,6 +20,21 @@ namespace Consumables.Books.Abilities {
 
 		}
 
+		private void OnTriggerEnter(Collider other) {
+			Character enemy = other.gameObject.GetComponent<Character>();
+			if (enemy != null) {
+				Transform child = gameObject.transform.GetChild(0);
+				ParticleSystem particle = child.GetComponent<ParticleSystem>();
+				if (!particle.isPlaying) {
+					particle.Play();
+				}
+				Character.Damage firePillarDamage = new Character.Damage(200.0F, EnumUtility.AttackType.Inferno);
+				Debug.Log(enemy + " hitted");
+				enemy.SendMessage("TakeDamage", firePillarDamage, SendMessageOptions.DontRequireReceiver);
+				StartCoroutine(WaitAndDestroy(30.0F));
+			}
+		}
+
 		private void OnCollisionEnter(Collision collision) {
 			Character enemy = collision.gameObject.GetComponent<Character>();
 			if (enemy != null) {

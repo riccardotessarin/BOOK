@@ -10,6 +10,20 @@ public class IceStalagmiteBehavior : MonoBehaviour {
 
 	}
 
+	private void OnTriggerEnter(Collider other) {
+		Character enemy = other.gameObject.GetComponent<Character>();
+		if (enemy != null) {
+			Animation animation = gameObject.GetComponent<Animation>();
+			if (!animation.isPlaying) {
+				animation.Play();
+			}
+			Character.Damage iceStalagmiteDamage = new Character.Damage(200.0F, EnumUtility.AttackType.Niflheim);
+			Debug.Log(enemy + " hitted");
+			enemy.SendMessage("TakeDamage", iceStalagmiteDamage, SendMessageOptions.DontRequireReceiver);
+			StartCoroutine(WaitAndDestroy(30.0F));
+		}
+	}
+
 	private void OnCollisionEnter(Collision collision) {
 		Character enemy = collision.gameObject.GetComponent<Character>();
 		if (enemy != null) {
