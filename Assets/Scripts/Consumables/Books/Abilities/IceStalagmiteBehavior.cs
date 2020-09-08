@@ -17,7 +17,7 @@ public class IceStalagmiteBehavior : MonoBehaviour {
 			if (!animation.isPlaying) {
 				animation.Play();
 			}
-			Character.Damage iceStalagmiteDamage = new Character.Damage(200.0F, EnumUtility.AttackType.Niflheim);
+			Character.Damage iceStalagmiteDamage = new Character.Damage(10.0F, EnumUtility.AttackType.Niflheim);
 			Debug.Log(enemy + " hitted");
 			enemy.SendMessage("TakeDamage", iceStalagmiteDamage, SendMessageOptions.DontRequireReceiver);
 			StartCoroutine(WaitAndDestroy(30.0F));
