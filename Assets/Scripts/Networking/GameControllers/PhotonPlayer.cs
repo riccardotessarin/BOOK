@@ -52,6 +52,14 @@ namespace Networking.GameControllers {
             MyPlayerAvatar.SynchHP(hp);
         }
 
+        [PunRPC]
+        private void RPC_Revive(float hp) {
+            Debug.Log($"{gameObject} revived");
+            MyPlayerAvatar.SynchHP(hp / 6);
+            GetComponent<CapsuleCollider>().direction = 1;
+            MyPlayerAvatar.IsDeath = false;
+        }
+
 #endregion
 
         private GameObject InstantiatePlayer(string instanceSelectedClass) {

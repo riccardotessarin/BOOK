@@ -18,7 +18,7 @@ namespace Characters.Interfaces {
 
         public bool IsDeath {
             get => isDeath;
-            protected set => isDeath = value;
+            set => isDeath = value;
         }
 
         [SerializeField] protected bool isAttacking;

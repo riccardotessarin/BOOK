@@ -24,20 +24,20 @@ namespace Characters.Interfaces {
 
         protected virtual void Awaker() {
             _photonView = GetComponent<PhotonView>();
-            
+
             gameObject.layer = 9; //NPC layer
             type = "kinean";
             IsDeath = false;
             target = null;
             isAttacking = false;
-            looted=false;
+            looted = false;
         }
 
         protected virtual void Starter() {
-            hpMax=hp;
+            hpMax = hp;
             currentHp = hp;
             currentSpeed = speed;
-            currentBasePower=basePower;
+            currentBasePower = basePower;
             baseDamage = new Damage(currentBasePower, EnumUtility.AttackType.Neutral);
         }
 
@@ -62,17 +62,17 @@ namespace Characters.Interfaces {
         void Update() {
             if (!IsDeath) {
                 Updater();
-            } 
+            }
         }
 
         protected override void Death() {
             IsDeath = true;
             StartCoroutine(DeathVanishing());
-            GetComponent<CapsuleCollider>().direction=2;
-            GetComponent<CapsuleCollider>().radius=1.5f;
+            GetComponent<CapsuleCollider>().direction = 2;
+            GetComponent<CapsuleCollider>().radius = 1.5f;
         }
 
-        protected IEnumerator DeathVanishing(){
+        protected IEnumerator DeathVanishing() {
             yield return new WaitForSecondsRealtime(120f);
             Destroy(this.gameObject);
         }
@@ -81,6 +81,7 @@ namespace Characters.Interfaces {
             if (!isAttacking)
                 StartCoroutine(BaseAttackDamage());
         }
+
         ///<summary>
         ///method that return true if in range for receiving a base Attack,
         ///false otherwise
@@ -100,6 +101,7 @@ namespace Characters.Interfaces {
 
             return false;
         }
+
         ///<summary>
         ///method that return true if at least a PC is in the zone,
         ///and set that as a target and makes this NPC instance look at it,
@@ -109,14 +111,15 @@ namespace Characters.Interfaces {
             Collider[] hitcolliders = Physics.OverlapSphere(transform.position, detectionRadius, PCLAYERMASK);
             if (hitcolliders.Length != 0) {
                 if (!target) {
-                    for(int i=0;i<hitcolliders.Length;i++){
+                    for (int i = 0; i < hitcolliders.Length; i++) {
                         target = hitcolliders[i].GetComponent<PlayableCharacter>();
-                        if(!target.IsDeath){
+                        if (!target.IsDeath) {
                             transform.LookAt(target.transform);
                             return true;
                         }
                     }
-                    target=null;
+
+                    target = null;
                     return false;
                 } else {
                     foreach (var collider in hitcolliders) {
@@ -136,28 +139,29 @@ namespace Characters.Interfaces {
         }
 
         protected override void TakeDamage(Damage damage) {
-            if(!IsDeath){
-                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage);
+            if (!IsDeath) {
+                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage.DamageRec, damage.AttackType);
             }
         }
 
-        protected virtual IEnumerator TakingDamage(Damage damage){
-            isAttacking=true;
+        protected virtual IEnumerator TakingDamage(Damage damage) {
+            isAttacking = true;
             yield return new WaitForSeconds(0.3f);
             if (damage.DamageRec < currentHp) {
                 currentHp -= damage.DamageRec;
                 Debug.Log(gameObject.ToString() + " took damage");
             } else
                 Death();
-            isAttacking=false;
+
+            isAttacking = false;
         }
 
         protected virtual IEnumerator BaseAttackDamage() {
             isAttacking = true;
-            
+
             target.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
-            yield return new WaitForSeconds(60f/currentSpeed);
-            
+            yield return new WaitForSeconds(60f / currentSpeed);
+
             isAttacking = false;
         }
 
@@ -169,12 +173,13 @@ namespace Characters.Interfaces {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
-        
+
 #region RPC
 
         [PunRPC]
-        private void RPC_NPCTakeDamage(Damage damage) {
-            StartCoroutine(TakingDamage(damage));
+        private void RPC_NPCTakeDamage(float damageAmount, short attackType) {
+            var attackTypeEnum = (EnumUtility.AttackType) attackType;
+            StartCoroutine(TakingDamage(new Damage(damageAmount, attackTypeEnum)));
         }
 
 #endregion
