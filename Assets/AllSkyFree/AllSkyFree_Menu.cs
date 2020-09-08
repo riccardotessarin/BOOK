@@ -1,7 +1,9 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿
+/* Delete this file to remove the AllSky menu item. */
 
-/* Delete this file to remove the AllSky menu item. */ 
+
+using UnityEditor;
+using UnityEngine;
 
 namespace Com.AllSkyFree
 {
