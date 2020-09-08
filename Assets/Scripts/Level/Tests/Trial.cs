@@ -14,6 +14,7 @@ namespace Test{
         [SerializeField] protected bool ended;
         public bool Ended=>ended;
         [SerializeField] protected bool lastTrial;
+        [SerializeField] protected GameObject library;
 
         // Start is called before the first frame update
         void Start()
@@ -54,6 +55,8 @@ namespace Test{
             GetComponent<Collider>().enabled=false;
             
         }
-        protected virtual void SpawnLibraryDoor(){}
+        protected virtual void SpawnLibraryDoor(){
+            library.SetActive(true);
+        }
     }
 }

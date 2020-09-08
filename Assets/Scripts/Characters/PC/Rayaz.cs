@@ -113,9 +113,9 @@ namespace Characters.PC {
         }
 
         protected override void RayazBond() {
-            Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "rayazMalus");
+            /*Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "rayazMalus");
             malusManager.Add(malus);
-            Debug.Log(this.ToString() + "rayazbond");
+            Debug.Log(this.ToString() + "rayazbond");*/
         }
 
         protected override void ReverseRyuyukiBond() {
@@ -131,8 +131,8 @@ namespace Characters.PC {
         }
 
         protected override void ReverseRayazBond() {
-            malusManager.Remove(MalusManager.Stats.Weakness, "rayazMalus");
-            Debug.Log(this.ToString() + ": reverse rayaz bond");
+            /*malusManager.Remove(MalusManager.Stats.Weakness, "rayazMalus");
+            Debug.Log(this.ToString() + ": reverse rayaz bond");*/
         }
 
         protected override void TakeDamage(Damage damage) {

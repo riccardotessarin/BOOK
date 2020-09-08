@@ -98,9 +98,9 @@ namespace Characters.PC {
         }
 
         protected override void RyuyukiBond() {
-            Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "ryuyukiMalus");
+            /*Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "ryuyukiMalus");
             malusManager.Add(malus);
-            Debug.Log(this.ToString() + ": ryuyuki bond");
+            Debug.Log(this.ToString() + ": ryuyuki bond");*/
         }
 
         protected override void GeneeBond() {
@@ -120,8 +120,8 @@ namespace Characters.PC {
         }
 
         protected override void ReverseRyuyukiBond() {
-            malusManager.Remove(MalusManager.Stats.Weakness, "ryuyukiMalus");
-            Debug.Log(this.ToString() + ": reverse ryuyuki bond");
+            /*malusManager.Remove(MalusManager.Stats.Weakness, "ryuyukiMalus");
+            Debug.Log(this.ToString() + ": reverse ryuyuki bond");*/
         }
 
         protected override void ReverseGeneeBond() {

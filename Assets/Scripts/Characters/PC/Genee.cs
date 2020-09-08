@@ -76,10 +76,10 @@ namespace Characters.PC {
         }
 
         protected override void GeneeBond() {
-            Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "geneeMalus");
+            /*Bonus malus = new Bonus(false, MalusManager.Stats.Weakness, 0.7f, "geneeMalus");
 
             malusManager.Add(malus);
-            Debug.Log(this.ToString() + "genee bond");
+            Debug.Log(this.ToString() + "genee bond");*/
         }
 
         protected override void RayazBond() {
@@ -97,8 +97,8 @@ namespace Characters.PC {
         }
 
         protected override void ReverseGeneeBond() {
-            malusManager.Remove(MalusManager.Stats.Weakness, "geneeMalus");
-            Debug.Log(this.ToString() + ": reverse genee bond");
+            /*malusManager.Remove(MalusManager.Stats.Weakness, "geneeMalus");
+            Debug.Log(this.ToString() + ": reverse genee bond");*/
         }
 
         protected override void ReverseRayazBond() {
