@@ -81,7 +81,7 @@ namespace Characters.PC {
                         anim.Play("walk");
                 }
                 
-                else if(controller.isJumping){
+                else if(controller.IsJumping){
                     anim.Play("jump");
                 }
                 

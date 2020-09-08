@@ -9,9 +9,9 @@ namespace UnityStandardAssets.Characters.FirstPerson {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour {
-        [SerializeField] private bool m_IsWalking;
-        [SerializeField] private float m_WalkSpeed;
-        [SerializeField] private float m_RunSpeed;
+        [SerializeField] protected bool m_IsWalking;
+        [SerializeField] protected float m_WalkSpeed;
+        [SerializeField] protected float m_RunSpeed;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
         [SerializeField] private float m_JumpSpeed;
         [SerializeField] private float m_StickToGroundForce;
@@ -28,7 +28,6 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         [SerializeField] private AudioClip m_LandSound; // the sound played when character touches back on ground.
 
         private Camera m_Camera;
-        private bool m_Jump;
         private float m_YRotation;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
@@ -39,17 +38,19 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
-        
+
         protected CharacterController m_CharacterController;
 
-        protected PlayableCharacter playableCharacter;//zeph
-        protected EnumUtility.CharacterType characterType;//zeph
-        public float speedToTransmit;//zeph
-        public bool isJumping{get=>m_Jump;} //zeph
-        public bool IsWalking=>m_IsWalking; //zeph
-        public float RunSpeed=>m_RunSpeed;//zeph
-        public float WalkingSpeed=>m_WalkSpeed;//zeph
-        public Vector2 moveDir;  //zeph
+        protected PlayableCharacter playableCharacter; //zeph
+        
+        public float speedToTransmit; //zeph
+        public Vector2 moveDir; //zeph
+
+        public bool IsJumping { get; protected set; }
+        public bool IsWalking => m_IsWalking; //zeph
+        public float RunSpeed => m_RunSpeed; //zeph
+        public float WalkingSpeed => m_WalkSpeed; //zeph
+        
 
         // Use this for initialization
         protected virtual void Start() {
@@ -63,8 +64,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
             m_MouseLook.Init(transform, m_Camera.transform);
-            playableCharacter=GetComponent<PlayableCharacter>();
-            characterType=playableCharacter.RaceType;
+            playableCharacter = GetComponent<PlayableCharacter>();
         }
 
 
@@ -72,18 +72,18 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         protected virtual void Update() {
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump){
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+            if (!IsJumping) {
+                IsJumping = CrossPlatformInputManager.GetButtonDown("Jump");
             }
 
-            if (!m_PreviouslyGrounded && m_CharacterController.isGrounded){
+            if (!m_PreviouslyGrounded && m_CharacterController.isGrounded) {
                 StartCoroutine(m_JumpBob.DoBobCycle());
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
             }
 
-            if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded){
+            if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded) {
                 m_MoveDir.y = 0f;
             }
 
@@ -101,7 +101,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         protected virtual void FixedUpdate() {
             float speed;
             GetInput(out speed);
-            speedToTransmit=speed; //zeph
+            speedToTransmit = speed; //zeph
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward * m_Input.y + transform.right * m_Input.x;
 
@@ -110,23 +110,20 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
                 m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
-            moveDir=desiredMove;
+            moveDir = desiredMove;
             m_MoveDir.x = desiredMove.x * speed;
             m_MoveDir.z = desiredMove.z * speed;
 
-
-
-            if (m_CharacterController.isGrounded){
+            if (m_CharacterController.isGrounded) {
                 m_MoveDir.y = -m_StickToGroundForce;
 
-                if (m_Jump){
+                if (IsJumping) {
                     m_MoveDir.y = m_JumpSpeed;
                     PlayJumpSound();
-                    m_Jump = false;
+                    IsJumping = false;
                     m_Jumping = true;
                 }
-            }
-            else{
+            } else {
                 m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
             }
 
@@ -146,12 +143,12 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
 
         private void ProgressStepCycle(float speed) {
-            if (m_CharacterController.velocity.sqrMagnitude > 0 && (m_Input.x != 0 || m_Input.y != 0)){
+            if (m_CharacterController.velocity.sqrMagnitude > 0 && (m_Input.x != 0 || m_Input.y != 0)) {
                 m_StepCycle += (m_CharacterController.velocity.magnitude + (speed * (m_IsWalking ? 1f : m_RunstepLenghten))) *
                                Time.fixedDeltaTime;
             }
 
-            if (!(m_StepCycle > m_NextStep)){
+            if (!(m_StepCycle > m_NextStep)) {
                 return;
             }
 
@@ -162,7 +159,7 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
 
         private void PlayFootStepAudio() {
-            if (!m_CharacterController.isGrounded){
+            if (!m_CharacterController.isGrounded) {
                 return;
             }
 
@@ -179,18 +176,17 @@ namespace UnityStandardAssets.Characters.FirstPerson {
 
         private void UpdateCameraPosition(float speed) {
             Vector3 newCameraPosition;
-            if (!m_UseHeadBob){
+            if (!m_UseHeadBob) {
                 return;
             }
 
-            if (m_CharacterController.velocity.magnitude > 0 && m_CharacterController.isGrounded){
+            if (m_CharacterController.velocity.magnitude > 0 && m_CharacterController.isGrounded) {
                 m_Camera.transform.localPosition =
                     m_HeadBob.DoHeadBob(m_CharacterController.velocity.magnitude +
                                         (speed * (m_IsWalking ? 1f : m_RunstepLenghten)));
                 newCameraPosition = m_Camera.transform.localPosition;
                 newCameraPosition.y = m_Camera.transform.localPosition.y - m_JumpBob.Offset();
-            }
-            else{
+            } else {
                 newCameraPosition = m_Camera.transform.localPosition;
                 newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
             }
@@ -212,21 +208,22 @@ namespace UnityStandardAssets.Characters.FirstPerson {
             m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
 #endif
             // set the desired speed to be walking or running
-            speed = m_IsWalking? m_WalkSpeed : m_RunSpeed;
-            if(!m_IsWalking & playableCharacter.CurrentStamin<=0){
+            speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
+            if (!m_IsWalking & playableCharacter.CurrentStamin <= 0) {
                 Debug.Log("Stamina Finished, cannot run");
-                speed=m_WalkSpeed;
+                speed = m_WalkSpeed;
             }
+
             m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:
-            if (m_Input.sqrMagnitude > 1){
+            if (m_Input.sqrMagnitude > 1) {
                 m_Input.Normalize();
             }
 
             // handle speed change to give an fov kick
             // only if the player is going to a run, is running and the fovkick is to be used
-            if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0){
+            if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0) {
                 StopAllCoroutines();
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
             }
@@ -241,20 +238,20 @@ namespace UnityStandardAssets.Characters.FirstPerson {
         protected virtual void OnControllerColliderHit(ControllerColliderHit hit) {
             Rigidbody body = hit.collider.attachedRigidbody;
             //dont move the rigidbody if the character is on top of it
-            if (m_CollisionFlags == CollisionFlags.Below){
+            if (m_CollisionFlags == CollisionFlags.Below) {
                 return;
             }
 
-            if (body == null || body.isKinematic){
+            if (body == null || body.isKinematic) {
                 return;
             }
 
             body.AddForceAtPosition(m_CharacterController.velocity * 0.1f, hit.point, ForceMode.Impulse);
         }
 
-        public void ModifySpeed(float modifier){
-            m_WalkSpeed*=modifier;
-            m_RunSpeed*=modifier;
+        public void ModifySpeed(float modifier) {
+            m_WalkSpeed *= modifier;
+            m_RunSpeed *= modifier;
         }
     }
 }

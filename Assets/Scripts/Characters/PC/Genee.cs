@@ -47,7 +47,7 @@ namespace Characters.PC {
                     animator.SetBool("isRunning",false);
                 }
             }
-            if(controller.isJumping){
+            if(controller.IsJumping){
                 animator.SetBool("isJumping",true);
             }
             else{

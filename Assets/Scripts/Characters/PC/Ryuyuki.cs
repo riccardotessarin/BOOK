@@ -12,7 +12,6 @@ namespace Characters.PC {
         [SerializeField] protected float speedModifier;
         [SerializeField] protected float maxlastTargetDistance;
         [SerializeField] protected GameObject iceFogPrefab;
-        
 
 
         // Start is called before the first frame update
@@ -31,8 +30,8 @@ namespace Characters.PC {
             maxlastTargetDistance = 20;
             elementType = EnumUtility.AttackType.Niflheim;
             elementSprite = Resources.Load<Sprite>("Images/IcePowerSprite");
-            anim=transform.GetChild(1).GetComponent<Animation>();
-            iceFogPrefab=Resources.Load<GameObject>("Prefabs/Attacks/IceFog");
+            anim = transform.GetChild(1).GetComponent<Animation>();
+            iceFogPrefab = Resources.Load<GameObject>("Prefabs/Attacks/IceFog");
         }
 
         protected override void Starter() {
@@ -40,8 +39,8 @@ namespace Characters.PC {
             //Debug.Log("Starter Ryuyuki");
             baseAttackDescription = $"ice scale(Recoil: {baseAttackRecoil * 100 / hp}%)";
             specialAttackDescription = $"the last scale,that hitted a target, explodes and freeze all characters in a certain area, slowing their speed (Recoil: {specialAttackRecoil * 100 / hp}%; Last target: {lastTarget != null})";
-            anim["punch"].layer=123;
-            anim["hpunch"].layer=123;
+            anim["punch"].layer = 123;
+            anim["hpunch"].layer = 123;
         }
 
         protected override void Updater() {
@@ -54,38 +53,31 @@ namespace Characters.PC {
                 DistanceCheckLastTarget();
         }
 
-        protected override void FixedUpdater()
-        {
-            if(!isDeath){
+        protected override void FixedUpdater() {
+            if (!isDeath) {
                 base.FixedUpdater();
-                if(controller.IsWalking){
+                if (controller.IsWalking) {
                     Debug.Log("moving");
-                    if(controller.moveDir==new Vector2(0,0)){
+                    if (controller.moveDir == new Vector2(0, 0)) {
                         anim.Stop();
                         anim.Play("idle");
-                    }
-                    else{
-                        
+                    } else {
                         Debug.Log("walking");
                         anim.Play("walk");
                     }
-                }
-                else if(!controller.IsWalking){
-                    if(controller.speedToTransmit==controller.RunSpeed){
+                } else if (!controller.IsWalking) {
+                    if (controller.speedToTransmit == controller.RunSpeed) {
                         Debug.Log("running");
                         UseStamina(0.5f);
                         anim.Play("run");
-                    }
-                    else if(controller.speedToTransmit==controller.WalkingSpeed)
+                    } else if (controller.speedToTransmit == controller.WalkingSpeed)
                         anim.Play("walk");
-                }
-                
-                else if(controller.isJumping){
+                } else if (controller.IsJumping) {
                     anim.Play("jump");
                 }
-                
             }
         }
+
         protected override void SpecialAttack() {
             if (!isAttacking && lastTarget) {
                 if (currentHp <= specialAttackRecoil) {
@@ -138,7 +130,7 @@ namespace Characters.PC {
         }
 
         protected override void TakeDamage(Damage damage) {
-            if(!isDeath){
+            if (!isDeath) {
                 Debug.Log("taking damage1");
                 anim.Play("hit");
                 float dam = damage.AttackType == weakness ? damage.DamageRec * weaknessMultiplicator : damage.DamageRec;
@@ -151,7 +143,7 @@ namespace Characters.PC {
                     Death();
                 }
 
-                if (isMine){
+                if (isMine) {
                     uIManager.FillBar(currentHp / hp, "health");
                     UIManager.TakeDamage();
                 }
@@ -165,7 +157,7 @@ namespace Characters.PC {
             if (isMine)
                 uIManager.FillBar(currentHp / hp, "health");
             RaycastHit hit;
-            
+
             if (Physics.Raycast(position, direction, out hit, baseAttackRange)) {
                 Character hitted = hit.collider.GetComponent<Character>();
                 if (hitted) {
@@ -173,8 +165,9 @@ namespace Characters.PC {
                     hitted.SendMessage("TakeDamage", baseDamage, SendMessageOptions.DontRequireReceiver);
                 }
             }
+
             anim.Play("punch");
-            yield return new WaitForSeconds(60f/currentSpeed);
+            yield return new WaitForSeconds(60f / currentSpeed);
             isAttacking = false;
         }
 
@@ -190,10 +183,11 @@ namespace Characters.PC {
                     character.SendMessage("ModifySpeed", speedModifier, SendMessageOptions.DontRequireReceiver);
                 }
             }
-            GameObject iceFog=Instantiate(iceFogPrefab,lastTarget.transform.position,lastTarget.transform.rotation);
 
-            yield return new WaitForSeconds(120f/currentSpeed);
-            lastTarget=null;
+            GameObject iceFog = Instantiate(iceFogPrefab, lastTarget.transform.position, lastTarget.transform.rotation);
+
+            yield return new WaitForSeconds(120f / currentSpeed);
+            lastTarget = null;
             Destroy(iceFog);
             isAttacking = false;
             yield return new WaitForSeconds(10);
@@ -232,25 +226,24 @@ namespace Characters.PC {
             Debug.Log(ToString() + "weakness modified");
         }
 
-        protected override void Death(){
+        protected override void Death() {
             base.Death();
             //StartCoroutine(DeathAnimation());
             anim.Play("death");
         }
 
-        protected override void ModifySpeed(float modifier){
+        protected override void ModifySpeed(float modifier) {
             base.ModifySpeed(modifier);
-            var value=currentSpeed/speed;
-            anim["idle"].speed=value;
-            anim["punch"].speed=value;
-            anim["run"].speed=value;
-            anim["walk"].speed=value;
-            anim["hpunch"].speed=value;
+            var value = currentSpeed / speed;
+            anim["idle"].speed = value;
+            anim["punch"].speed = value;
+            anim["run"].speed = value;
+            anim["walk"].speed = value;
+            anim["hpunch"].speed = value;
         }
 
-        
 
-        protected override void Revive(){
+        protected override void Revive() {
             base.Revive();
             anim.Stop();
             anim.Play("idle");

@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892498567716444332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.41, z: 2.99}
+  m_LocalPosition: {x: 0, y: 6.47, z: 1.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1892498567716340878}
@@ -138,7 +138,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892498567716444334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.463791, y: 0.19, z: -20.31731}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1892498567716340876}
@@ -184,7 +184,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 1.831542
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -457,6 +457,7 @@ MonoBehaviour:
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
   speedToTransmit: 0
+  moveDir: {x: 0, y: 0}
 --- !u!114 &4094583394028137103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,10 +506,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 3.060246
-  m_Height: 7.1828423
+  m_Radius: 2
+  m_Height: 7
   m_Direction: 1
-  m_Center: {x: -0.11624384, y: 4.286648, z: -0.21158314}
+  m_Center: {x: 0, y: 4, z: 0}
 --- !u!1001 &8880785606104513769
 PrefabInstance:
   m_ObjectHideFlags: 0
