@@ -6,6 +6,7 @@ using Attacks;
 using Consumables.Books.Abilities;
 using Consumables.Books;
 using Consumables.Books.Drops;
+using Photon.Pun;
 using User;
 
 namespace Characters.NPC {
@@ -187,5 +188,15 @@ namespace Characters.NPC {
             var value=currentSpeed/speed;
             animator.SetFloat("Speed",value);
         }
+        
+#region RPC
+
+        [PunRPC]
+        private void RPC_NPCTakeDamage(float damageAmount, short attackType) {
+            var attackTypeEnum = (EnumUtility.AttackType) attackType;
+            StartCoroutine(TakingDamage(new Damage(damageAmount, attackTypeEnum)));
+        }
+
+#endregion
     }
 }

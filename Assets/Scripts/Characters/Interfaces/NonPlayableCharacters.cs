@@ -139,8 +139,8 @@ namespace Characters.Interfaces {
         }
 
         protected override void TakeDamage(Damage damage) {
-            if(!IsDeath){
-                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.AllBuffered, damage.DamageRec, damage.AttackType);
+            if (!IsDeath) {
+                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.AllBuffered, damage.DamageRec, (short) damage.AttackType);
             }
         }
 
@@ -173,15 +173,5 @@ namespace Characters.Interfaces {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
         }
-
-#region RPC
-
-        [PunRPC]
-        private void RPC_NPCTakeDamage(float damageAmount, short attackType) {
-            var attackTypeEnum = (EnumUtility.AttackType) attackType;
-            StartCoroutine(TakingDamage(new Damage(damageAmount, attackTypeEnum)));
-        }
-
-#endregion
     }
 }
