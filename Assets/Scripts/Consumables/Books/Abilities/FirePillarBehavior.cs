@@ -12,6 +12,8 @@ using Photon.Pun;
 namespace Consumables.Books.Abilities {
 	class FirePillarBehavior : MonoBehaviour {
 
+		private bool active = false;
+
 		private void Awake() {
 		}
 
@@ -22,7 +24,8 @@ namespace Consumables.Books.Abilities {
 
 		private void OnTriggerEnter(Collider other) {
 			Character enemy = other.gameObject.GetComponent<Character>();
-			if (enemy != null) {
+			if (enemy != null && !active) {
+				active = true;
 				Transform child = gameObject.transform.GetChild(0);
 				ParticleSystem particle = child.GetComponent<ParticleSystem>();
 				if (!particle.isPlaying) {
