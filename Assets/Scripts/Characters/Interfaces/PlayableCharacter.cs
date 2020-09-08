@@ -15,6 +15,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 using UnityEngine;
 using User;
 using Photon.Pun;
+using Test;
+using Consumables.Healables.HealthStabilizers;
 
 //using Books;
 namespace Characters.Interfaces {
@@ -518,6 +520,10 @@ namespace Characters.Interfaces {
                         }
                     }
                 }
+                else {
+                    HealthStabilizer healthStabilizer=deadNPC.GetDropHS();
+                    healthStabilizer.UseConsumable();
+                }
             } else if (deadType == typeof(CyborgKinean)) {
                 CyborgKinean deadNPC = dead.GetComponent<CyborgKinean>();
                 BookDrop dropBook = deadNPC.GetDrop();
@@ -544,6 +550,15 @@ namespace Characters.Interfaces {
                 } else if (hit.collider.GetComponent<PlayableCharacter>()) {
                     StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
                 }
+                else if(hit.collider.GetComponent<Trial>()){
+                    StartCoroutine(StartTrial(hit.collider.GetComponent<Trial>()));
+                }
+                else if(hit.collider.GetComponent<TrialObject>()){
+                    StartCoroutine(CollectTrialObject(hit.collider.GetComponent<TrialObject>()));
+                }
+                else if(hit.collider.GetComponent<TrialButton>()){
+                    StartCoroutine(PressButton(hit.collider.GetComponent<TrialButton>()));
+                }
             }
         }
 
@@ -559,6 +574,39 @@ namespace Characters.Interfaces {
 
             yield return new WaitForSeconds(0.5f);
             isAttacking = false;
+        }
+
+        private IEnumerator StartTrial(Trial interacted){
+            isAttacking=true;
+            if(!interacted.Starting && !interacted.Completed){
+                interacted.StartTrial();
+            }
+            else if(interacted is BloodAltar && interacted.Starting && !interacted.Completed){
+                if(currentHp>10){
+                    interacted.GetComponent<BloodAltar>().AddLife(10f);
+                    currentHp=currentHp-10;
+                    
+                }
+                else{
+                    Debug.Log("Don't have enough life");
+                }
+                    
+            }
+            yield return new WaitForSeconds(0.5f);
+            isAttacking=false;
+        }
+
+        private IEnumerator CollectTrialObject(TrialObject trialObject){
+            isAttacking=true;
+            trialObject.Collect();
+            yield return new WaitForSeconds(0.5f);
+            isAttacking=false;
+        }
+        private IEnumerator PressButton(TrialButton button){
+            isAttacking=true;
+            button.PressButton();
+            yield return new WaitForSeconds(0.5f);
+            isAttacking=false;
         }
 
         private IEnumerator ReviveTeamMember(PlayableCharacter revived) {

@@ -6,6 +6,7 @@ using Consumables.Pages;
 using Consumables.Pages.Abilities;
 using Consumables;
 using User;
+using Consumables.Healables.HealthStabilizers;
 
 
 
@@ -81,7 +82,10 @@ namespace Characters.NPC {
             return page;
         }
 
-        //public HealthStabilizer GetDropHS(){}
+        public HealthStabilizer GetDropHS(){
+            HealthStabilizer hs=new HealthStabilizer();
+            return hs;
+        }
         private void SetIdleStance(){
             randomIdle=Random.Range(0,4);
             animator.SetInteger("RandomIdle",randomIdle);

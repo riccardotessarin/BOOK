@@ -6,6 +6,7 @@ using System.Linq;
 using Consumables.Healables.Plants;
 using Characters.NPC;
 using Consumables.Healables.Plants.Drops;
+using Test;
 namespace Managers.UI{
     public class UIController 
     {
@@ -346,7 +347,8 @@ namespace Managers.UI{
                     }
                 }
             }
-            else if(hit.collider.GetComponent<PlantDrop>()){
+            else if(hit.collider.GetComponent<PlantDrop>() || hit.collider.GetComponent<Trial>()
+            || hit.collider.GetComponent<TrialObject>() || hit.collider.GetComponent<TrialButton>()){
                 Debug.Log("interact");
                 uIManager.ChangeInteractionText("Press 'E' to interact");
             }
