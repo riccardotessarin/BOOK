@@ -319,8 +319,7 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    StartCoroutine(BaseAttackDamage(camera.transform.position,camera.transform.forward));
-                    //Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
+                    Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
                     UseStamina(staminaConsumed);
                 }
             }
