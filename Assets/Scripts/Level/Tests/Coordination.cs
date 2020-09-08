@@ -13,7 +13,7 @@ namespace Test{
         protected override void Starter(){
             description="press buttons spawned in the area";
             base.Starter();
-            //load prefab
+            prefab=Resources.Load<GameObject>("Prefabs/LevelUtility/Button").GetComponent<TrialButton>();
             
             
         }

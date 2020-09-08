@@ -37,7 +37,7 @@ namespace Characters.PC {
         protected override void FixedUpdater()
         {
             base.FixedUpdater();
-            /*animator.SetBool("IsWalking",controller.IsWalking);
+            animator.SetBool("IsWalking",!controller.IsWalking);
             if(controller.IsWalking){
                 if(controller.speedToTransmit==controller.RunSpeed){
                     UseStamina(2);
@@ -52,7 +52,7 @@ namespace Characters.PC {
             }
             else{
                 animator.SetBool("isJumping",false);
-            }*/
+            }
         }
         /*protected override void BaseAttack(){
             
@@ -122,8 +122,10 @@ namespace Characters.PC {
                 }
 
         
-                if(isMine)
-                    uIManager.FillBar(currentHp/hp,"health");
+                if (isMine){
+                    uIManager.FillBar(currentHp / hp, "health");
+                    UIManager.TakeDamage();
+                }
                 
 
 

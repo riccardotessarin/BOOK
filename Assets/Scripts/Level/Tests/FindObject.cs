@@ -11,6 +11,7 @@ namespace Test{
             base.Starter();
             description="find the crystal";
             //Load prefab
+            prefab=Resources.Load<GameObject>("Prefabs/LevelUtility/Crystal").GetComponent<TrialObject>();
         }
         public override void StartTrial(){
             start=true;

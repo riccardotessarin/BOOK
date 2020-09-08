@@ -11,6 +11,7 @@ namespace Characters.PC {
         [SerializeField] protected float specialAttackRadius;
         [SerializeField] protected float speedModifier;
         [SerializeField] protected float maxlastTargetDistance;
+        [SerializeField] protected GameObject iceFogPrefab;
         
 
 
@@ -31,6 +32,7 @@ namespace Characters.PC {
             elementType = EnumUtility.AttackType.Niflheim;
             elementSprite = Resources.Load<Sprite>("Images/IcePowerSprite");
             anim=transform.GetChild(1).GetComponent<Animation>();
+            iceFogPrefab=Resources.Load<GameObject>("Prefabs/Attacks/IceFog");
         }
 
         protected override void Starter() {
@@ -58,23 +60,26 @@ namespace Characters.PC {
                 base.FixedUpdater();
                 if(controller.IsWalking){
                     Debug.Log("moving");
+                    if(controller.speedToTransmit==controller.WalkingSpeed){
+                        Debug.Log("walking");
+                        anim.Play("walk");
+                    }
+                    else{
+                        anim.Play("idle");
+                    }
+                }
+                else if(!controller.IsWalking){
                     if(controller.speedToTransmit==controller.RunSpeed){
                         Debug.Log("running");
                         UseStamina(2);
                         anim.Play("run");
-                    }
-                    if(controller.speedToTransmit==controller.WalkingSpeed){
-                        Debug.Log("running");
-                        anim.Play("walk");
                     }
                 }
                 
                 else if(controller.isJumping){
                     anim.Play("jump");
                 }
-                else if(!isAttacking){
-                    anim.Play("idle");
-                }
+                
             }
         }
         protected override void SpecialAttack() {
@@ -142,8 +147,10 @@ namespace Characters.PC {
                     Death();
                 }
 
-                if (isMine)
+                if (isMine){
                     uIManager.FillBar(currentHp / hp, "health");
+                    UIManager.TakeDamage();
+                }
             }
         }
 
@@ -179,8 +186,11 @@ namespace Characters.PC {
                     character.SendMessage("ModifySpeed", speedModifier, SendMessageOptions.DontRequireReceiver);
                 }
             }
+            GameObject iceFog=Instantiate(iceFogPrefab,lastTarget.transform.position,lastTarget.transform.rotation);
 
             yield return new WaitForSeconds(120f/currentSpeed);
+            lastTarget=null;
+            Destroy(iceFog);
             isAttacking = false;
             yield return new WaitForSeconds(10);
             foreach (var collider in hitcolliders) {

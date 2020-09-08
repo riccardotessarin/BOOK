@@ -38,6 +38,7 @@ namespace StateMachine.Actions.Implementations {
                 if (Input.GetMouseButtonDown(0)) {
                     GameManager.Instance.CurrentState = new GameState();
                     Debug.Log("switching to game state");
+                    player.UIManager.App_disViewfinder(true);
                     player.UIManager.ActivateMenu(false);
                 }
                 if(Input.GetKeyDown(KeyCode.T)){

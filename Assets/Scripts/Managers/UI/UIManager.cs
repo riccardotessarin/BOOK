@@ -52,6 +52,8 @@ namespace Managers.UI{
         [SerializeField] private bool chatMode;
         public bool ChatMode=>chatMode;
         private bool firstWords;
+
+        [SerializeField] private Image damageImage;
     
         
         
@@ -113,8 +115,9 @@ namespace Managers.UI{
             interactionText=canvas.GetChild(4).GetComponent<Text>();
             statusArea=canvas.GetChild(5).GetComponent<Image>();
             viewfinder=canvas.GetChild(6).GetComponent<Image>();
-            chat=canvas.GetChild(7).GetComponent<Text>();
-            messageToWrite=canvas.GetChild(8).GetComponent<Text>();
+            chat=canvas.GetChild(7).GetChild(0).GetComponent<Text>();
+            messageToWrite=canvas.GetChild(8).GetChild(0).GetComponent<Text>();
+            damageImage=canvas.GetChild(9).GetComponent<Image>();
             centerObject=inGameObjectMenu.transform.GetChild(0).GetComponent<Image>();
             leftObject=inGameObjectMenu.transform.GetChild(1).GetComponent<Image>();
             rightObject=inGameObjectMenu.transform.GetChild(2).GetComponent<Image>();
@@ -408,6 +411,22 @@ namespace Managers.UI{
 
         public void ChangeChatMode(){
             chatMode= !chatMode;
+        }
+
+        public void App_disViewfinder(bool value){
+            viewfinder.gameObject.SetActive(value);
+        }
+        public void TakeDamage(){
+            StartCoroutine(DamageCoroutine());
+        }
+        private IEnumerator DamageCoroutine(){
+            damageImage.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+            damageImage.gameObject.SetActive(false);
+        }
+        public void AddMessageForSinglePlayer(string message){
+            textChat+=message+"\n";
+            chat.text=textChat;
         }
     }
 }

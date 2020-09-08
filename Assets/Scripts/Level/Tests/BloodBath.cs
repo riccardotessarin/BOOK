@@ -11,7 +11,7 @@ namespace Test{
         protected override void Starter(){
             base.Starter();
             description="Destroy 3 Cyborg_Kineans that will spawn in this area";
-            prefab=Resources.Load<CyborgKinean>("Prefabs/NPC/Cyborg_Kinean").GetComponent<CyborgKinean>();
+            prefab=Resources.Load<GameObject>("Prefabs/NPC/Cyborg_Kinean").GetComponent<CyborgKinean>();
         }
         
         public override void StartTrial(){

@@ -5,6 +5,7 @@ namespace Test{
     public abstract class Trial : MonoBehaviour
     {
         [SerializeField] protected string description;
+        public string Description=>description;
         [SerializeField] protected bool start;
         public bool Starting=>start;
         [SerializeField] protected bool completed;
