@@ -137,7 +137,7 @@ namespace Characters.Interfaces {
 
         protected override void TakeDamage(Damage damage) {
             if(!IsDeath){
-                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage);
+                _photonView.RPC("RPC_NPCTakeDamage", RpcTarget.OthersBuffered, damage.DamageRec, damage.AttackType);
             }
         }
 
@@ -173,8 +173,8 @@ namespace Characters.Interfaces {
 #region RPC
 
         [PunRPC]
-        private void RPC_NPCTakeDamage(Damage damage) {
-            StartCoroutine(TakingDamage(damage));
+        private void RPC_NPCTakeDamage(float damageAmount ,EnumUtility.AttackType attackType) {
+            StartCoroutine(TakingDamage(new Damage(damageAmount, attackType)));
         }
 
 #endregion

@@ -322,7 +322,6 @@ namespace Characters.Interfaces {
                 if (currentHp <= baseAttackRecoil) {
                     Debug.Log("cannot use base attack, not much life left");
                 } else {
-                    //StartCoroutine(BaseAttackDamage(camera.transform.position, camera.transform.forward));
                     Player.PhotonView.RPC("RPC_BasicAttack", RpcTarget.All, camera.transform.position, camera.transform.forward);
                     UseStamina(staminaConsumed);
                 }
@@ -553,6 +552,7 @@ namespace Characters.Interfaces {
         ///</summary>
         public void InteractAction() {
             RaycastHit hit;
+
             if (!isAttacking && Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, interactionDistance)) {
                 if (hit.collider.GetComponent<PlantDrop>()) {
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
@@ -627,13 +627,15 @@ namespace Characters.Interfaces {
             isAttacking = false;
         }
 
-        private IEnumerator ReviveTeamMember(PlayableCharacter revived) {
+        public IEnumerator ReviveTeamMember(PlayableCharacter revived) {
             isAttacking = true;
             isReanimating = true;
             if (isMine)
                 UIManager.AddMessageForSinglePlayer($"reviving");
             yield return new WaitForSecondsRealtime(3f);
-            revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
+
+            //revived.SendMessage("Revive", SendMessageOptions.DontRequireReceiver);
+            Player.PhotonView.RPC("RPC_Revive", RpcTarget.AllBuffered, hp);
 
             isAttacking = false;
             isReanimating = false;
