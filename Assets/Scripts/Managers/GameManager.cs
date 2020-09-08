@@ -1,9 +1,6 @@
-using System;
-using System.Net.Security;
 using Photon.Pun;
 using StateMachine.States;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Managers {
 	public class GameManager : MonoBehaviour {
@@ -26,16 +23,7 @@ namespace Managers {
 
 		// Start is called before the first frame update
 		private void Start() {
-			if (_photonView.IsMine) {
-				InstantiateNPC();
-			}
-			
 			CurrentState = new InGameState();
-		}
-
-		private void InstantiateNPC() {
-			PhotonNetwork.Instantiate("Prefabs/NPC/Cyborg_Kinean", npcSpawnPoints[0].position, npcSpawnPoints[0].rotation);
-			PhotonNetwork.Instantiate("Prefabs/NPC/Melting_Kinean", npcSpawnPoints[1].position, npcSpawnPoints[1].rotation);
 		}
 
 		// Update is called once per frame
