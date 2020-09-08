@@ -60,7 +60,7 @@ namespace Test {
 
         private void TrialCompleted() {
             if (!lastTrial)
-                walls.SetActive(false);
+                walls.transform.localScale = Vector3.zero;
             else
                 SpawnLibraryDoor();
             

@@ -113,7 +113,7 @@ namespace Characters.Interfaces {
                 if (!target) {
                     for (int i = 0; i < hitcolliders.Length; i++) {
                         target = hitcolliders[i].GetComponent<PlayableCharacter>();
-                        if (!target.IsDeath) {
+                        if (target && !target.IsDeath) {
                             transform.LookAt(target.transform);
                             return true;
                         }
