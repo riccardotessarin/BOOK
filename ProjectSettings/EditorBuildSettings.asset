@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MatchMakingScene.unity
     guid: 5c43b418871e101368765cab0fd8f0e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/GameScene.unity
     guid: 3a7f01abfb48cf5a7ba196772ced7d89
+  - enabled: 1
+    path: Assets/Scenes/LevelScene.unity
+    guid: 01d00efa8a196504791e1b81ad6ac95a
   m_configObjects: {}
