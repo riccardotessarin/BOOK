@@ -428,7 +428,7 @@ namespace Managers.UI {
 
         public void WriteMessageToChat(string newMessage) {
             Debug.Log(ColorUtility.ToHtmlStringRGBA(player.Player.UsernameColor));
-            textChat += $"<color=#{ColorUtility.ToHtmlStringRGBA(player.Player.UsernameColor)}>{Player.Player.Username}</color>: {newMessage} \n";
+            textChat += $"{Player.Player.Username}: {newMessage} \n";
             chat.text = textChat;
         }
     }

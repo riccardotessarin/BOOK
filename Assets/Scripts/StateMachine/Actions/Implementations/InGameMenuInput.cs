@@ -17,6 +17,7 @@ namespace StateMachine.Actions.Implementations {
                 if (Input.GetKeyDown(KeyCode.Q)) {
                     GameManager.Instance.CurrentState = new GameState();
                     Debug.Log("switching to game state");
+                    player.UIManager.App_disViewfinder(true);
                     player.UIManager.ActivateMenu(false);
                 }
 
