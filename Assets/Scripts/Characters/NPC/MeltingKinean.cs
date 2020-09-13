@@ -48,7 +48,7 @@ namespace Characters.NPC {
         protected override void Starter() {
             base.Starter();
             if (drop) {
-                dropPage = HasDrop(0.8f);
+                dropPage = true; //HasDrop(0.8f);
             }
 
             SetIdleStance();

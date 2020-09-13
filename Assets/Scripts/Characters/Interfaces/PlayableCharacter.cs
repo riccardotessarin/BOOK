@@ -690,7 +690,7 @@ namespace Characters.Interfaces {
             currentStamina = currentStamina + staminaRecharged > stamina ? stamina : currentStamina + staminaRecharged;
             if (isMine)
                 uIManager.FillBar(currentStamina / stamina, "stamina");
-            yield return new WaitForSeconds(120f / currentSpeed);
+            yield return new WaitForSeconds(60f / currentSpeed);
             staminaRecharging = false;
         }
 
