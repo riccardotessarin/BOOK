@@ -11,7 +11,6 @@ namespace StateMachine.Actions.Implementations {
         private readonly PlayableCharacter _player = GameObject.FindWithTag("Player").transform.GetComponent<PlayableCharacter>();
 
         public void Execute() {
-            
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
@@ -21,7 +20,7 @@ namespace StateMachine.Actions.Implementations {
         }
 
         private void HandlePlayerInputs() {
-            if(!_player.UIManager.ChatMode){
+            if (!_player.UIManager.ChatMode) {
                 if (Input.GetMouseButtonDown(0)) {
                     if (_player.PowerMode)
                         _player.Attacker();
@@ -52,19 +51,24 @@ namespace StateMachine.Actions.Implementations {
                     Debug.Log("Trying to interact");
                     _player.InteractAction();
                 }
-                if(Input.GetKeyDown(KeyCode.T)){
+
+                if (Input.GetKeyDown(KeyCode.T)) {
                     Debug.Log("entering chat");
                     _player.UIManager.ChangeChatMode();
                 }
-                if(Input.GetKeyDown(KeyCode.Escape)){
+
+                if (Input.GetKeyDown(KeyCode.Escape)) {
                     Application.Quit();
                 }
-            }
-            else{
-                if(Input.GetKeyDown(KeyCode.Escape)){
-                    Debug.Log("exitting chat");
-                    _player.UIManager.ChangeChatMode();
+
+                if (Input.GetKeyDown(KeyCode.F1)) {
+                    _player.GetComponent<CharacterController>().enabled = false;
+                    _player.transform.position = new Vector3(370, 25, 766);
+                    _player.GetComponent<CharacterController>().enabled = true;
                 }
+            } else if (Input.GetKeyDown(KeyCode.Escape)) {
+                Debug.Log("exiting chat");
+                _player.UIManager.ChangeChatMode();
             }
         }
     }
