@@ -558,7 +558,7 @@ namespace Characters.Interfaces {
                 if (hit.collider.GetComponent<PlantDrop>()) {
                     StartCoroutine(InteractPlant(hit.collider.GetComponent<PlantDrop>()));
                 } else if (hit.collider.GetComponent<PlayableCharacter>()) {
-                    StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
+                   // StartCoroutine(ReviveTeamMember(hit.collider.GetComponent<PlayableCharacter>()));
                 } else if (hit.collider.GetComponent<Trial>()) {
                     StartCoroutine(StartTrial(hit.collider.GetComponent<Trial>()));
                 } else if (hit.collider.GetComponent<TrialObject>()) {
