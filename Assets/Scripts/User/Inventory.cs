@@ -63,7 +63,7 @@ namespace User {
 
 			Book book = new Fireball(booksContainer);
 			Plant plant = new Genea(plantsContainer);
-			Book book1= new FirePillar(booksContainer);
+			//Book book1= new FirePillar(booksContainer);
 			Book book2=new IceStalagmite(booksContainer);
 			Plant plant1= new Rayaza(plantsContainer);
 			Plant plant2= new Ryua(plantsContainer);
@@ -75,9 +75,9 @@ namespace User {
 			if (TryAddConsumableToInventory(new WaterShield(booksContainer))) {
 				Debug.Log("Water Shield added to inventory!");
 			}
-			if (TryAddConsumableToInventory(new FirePillar(booksContainer))) {
+			/*if (TryAddConsumableToInventory(new FirePillar(booksContainer))) {
 				Debug.Log("Water Shield added to inventory!");
-			}
+			}*/
 			/*if (TryAddConsumableToInventory(book2)) {
 				Debug.Log("Fire Pillar added to inventory!");
 			}*/
@@ -96,7 +96,7 @@ namespace User {
 			if (TryAddConsumableToInventory(plant2)){
 				Debug.Log("Ryua added to Inventory");
 			}
-			if(TryAddConsumableToInventory(plant3)){
+			if(TryAddConsumableToInventory(plant1)){
 				Debug.Log("Genea added to Inventory");
 			}
 		}
