@@ -62,7 +62,7 @@ namespace Networking.GameControllers {
         private void RPC_Revive(float hp) {
             Debug.Log($"{gameObject} revived");
             MyPlayerAvatar.SynchHP(hp / 6);
-            GetComponent<CapsuleCollider>().direction = 1;
+            MyPlayerAvatar.GetComponent<CapsuleCollider>().direction = 1;
             MyPlayerAvatar.IsDeath = false;
         }
 

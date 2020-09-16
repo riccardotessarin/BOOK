@@ -348,7 +348,7 @@ namespace Managers.UI{
                     }
                 }
             }
-            else if(hit.collider.GetComponent<PlantDrop>() || hit.collider.GetComponent<Trial>()
+            else if(hit.collider.GetComponent<PlantDrop>() || (hit.collider.GetComponent<Trial>() && !hit.collider.GetComponent<Trial>().Starting)
             || hit.collider.GetComponent<TrialObject>() || hit.collider.GetComponent<TrialButton>()){
                 Debug.Log("interact");
                 uIManager.ChangeInteractionText("Press 'E' to interact");
