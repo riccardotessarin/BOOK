@@ -64,6 +64,8 @@ namespace Networking.GameControllers {
             MyPlayerAvatar.SynchHP(hp / 6);
             MyPlayerAvatar.GetComponent<CapsuleCollider>().direction = 1;
             MyPlayerAvatar.IsDeath = false;
+            MyPlayerAvatar.Revive();
+
         }
 
         [PunRPC]

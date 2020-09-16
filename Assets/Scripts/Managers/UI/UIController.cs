@@ -332,7 +332,7 @@ namespace Managers.UI{
                     if(hitted is PlayableCharacter){
                         if(!traitor){
                             //Debug.Log("revive");
-                            uIManager.ChangeInteractionText("Press 'E' to revive");
+                            //uIManager.ChangeInteractionText("Press 'E' to revive");
                         }
                         else{
                             //Debug.Log("revive or loot");

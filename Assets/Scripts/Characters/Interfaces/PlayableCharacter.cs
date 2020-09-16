@@ -642,7 +642,7 @@ namespace Characters.Interfaces {
             isReanimating = false;
         }
 
-        protected virtual void Revive() {
+        public virtual void Revive() {
             Debug.Log($"{gameObject.ToString()} revived");
             currentHp = hp / 6;
             GetComponent<CapsuleCollider>().direction = 1;

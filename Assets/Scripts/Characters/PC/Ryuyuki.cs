@@ -242,7 +242,7 @@ namespace Characters.PC {
         }
 
 
-        protected override void Revive() {
+        public override void Revive() {
             base.Revive();
             anim.Stop();
             anim.Play("idle");
