@@ -423,13 +423,32 @@ namespace Managers.UI {
 
         public void AddMessageForSinglePlayer(string message) {
             textChat += message + "\n";
+             if(textChat.Count(c=>c=='\n')>7){
+                
+                int ind=textChat.IndexOf('\n');
+                
+                textChat=textChat.Remove(0,ind+1);
+                
+            }
             chat.text = textChat;
         }
 
         public void WriteMessageToChat(string newMessage) {
             Debug.Log(ColorUtility.ToHtmlStringRGBA(player.Player.UsernameColor));
             textChat += $"{Player.Player.Username}: {newMessage} \n";
+            
+            
+            if(textChat.Count(c=>c=='\n')>7){
+                
+                int ind=textChat.IndexOf('\n');
+                
+                textChat=textChat.Remove(0,ind+1);
+                
+            }
+            
             chat.text = textChat;
+            
         }
+
     }
 }
