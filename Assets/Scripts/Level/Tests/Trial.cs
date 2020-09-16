@@ -59,6 +59,7 @@ namespace Test {
         }
 
         private void TrialCompleted() {
+            ended=true;
             if (!lastTrial)
                 walls.transform.localScale = Vector3.zero;
             else

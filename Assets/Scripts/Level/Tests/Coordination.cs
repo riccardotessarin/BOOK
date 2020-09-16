@@ -54,7 +54,7 @@ namespace Level.Tests {
 
         [PunRPC]
         private void RPC_TrialCompleted() {
-            ended = true;
+            //ended = true;
             GetComponent<Collider>().enabled = false;
         }
 
