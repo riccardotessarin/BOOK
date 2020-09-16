@@ -67,8 +67,8 @@ namespace Networking.GameControllers {
         }
 
         [PunRPC]
-        private void RPC_NewMessage(string newMessage) {
-            UIManager.Instance.WriteMessageToChat(newMessage);
+        private void RPC_NewMessage(string newMessage, string username) {
+            UIManager.Instance.WriteMessageToChat(newMessage,username);
         }
 #endregion
 

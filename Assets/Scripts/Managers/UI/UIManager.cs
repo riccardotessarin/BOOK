@@ -399,7 +399,7 @@ namespace Managers.UI {
 
         public void SendMessageToChat() {
             if (player.IsMine) {
-                player.Player.PhotonView.RPC("RPC_NewMessage", RpcTarget.All, messageToWrite.text);
+                player.Player.PhotonView.RPC("RPC_NewMessage", RpcTarget.All, messageToWrite.text,Player.Player.Username);
             }
         }
         
@@ -423,7 +423,7 @@ namespace Managers.UI {
 
         public void AddMessageForSinglePlayer(string message) {
             textChat += message + "\n";
-             if(textChat.Count(c=>c=='\n')>7){
+             if(textChat.Count(c=>c=='\n')>10){
                 
                 int ind=textChat.IndexOf('\n');
                 
@@ -433,12 +433,11 @@ namespace Managers.UI {
             chat.text = textChat;
         }
 
-        public void WriteMessageToChat(string newMessage) {
-            Debug.Log(ColorUtility.ToHtmlStringRGBA(player.Player.UsernameColor));
-            textChat += $"{Player.Player.Username}: {newMessage} \n";
+        public void WriteMessageToChat(string newMessage, string username) {
+            textChat += $"{username}: {newMessage} \n";
             
             
-            if(textChat.Count(c=>c=='\n')>7){
+            if(textChat.Count(c=>c=='\n')>10){
                 
                 int ind=textChat.IndexOf('\n');
                 
